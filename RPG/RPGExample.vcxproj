@@ -170,7 +170,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\loading.h" />
+    <ClInclude Include="include\pause.h" />
+    <ClInclude Include="include\screens.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="loading.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pause.cpp" />
+    <ClCompile Include="screens.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\build\raylib.vcxproj">
