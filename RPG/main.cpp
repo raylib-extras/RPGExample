@@ -5,7 +5,9 @@
 #include "game.h"
 #include "pause.h"
 #include "screens.h"
+#include "resource_ids.h"
 
+// all the states the program can be in 
 enum class ApplicationStates
 {
 	Startup,
@@ -19,44 +21,14 @@ enum class ApplicationStates
 ApplicationStates ApplicationState = ApplicationStates::Startup;
 
 
-
+// the main menu screen
 class MainMenuScreen : public Screen
 {
-protected:
-	bool CenteredButton(int y, const char* text)
-	{
-		int rectHeight = ButtonFontSize + (ButtonBorder * 2);
-		int textWidth = MeasureText(text, ButtonFontSize);
-
-		int textXOrigin = GetScreenWidth() / 2 - textWidth / 2;
-		int textYOrigin = y - ButtonFontSize / 2;
-
-		Rectangle buttonRect = { textXOrigin - ButtonBorder, textYOrigin - ButtonBorder, textWidth + (ButtonBorder * 2), ButtonFontSize + (ButtonBorder * 2) };
-
-		bool hovered = RectIsHovered(buttonRect);
-		bool down = hovered & IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-
-		Color color = hovered ? (down ? ButtonPressColor : ButtonHighlight) : (ButtonColor);
-
-		DrawRectangleRec(buttonRect, ColorAlpha(color,0.25f));
-		DrawText(text, textXOrigin, textYOrigin, ButtonFontSize, color);
-		DrawRectangleLines(buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, color);
-		
-		return hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-	}
-
-protected:
-	Color ButtonColor = WHITE;
-	Color ButtonHighlight = SKYBLUE;
-	Color ButtonPressColor = DARKBLUE;
-
-	int ButtonFontSize = 60;
-	int ButtonBorder = 10;
-
 public:
 	void Draw() override
 	{
 		DrawCenteredText(40, "Raylib RPG Example", 40, BLUE);
+
 		DrawText(VersionString, 2, GetScreenHeight() - 10, 10, GRAY);
 		DrawText(CopyrightString, GetScreenWidth() - 2 - MeasureText(CopyrightString, 10), GetScreenHeight() - 10, 10, GRAY);
 
@@ -111,12 +83,19 @@ void GoToMainMenu()
 void StartGame()
 {
 	ApplicationState = ApplicationStates::Running;
+	SetActiveScreen(nullptr);
 	InitGame();
 }
 
 void PauseGame()
 {
 	ApplicationState = ApplicationStates::Paused;
+}
+
+void ResumeGame()
+{
+	ApplicationState = ApplicationStates::Running;
+	SetActiveScreen(nullptr);
 }
 
 void EndGame()

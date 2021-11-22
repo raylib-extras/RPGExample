@@ -7,6 +7,7 @@ void LoadComplete();
 void GoToMainMenu();
 void StartGame();
 void PauseGame();
+void ResumeGame();
 void EndGame();
 void QuitApplication();
 
