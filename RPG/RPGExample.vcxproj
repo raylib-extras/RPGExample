@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\loading.h" />
+    <ClInclude Include="include\main.h" />
     <ClInclude Include="include\pause.h" />
     <ClInclude Include="include\resource_ids.h" />
     <ClInclude Include="include\screens.h" />

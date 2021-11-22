@@ -1,6 +1,7 @@
 #include "loading.h"
 #include "resource_ids.h"
 #include "screens.h"
+#include "main.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -27,8 +28,6 @@ public:
 		LeftSpinner.width = RightSpinner.width = 20;
 		LeftSpinner.height = RightSpinner.height = 20;
 	}
-
-	void Update() override {}
 
 	void Draw() override
 	{
@@ -94,12 +93,17 @@ void CleanupResources()
 	LoadScreen = nullptr;
 }
 
+void FinalizeLoad()
+{
+	// build up sprite frames
+}
+
 void UpdateLoad()
 {
 	if (TexturesToLoad.empty())
 	{
-		// change state
-
+		FinalizeLoad();
+		LoadComplete();
 		return;
 	}
 
