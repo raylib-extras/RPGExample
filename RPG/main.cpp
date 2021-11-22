@@ -1,11 +1,12 @@
 #include "raylib.h"
 
-#include "main.h"
-#include "loading.h"
 #include "game.h"
+#include "loading.h"
+#include "main.h"
+#include "map.h"
 #include "pause.h"
-#include "screens.h"
 #include "resource_ids.h"
+#include "screens.h"
 
 // all the states the program can be in 
 enum class ApplicationStates
@@ -145,11 +146,10 @@ void main()
 			break;
 		}
 
-
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		// draw world
+		DrawMap();
 
 		DrawScreen();
 

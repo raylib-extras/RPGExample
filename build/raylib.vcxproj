@@ -178,6 +178,7 @@
     <ClInclude Include="..\raylib\src\rgestures.h" />
     <ClInclude Include="..\raylib\src\rlgl.h" />
     <ClInclude Include="..\raylib\src\utils.h" />
+    <ClInclude Include="..\RPG\include\sprites.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\raylib\src\raudio.c" />

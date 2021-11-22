@@ -1,7 +1,8 @@
 #include "loading.h"
+#include "main.h"
 #include "resource_ids.h"
 #include "screens.h"
-#include "main.h"
+#include "sprites.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -71,7 +72,7 @@ void InitResources()
 
 
 	// setup default texture
-	Image checkered = GenImageChecked(64, 64, 16, 16, GRAY, RAYWHITE);
+	Image checkered = GenImageChecked(32, 32, 8, 8, GRAY, RAYWHITE);
 	DefaultTexture = LoadTextureFromImage(checkered);
 	UnloadImage(checkered);
 }
@@ -95,7 +96,7 @@ void CleanupResources()
 
 void FinalizeLoad()
 {
-	// build up sprite frames
+	LoadSpriteFrames(TileSetTexture, 14, 10, 4);
 }
 
 void UpdateLoad()

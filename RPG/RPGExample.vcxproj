@@ -173,6 +173,7 @@
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\loading.h" />
     <ClInclude Include="include\main.h" />
+    <ClInclude Include="include\map.h" />
     <ClInclude Include="include\pause.h" />
     <ClInclude Include="include\resource_ids.h" />
     <ClInclude Include="include\screens.h" />
@@ -181,8 +182,10 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="screens.cpp" />
+    <ClCompile Include="sprites.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\build\raylib.vcxproj">
