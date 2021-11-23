@@ -7,7 +7,4 @@
 
 void DrawMap()
 {
-	Rectangle rect = { 0,0, float(GetScreenWidth()), float(GetScreenHeight()) };
-
-	FillRectWithSprite(BackgroundSprite, rect);
 }

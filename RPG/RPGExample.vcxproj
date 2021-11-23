@@ -170,6 +170,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\tile_map.h" />
+    <ClInclude Include="PUGIXML\pugiconfig.hpp" />
+    <ClInclude Include="PUGIXML\pugixml.hpp" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\loading.h" />
     <ClInclude Include="include\main.h" />
@@ -177,8 +180,10 @@
     <ClInclude Include="include\pause.h" />
     <ClInclude Include="include\resource_ids.h" />
     <ClInclude Include="include\screens.h" />
+    <ClInclude Include="include\sprites.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PUGIXML\pugixml.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="main.cpp" />

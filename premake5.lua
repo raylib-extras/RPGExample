@@ -76,10 +76,10 @@ project "RPGExample"
 	includedirs {"src"}
 	vpaths 
 	{
-		["Header Files"] = { "**.h"},
+		["Header Files"] = { "**.h", "**.hpp"},
 		["Source Files"] = {"**.c", "**.cpp"},
 	}
-	files {"RPG/**.c", "RPG/**.cpp", "RPG/**.h"}
+	files {"RPG/**.c", "RPG/**.cpp", "RPG/**.h", "RPG/PUGIXML/*.hpp", "RPG/PUGIXML/*.cpp"}
 
 	links {"raylib"}
 	

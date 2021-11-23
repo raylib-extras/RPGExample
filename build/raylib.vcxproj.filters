@@ -33,9 +33,6 @@
     <ClInclude Include="..\raylib\src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\RPG\include\sprites.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\raylib\src\raudio.c">

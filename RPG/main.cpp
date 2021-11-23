@@ -28,16 +28,21 @@ class MainMenuScreen : public Screen
 public:
 	void Draw() override
 	{
+		// title
 		DrawCenteredText(40, "Raylib RPG Example", 40, BLUE);
 
+		// version and copyright
 		DrawText(VersionString, 2, GetScreenHeight() - 10, 10, GRAY);
 		DrawText(CopyrightString, GetScreenWidth() - 2 - MeasureText(CopyrightString, 10), GetScreenHeight() - 10, 10, GRAY);
 
+		// play button
 		if (CenteredButton(GetScreenHeight() / 4, "Play"))
 			StartGame();
 		
+		// options button
 		CenteredButton(GetScreenHeight()/2, "Options");
 
+		// quit button
 		if (CenteredButton(GetScreenHeight() - (GetScreenHeight() / 4), "Quit"))
 			QuitApplication();
 	}
@@ -45,6 +50,7 @@ public:
 
 MainMenuScreen MainMenu;
 
+// setup the window and icon
 void SetupWindow()
 {
 	SetExitKey(0);
@@ -72,7 +78,7 @@ void LoadComplete()
 	ApplicationState = ApplicationStates::Menu;
 	SetActiveScreen(&MainMenu);
 
-	// load demo world
+	// load background world
 }
 
 void GoToMainMenu()
