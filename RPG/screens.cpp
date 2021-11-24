@@ -45,3 +45,8 @@ bool Screen::CenteredButton(int y, const char* text)
 
 	return hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
+
+void Screen::DimSceen(float alpha)
+{
+	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, alpha));
+}

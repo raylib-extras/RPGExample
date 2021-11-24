@@ -8,6 +8,9 @@ class PauseMenuScreen : public Screen
 public:
 	void Draw() override
 	{
+		// dim the background
+		DimSceen();
+
 		DrawCenteredText(40, "Raylib RPG Example", 40, BLUE);
 		DrawCenteredText(105, "Paused", 60, RED);
 

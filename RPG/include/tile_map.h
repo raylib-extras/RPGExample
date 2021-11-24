@@ -1,10 +1,13 @@
 #pragma once
 
+#include "sprites.h"
+
+#include "raylib.h"
+
 #include <stdint.h>
 #include <vector>
 #include <map>
 
-#include "raylib.h"
 
 enum class TileMapTypes
 {
@@ -12,18 +15,11 @@ enum class TileMapTypes
 	Isometric,
 };
 
-enum class TileFlipMasks
-{
-	None = 0,
-	X = 0x02,
-	Y = 0x04,
-	Diagonal = 0x08
-};
 
 struct Tile
 {
 	int16_t Sprite = -1;
-	TileFlipMasks Flip = TileFlipMasks::None;
+	uint8_t Flip = SpriteFlipNone;
 };
 
 struct TileLayer
@@ -41,6 +37,8 @@ public:
 	TileMapTypes MapType = TileMapTypes::Orthographic;
 
 	std::map<int, TileLayer> Layers;
-
-	bool Read(const char* filePath);
 };
+
+bool ReadTileMap(const char* filePath, TileMap& map);
+
+void DrawTileMap(Camera2D& camera, const TileMap& map);

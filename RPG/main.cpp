@@ -28,6 +28,9 @@ class MainMenuScreen : public Screen
 public:
 	void Draw() override
 	{
+		// dim the background
+		DimSceen();
+
 		// title
 		DrawCenteredText(40, "Raylib RPG Example", 40, BLUE);
 
@@ -79,6 +82,7 @@ void LoadComplete()
 	SetActiveScreen(&MainMenu);
 
 	// load background world
+	LoadMap("resources/maps/menu_map.tmx");
 }
 
 void GoToMainMenu()

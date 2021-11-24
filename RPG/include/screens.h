@@ -12,6 +12,8 @@ protected:
 	void DrawCenteredText(int y, const char* text, int fontSize, Color color);
 	bool CenteredButton(int y, const char* text);
 
+	void DimSceen(float alpha = 0.75f);
+
 protected:
 	Color ButtonColor = WHITE;
 	Color ButtonHighlight = SKYBLUE;

@@ -53,24 +53,43 @@ void SetSpriteOrigin(int spriteId, int x, int y)
 	sprite.Origin.y = float(y);
 }
 
-void DrawSprite(int spriteId, float x, float y, float rotation, float scale, Color tint)
+void DrawSprite(int spriteId, float x, float y, float rotation, float scale, Color tint, uint8_t flip)
 {
 	if (spriteId < 0 || spriteId >= int(Sprites.size()))
 		return;
 
 	SpriteInfo& sprite = Sprites[spriteId];
+
+	Rectangle source = sprite.SourceRect;
+
+	if (flip && SpriteFlipDiagonal == 0)
+		rotation += 90;
+	if (flip && SpriteFlipX == 0)
+		source.width *= -1;
+	if (flip && SpriteFlipY == 0)
+		source.height *= -1;
 
 	Rectangle destination = { x, y, sprite.SourceRect.width * scale,sprite.SourceRect.height * scale };
 
 	DrawTexturePro(GetTexture(sprite.TextureId), sprite.SourceRect, destination, sprite.Origin, rotation, tint);
 }
 
-void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint)
+void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t flip)
 {
 	if (spriteId < 0 || spriteId >= int(Sprites.size()))
 		return;
 
 	SpriteInfo& sprite = Sprites[spriteId];
 
-	DrawTextureTiled(GetTexture(sprite.TextureId), sprite.SourceRect, rect, Vector2{ 0, 0 }, 0, 1, tint);
+	Rectangle source = sprite.SourceRect;
+	float rotation = 0;
+
+	if (flip && SpriteFlipDiagonal == 0)
+		rotation += 90;
+	if (flip && SpriteFlipX == 0)
+		source.width *= -1;
+	if (flip && SpriteFlipY == 0)
+		source.height *= -1;
+
+	DrawTextureTiled(GetTexture(sprite.TextureId), source, rect, Vector2{ 0, 0 }, rotation, 1, tint);
 }

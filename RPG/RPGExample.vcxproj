@@ -191,6 +191,8 @@
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="screens.cpp" />
     <ClCompile Include="sprites.cpp" />
+    <ClCompile Include="tile_map_drawing.cpp" />
+    <ClCompile Include="tile_map_io.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\build\raylib.vcxproj">
