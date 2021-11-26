@@ -29,7 +29,7 @@ void LoadMap(const char* file)
 
 	if (!CurrentMap.Layers.empty())
 	{
-		int index = int(CurrentMap.Layers.size()) - 1;
+		int index = CurrentMap.Layers.rbegin()->first;
 		MapCamera.target.x = (CurrentMap.Layers[index].Size.x * CurrentMap.Layers[index].TileSize.x) / 2;
 		MapCamera.target.y = (CurrentMap.Layers[index].Size.y * CurrentMap.Layers[index].TileSize.y) / 2;
 	}
