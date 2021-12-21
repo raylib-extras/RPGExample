@@ -125,7 +125,7 @@ void UpdateMainMenu()
 		QuitApplication();
 }
 
-void main()
+int main()
 {
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(1280,800,"RPG Example");
@@ -168,4 +168,6 @@ void main()
 
 	CleanupResources();
 	CloseWindow();
+
+	return 0;
 }

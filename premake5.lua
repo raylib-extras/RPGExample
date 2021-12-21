@@ -45,10 +45,14 @@ project "raylib"
 			kind "StaticLib"
 			
 		filter "action:vs*"
-			defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "_WIN32"}
-			links {"winmm"}
+			defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
+			characterset ("MBCS")
+		
+		filter "system:windows"
+			defines{"_WIN32"}
+			links {"winmm", "kernel32", "opengl32", "kernel32", "gdi32"}
 			
-		filter "action:gmake*"
+		filter "system:linux"
 			links {"pthread", "GL", "m", "dl", "rt", "X11"}
 			
 		filter{}
@@ -73,7 +77,6 @@ project "RPGExample"
 	targetdir "bin/%{cfg.buildcfg}"
 	cppdialect "C++17"
 	
-	includedirs {"src"}
 	vpaths 
 	{
 		["Header Files"] = { "**.h", "**.hpp"},
@@ -89,8 +92,13 @@ project "RPGExample"
 	filter "action:vs*"
 		defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "_WIN32"}
 		dependson {"raylib"}
-		links {"raylib.lib", "winmm", "kernel32"}
+		links {"raylib.lib"}
+        characterset ("MBCS")
+		
+	filter "system:windows"
+		defines{"_WIN32"}
+		links {"winmm", "kernel32", "opengl32", "kernel32", "gdi32"}
 		libdirs {"bin/%{cfg.buildcfg}"}
 		
-	filter "action:gmake*"
+	filter "system:linux"
 		links {"pthread", "GL", "m", "dl", "rt", "X11"}
