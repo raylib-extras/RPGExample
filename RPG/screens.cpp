@@ -26,13 +26,13 @@ void Screen::DrawCenteredText(int y, const char* text, int fontSize, Color color
 
 bool Screen::CenteredButton(int y, const char* text)
 {
-	int rectHeight = ButtonFontSize + (ButtonBorder * 2);
-	int textWidth = MeasureText(text, ButtonFontSize);
+	float rectHeight = ButtonFontSize + (ButtonBorder * 2.0f);
+	float textWidth = float(MeasureText(text, ButtonFontSize));
 
-	int textXOrigin = GetScreenWidth() / 2 - textWidth / 2;
-	int textYOrigin = y - ButtonFontSize / 2;
+	float textXOrigin = GetScreenWidth() / 2.0f - textWidth / 2.0f;
+	float textYOrigin = y - ButtonFontSize / 2.0f;
 
-	Rectangle buttonRect = { textXOrigin - ButtonBorder, textYOrigin - ButtonBorder, textWidth + (ButtonBorder * 2), ButtonFontSize + (ButtonBorder * 2) };
+	Rectangle buttonRect = { textXOrigin - ButtonBorder, textYOrigin - ButtonBorder, textWidth + (ButtonBorder * 2.0f), ButtonFontSize + (ButtonBorder * 2.0f) };
 
 	bool hovered = RectIsHovered(buttonRect);
 	bool down = hovered & IsMouseButtonDown(MOUSE_BUTTON_LEFT);
@@ -40,8 +40,8 @@ bool Screen::CenteredButton(int y, const char* text)
 	Color color = hovered ? (down ? ButtonPressColor : ButtonHighlight) : (ButtonColor);
 
 	DrawRectangleRec(buttonRect, ColorAlpha(color, 0.25f));
-	DrawText(text, textXOrigin, textYOrigin, ButtonFontSize, color);
-	DrawRectangleLines(buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, color);
+	DrawText(text, int(textXOrigin), int(textYOrigin), ButtonFontSize, color);
+	DrawRectangleLinesEx(buttonRect, 2, color);
 
 	return hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }

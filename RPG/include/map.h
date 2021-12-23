@@ -16,6 +16,9 @@ Camera2D& GetMapCamera();
 std::vector<const TileObject*> GetMapObjectsOfType(const char* objType, TileObject::SubTypes requiredType = TileObject::SubTypes::None);
 const TileObject* GetFirstMapObjectOfType(const char* objType, TileObject::SubTypes requiredType = TileObject::SubTypes::None);
 
+// map collisions
+bool PointInMap(const Vector2& point);
+
 // map sprites
 struct SpriteInstance
 {

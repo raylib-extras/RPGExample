@@ -14,9 +14,32 @@ TileMap CurrentMap;
 std::unordered_map<int, SpriteInstance> SpriteInstances;
 int NextSpriteId = 0;
 
+Rectangle MapBounds = { 0,0,0,0 };
+
 Camera2D& GetMapCamera()
 {
 	return MapCamera;
+}
+
+
+bool PointInMap(const Vector2& point)
+{
+	if (!CheckCollisionPointRec(point, MapBounds))
+		return false;
+
+	for (const auto& layerInfo : CurrentMap.ObjectLayers)
+	{
+		for (const auto& object : layerInfo.second->Objects)
+		{
+			if (object->Type == "wall")
+			{
+				if (CheckCollisionPointRec(point, object->Bounds))
+					return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 void LoadMap(const char* file)
@@ -33,11 +56,17 @@ void LoadMap(const char* file)
 	MapCamera.target.x = 0;
 	MapCamera.target.y = 0;
 
+	MapBounds = Rectangle{ 0,0,0,0 };
+
 	if (!CurrentMap.TileLayers.empty())
 	{
 		int index = CurrentMap.TileLayers.rbegin()->first;
-		MapCamera.target.x = (CurrentMap.TileLayers[index]->Size.x * CurrentMap.TileLayers[index]->TileSize.x) / 2;
-		MapCamera.target.y = (CurrentMap.TileLayers[index]->Size.y * CurrentMap.TileLayers[index]->TileSize.y) / 2;
+
+		MapBounds.width = (CurrentMap.TileLayers[index]->Size.x * CurrentMap.TileLayers[index]->TileSize.x);
+		MapBounds.height = (CurrentMap.TileLayers[index]->Size.y * CurrentMap.TileLayers[index]->TileSize.y);
+
+		MapCamera.target.x = MapBounds.width / 2;
+		MapCamera.target.y = MapBounds.height / 2;
 	}
 }
 

@@ -60,7 +60,7 @@ void SetSpritePos(SpriteInstance* sprite, Vector2 pos)
 	if (sprite != nullptr)
 	{
 		sprite->Position = pos;
-		sprite->Position.y += fabs(sinf(float(GetTime() * 5)) * 3);
+		sprite->Position.y += fabsf(sinf(float(GetTime() * 5)) * 3);
 	}
 }
 
@@ -73,8 +73,12 @@ void UpdateGame()
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), GetMapCamera());
-		Player.TargetActive = true;
-		Player.Target = mousePos;
+
+		if (PointInMap(mousePos))
+		{
+			Player.TargetActive = true;
+			Player.Target = mousePos;
+		}
 	}
 
 	// does the player want to move

@@ -64,7 +64,7 @@ void DrawTileMap(Camera2D& camera, const TileMap& map)
 				if (object->SubType == TileObject::SubTypes::Text)
 				{
 					const TileTextObject* textObject = static_cast<TileTextObject*>(object.get());
-					DrawText(textObject->Text.c_str(), textObject->Bounds.x, textObject->Bounds.y, textObject->FontSize, textObject->TextColor);
+					DrawText(textObject->Text.c_str(), int(textObject->Bounds.x), int(textObject->Bounds.y), textObject->FontSize, textObject->TextColor);
 				}
 			}
 		}
