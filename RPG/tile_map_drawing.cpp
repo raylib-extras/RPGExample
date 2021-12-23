@@ -53,7 +53,7 @@ void DrawTileMap(Camera2D& camera, const TileMap& map)
 	CurrentViewRect.height = GetScreenHeight() / camera.zoom;
 
 	// iterate the layers, back to front
-	for (const auto& layer : map.Layers)
+	for (const auto& layer : map.TileLayers)
 	{
 		for (int y = 0; y < int(layer.second.Size.y); ++y)
 		{

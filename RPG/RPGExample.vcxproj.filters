@@ -68,10 +68,10 @@
     <ClCompile Include="sprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tile_map_io.cpp">
+    <ClCompile Include="tile_map_drawing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tile_map_drawing.cpp">
+    <ClCompile Include="tile_map_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

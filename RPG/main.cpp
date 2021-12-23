@@ -87,8 +87,10 @@ void LoadComplete()
 
 void GoToMainMenu()
 {
-	ApplicationState = ApplicationStates::Menu;
-	SetActiveScreen(&MainMenu);
+	if (ApplicationState == ApplicationStates::Running || ApplicationState == ApplicationStates::Paused)
+		QuitGame();
+
+	LoadComplete();
 }
 
 void StartGame()

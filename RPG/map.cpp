@@ -18,8 +18,8 @@ void LoadMap(const char* file)
 {
 	ReadTileMap(file, CurrentMap);
 
-	MapCamera.offset.x = GetScreenWidth() / 2;
-	MapCamera.offset.y = GetScreenHeight() / 2;
+	MapCamera.offset.x = GetScreenWidth() * 0.5f;
+	MapCamera.offset.y = GetScreenHeight() * 0.5f;
 
 	MapCamera.rotation = 0;
 	MapCamera.zoom = 1;
@@ -27,17 +27,23 @@ void LoadMap(const char* file)
 	MapCamera.target.x = 0;
 	MapCamera.target.y = 0;
 
-	if (!CurrentMap.Layers.empty())
+	if (!CurrentMap.TileLayers.empty())
 	{
-		int index = CurrentMap.Layers.rbegin()->first;
-		MapCamera.target.x = (CurrentMap.Layers[index].Size.x * CurrentMap.Layers[index].TileSize.x) / 2;
-		MapCamera.target.y = (CurrentMap.Layers[index].Size.y * CurrentMap.Layers[index].TileSize.y) / 2;
+		int index = CurrentMap.TileLayers.rbegin()->first;
+		MapCamera.target.x = (CurrentMap.TileLayers[index].Size.x * CurrentMap.TileLayers[index].TileSize.x) / 2;
+		MapCamera.target.y = (CurrentMap.TileLayers[index].Size.y * CurrentMap.TileLayers[index].TileSize.y) / 2;
 	}
+}
+
+void ClearMap()
+{
+	CurrentMap.ObjectLayers.clear();
+	CurrentMap.TileLayers.clear();
 }
 
 void DrawMap()
 {
-	if (CurrentMap.Layers.empty())
+	if (CurrentMap.TileLayers.empty())
 		return;
 
 	BeginMode2D(GetMapCamera());

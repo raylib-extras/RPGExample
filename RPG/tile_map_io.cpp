@@ -91,6 +91,105 @@ bool ReadTileSetFile(const std::string& tilesetFileName, int idOffset, TileMap& 
 	return ReadTileSetNode(root, idOffset, map);
 }
 
+std::vector<std::string> split(const char* str, char c = ' ')
+{
+	std::vector<std::string> result;
+
+	do
+	{
+		const char* begin = str;
+
+		while (*str != c && *str)
+			str++;
+
+		result.push_back(std::string(begin, str));
+	} while (0 != *str++);
+
+	return result;
+}
+
+bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
+{
+	ObjectLayer layer;
+	int id = root.attribute("id").as_int();
+
+	layer.Name = root.attribute("name").as_string();
+
+	for (pugi::xml_node child : root.children())
+	{
+		std::string n = child.name();
+		if (n == "object")
+		{
+			int id = child.attribute("id").as_int();
+
+			std::shared_ptr<TileObject> object = nullptr;
+
+			if (!child.child("polygon").empty() || !child.child("polyline").empty())
+			{
+				auto poly = std::make_shared<TilePolygonObject>();
+
+				auto points = split(child.child("polygon").attribute("points").as_string(), ' ');
+				for (auto point : points)
+				{
+					auto coords = split(point.c_str(), ',');
+					if (coords.size() == 2)
+					{
+						Vector2 p = { (float)atof(coords[0].c_str()), (float)atof(coords[1].c_str()) };
+						poly->Points.emplace_back(p);
+					}
+				}
+				object = poly;
+
+			}
+			else if (!child.child("text").empty())
+			{
+				auto text = std::make_shared<TileTextObject>();
+
+				text->Text = child.child("text").value();
+				if (!child.child("text").attribute("pixelsize").empty())
+					text->FontSize = child.child("text").attribute("pixelsize").as_int();
+
+				// TODO, add the rest of the text attributes
+
+				object = text;
+			}
+			else
+			{
+				object = std::make_shared<TileObject>();
+			}
+
+			if (!child.child("polygon").empty())
+				object->SubType = TileObject::SubTypes::Polygon;
+			else if (!child.child("polyline").empty())
+				object->SubType = TileObject::SubTypes::Polyline;
+			else if (!child.child("ellipse").empty())
+				object->SubType = TileObject::SubTypes::Ellipse;
+			else if (!child.child("text").empty())
+				object->SubType = TileObject::SubTypes::Text;
+			else
+				object->SubType = TileObject::SubTypes::None;
+
+			object->Name = child.attribute("name").as_string();
+			object->Type = child.attribute("type").as_string();
+			object->Template = child.attribute("template").as_string();
+
+			object->Bounds.x = child.attribute("x").as_float();
+			object->Bounds.y = child.attribute("y").as_float();
+			object->Bounds.width = child.attribute("width").as_float();
+			object->Bounds.height = child.attribute("height").as_float();
+			object->Rotation = child.attribute("rotation").as_float();
+			object->Visible = child.attribute("visible").empty() || child.attribute("visible").as_int() != 0;
+
+			object->GridTile = child.attribute("gid").as_int();
+
+			layer.Objects.emplace_back(object);
+		}
+	}
+
+	map.ObjectLayers[id] = layer;
+	return true;
+}
+
 bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& filePath = std::string())
 {
 	auto root = doc.child("map");
@@ -131,7 +230,7 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 		}
 		else if (childName == "objectgroup")
 		{
-
+			ReadObjectsLayer(child, map);
 		}
 		else if (childName == "layer")
 		{
@@ -139,9 +238,9 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 
 			std::string name = child.attribute("name").as_string();
 
-			map.Layers[layerID] = TileLayer();
+			map.TileLayers[layerID] = TileLayer();
 
-			TileLayer& layer = map.Layers[layerID];
+			TileLayer& layer = map.TileLayers[layerID];
 			layer.Size.x = float(width);
 			layer.Size.y = float(height);
 			layer.TileSize.x = float(tilewidth);
@@ -215,7 +314,7 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 
 bool ReadTileMap(const char* filename, TileMap& map)
 {
-	map.Layers.clear();
+	map.TileLayers.clear();
 
 	if (filename == nullptr)
 		return false;
