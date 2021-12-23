@@ -278,9 +278,6 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 			if (encoding == "csv")
 			{
 				std::string contents = data.first_child().value();
-				// if it's a windows file it will have \r\n for newlines, not just \n 
-				// so remove all instances of \r so that we can consistently read based on \n
-				contents.erase(std::remove(contents.begin(), contents.end(), '\r'), contents.end());
 
 				std::vector<std::vector<int>> rawData;
 
