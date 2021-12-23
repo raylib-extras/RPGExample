@@ -20,8 +20,10 @@ const TileObject* GetFirstMapObjectOfType(const char* objType, TileObject::SubTy
 struct SpriteInstance
 {
 	int Id = -1;
+	bool Active = true;
 	int SpriteFrame = -1;
 	Vector2 Position = { 0,0 };
+	Color Tint = WHITE;
 };
 
 SpriteInstance* AddSprite(int frame, const Vector2& position);

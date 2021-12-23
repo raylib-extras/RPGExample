@@ -103,6 +103,8 @@ void FinalizeLoad()
 		CenterSprite(i);
 		CenterSprite(i + 14);
 	}
+
+	CenterSprite(ClickTargetSprite);
 }
 
 void UpdateLoad()

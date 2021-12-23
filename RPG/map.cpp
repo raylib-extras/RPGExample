@@ -59,7 +59,8 @@ void DrawMap()
 	for (const auto& entry : SpriteInstances)
 	{
 		const SpriteInstance& sprite = entry.second;
-		DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y);
+		if (sprite.Active)
+			DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y, 0.0f, 1.0f, sprite.Tint);
 	}
 	EndMode2D();
 }
@@ -103,7 +104,7 @@ const TileObject* GetFirstMapObjectOfType(const char* objType, TileObject::SubTy
 SpriteInstance* AddSprite(int frame, const Vector2& position)
 {
 	NextSpriteId++;
-	return &(SpriteInstances.insert_or_assign(NextSpriteId, SpriteInstance{ NextSpriteId,frame,position }).first->second);
+	return &(SpriteInstances.insert_or_assign(NextSpriteId, SpriteInstance{ NextSpriteId, true, frame, position }).first->second);
 }
 
 void RemoveSprite(SpriteInstance* sprite)
