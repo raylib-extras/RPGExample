@@ -22,13 +22,20 @@ struct Tile
 	uint8_t Flip = SpriteFlipNone;
 };
 
-struct TileLayer
+class Layer
 {
+public:
 	int Id;
 	std::string Name;
 	Vector2 Size = { 0,0 };
-	Vector2 TileSize = { 0,0 };
 
+	bool IsObject = false;
+};
+
+class TileLayer : public Layer
+{
+public:
+	Vector2 TileSize = { 0,0 };
 	std::vector<Tile> Tiles;
 };
 
@@ -80,10 +87,10 @@ class TileTextObject : public TileObject
 {
 public:
 	std::string Text;
-	Color TextColor = BLACK;
+	Color TextColor = WHITE;
 	bool Wrap = false;
 
-	int FontSize = 16;
+	int FontSize = 20;
 	std::string FontFamily;
 	bool Bold = false;
 	bool Italic = false;
@@ -94,10 +101,11 @@ public:
 	std::string VerticalAlignment = "top";
 };
 
-struct ObjectLayer
+class ObjectLayer : public Layer
 {
 public:
-	std::string Name;
+	ObjectLayer() { IsObject = true; }
+
 	std::vector<std::shared_ptr<TileObject>> Objects;
 };
 
@@ -106,8 +114,10 @@ class TileMap
 public:
 	TileMapTypes MapType = TileMapTypes::Orthographic;
 
-	std::map<int, TileLayer> TileLayers;
-	std::map<int, ObjectLayer> ObjectLayers;
+	std::map<int, std::shared_ptr<Layer>> Layers;
+
+	std::map<int, TileLayer*> TileLayers;
+	std::map<int, ObjectLayer*> ObjectLayers;
 };
 
 bool ReadTileMap(const char* filePath, TileMap& map);

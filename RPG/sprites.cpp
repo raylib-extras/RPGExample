@@ -53,6 +53,16 @@ void SetSpriteOrigin(int spriteId, int x, int y)
 	sprite.Origin.y = float(y);
 }
 
+void CenterSprite(int spriteId)
+{
+	if (spriteId < 0 || spriteId >= int(Sprites.size()))
+		return;
+
+	SpriteInfo& sprite = Sprites[spriteId];
+	sprite.Origin.x = sprite.SourceRect.width/2;
+	sprite.Origin.y = sprite.SourceRect.height/2;
+}
+
 void DrawSprite(int spriteId, float x, float y, float rotation, float scale, Color tint, uint8_t flip)
 {
 	if (spriteId < 0 || spriteId >= int(Sprites.size()))
@@ -62,16 +72,19 @@ void DrawSprite(int spriteId, float x, float y, float rotation, float scale, Col
 
 	Rectangle source = sprite.SourceRect;
 
-	if (flip && SpriteFlipDiagonal == 0)
-		rotation += 90;
-	if (flip && SpriteFlipX == 0)
+	if (flip & SpriteFlipDiagonal)
+		rotation -= 90;
+	if (flip & SpriteFlipX)
 		source.width *= -1;
-	if (flip && SpriteFlipY == 0)
+	if (flip & SpriteFlipY)
 		source.height *= -1;
 
 	Rectangle destination = { x, y, sprite.SourceRect.width * scale,sprite.SourceRect.height * scale };
 
-	DrawTexturePro(GetTexture(sprite.TextureId), sprite.SourceRect, destination, sprite.Origin, rotation, tint);
+	if (flip & SpriteFlipDiagonal)
+		destination.y += destination.height;
+
+	DrawTexturePro(GetTexture(sprite.TextureId), source, destination, sprite.Origin, rotation, tint);
 }
 
 void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t flip)

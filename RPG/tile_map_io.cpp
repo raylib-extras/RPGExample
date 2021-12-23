@@ -110,9 +110,12 @@ std::vector<std::string> split(const char* str, char c = ' ')
 
 bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 {
-	ObjectLayer layer;
+	std::shared_ptr<ObjectLayer> layerPtr = std::make_shared<ObjectLayer>();
+
+	ObjectLayer& layer = *layerPtr;
 	int id = root.attribute("id").as_int();
 
+	layer.Id = id;
 	layer.Name = root.attribute("name").as_string();
 
 	for (pugi::xml_node child : root.children())
@@ -144,10 +147,11 @@ bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 			else if (!child.child("text").empty())
 			{
 				auto text = std::make_shared<TileTextObject>();
+				auto textEntity = child.child("text");
 
-				text->Text = child.child("text").value();
-				if (!child.child("text").attribute("pixelsize").empty())
-					text->FontSize = child.child("text").attribute("pixelsize").as_int();
+				text->Text = textEntity.child_value();
+				if (!textEntity.attribute("pixelsize").empty())
+					text->FontSize = textEntity.attribute("pixelsize").as_int();
 
 				// TODO, add the rest of the text attributes
 
@@ -166,6 +170,8 @@ bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 				object->SubType = TileObject::SubTypes::Ellipse;
 			else if (!child.child("text").empty())
 				object->SubType = TileObject::SubTypes::Text;
+			else if (!child.child("point").empty())
+				object->SubType = TileObject::SubTypes::Point;
 			else
 				object->SubType = TileObject::SubTypes::None;
 
@@ -186,7 +192,9 @@ bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 		}
 	}
 
-	map.ObjectLayers[id] = layer;
+	int index = int(map.Layers.size());
+	map.Layers[index] = layerPtr;
+	map.ObjectLayers[index] = layerPtr.get();
 	return true;
 }
 
@@ -234,13 +242,18 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 		}
 		else if (childName == "layer")
 		{
+			int index = int(map.Layers.size());
 			int layerID = child.attribute("id").as_int();
 
 			std::string name = child.attribute("name").as_string();
 
-			map.TileLayers[layerID] = TileLayer();
+			std::shared_ptr<TileLayer> layerPtr = std::make_shared<TileLayer>();
+			map.Layers[index] = layerPtr;
+			map.TileLayers[index] = layerPtr.get();
 
-			TileLayer& layer = map.TileLayers[layerID];
+			TileLayer& layer = *layerPtr;
+			layer.Name = name;
+			layer.Id = layerID;
 			layer.Size.x = float(width);
 			layer.Size.y = float(height);
 			layer.TileSize.x = float(tilewidth);
@@ -299,7 +312,7 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 						// subtract 1 from the index, since our sprites start at 0 not 1
 						tile.Sprite = static_cast<int16_t>(val-1);
 
-						layer.Tiles.emplace_back(tile);
+						layer.Tiles.emplace_back(std::move(tile));
 						posX++;
 
 					} while (charPos <= colText.size());
@@ -315,6 +328,8 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 bool ReadTileMap(const char* filename, TileMap& map)
 {
 	map.TileLayers.clear();
+	map.ObjectLayers.clear();
+	map.Layers.clear();
 
 	if (filename == nullptr)
 		return false;

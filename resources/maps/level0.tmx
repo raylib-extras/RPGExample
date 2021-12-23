@@ -41,8 +41,14 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="7" name="Walls">
+  <object id="9" type="wall" x="0.558919" y="0" width="768" height="32"/>
+  <object id="10" type="wall" x="0" y="32" width="9.50163" height="414.718"/>
+  <object id="11" type="wall" x="759.571" y="33.5352" width="7.82487" height="414.159"/>
+  <object id="12" type="wall" x="0" y="447" width="770.75" height="32"/>
+ </objectgroup>
  <objectgroup id="4" name="Objects">
-  <object id="1" name="spawn" type="player_spawn" x="81.0433" y="238.1">
+  <object id="1" name="spawn" type="player_spawn" x="80" y="240">
    <point/>
   </object>
   <object id="5" name="Treasure" type="chest" x="384.537" y="127.434" width="31.2995" height="31.2995">
@@ -55,20 +61,14 @@
     <property name="target_level" type="int" value="1"/>
    </properties>
   </object>
-  <object id="13" x="28.3649" y="158.176" width="107.034" height="19">
+  <object id="13" x="28" y="160" width="108" height="20">
    <text wrap="1" color="#ffffff">Click to Move</text>
   </object>
-  <object id="14" x="347.508" y="60.3649" width="96" height="19">
+  <object id="14" x="348" y="60" width="96" height="20">
    <text wrap="1" color="#ffffff">Click To Loot</text>
   </object>
-  <object id="19" x="674.14" y="184.71" width="83" height="19">
+  <object id="19" x="650" y="185" width="83" height="20">
    <text wrap="1" color="#ffffff">Next Level</text>
   </object>
- </objectgroup>
- <objectgroup id="7" name="Walls">
-  <object id="9" type="wall" x="0.558919" y="0" width="768" height="32"/>
-  <object id="10" type="wall" x="0" y="32" width="9.50163" height="414.718"/>
-  <object id="11" type="wall" x="759.571" y="33.5352" width="7.82487" height="414.159"/>
-  <object id="12" type="wall" x="0" y="447" width="770.75" height="32"/>
  </objectgroup>
 </map>

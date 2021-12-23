@@ -53,20 +53,38 @@ void DrawTileMap(Camera2D& camera, const TileMap& map)
 	CurrentViewRect.height = GetScreenHeight() / camera.zoom;
 
 	// iterate the layers, back to front
-	for (const auto& layer : map.TileLayers)
+	for (const auto& layer : map.Layers)
 	{
-		for (int y = 0; y < int(layer.second.Size.y); ++y)
+		if (layer.second->IsObject)
 		{
-			for (int x = 0; x < int(layer.second.Size.x); ++x)
-			{
-				Rectangle destinationRect = GetTileDisplayRect(x, y, map.MapType == TileMapTypes::Orthographic, layer.second.TileSize);
-				if (!RectInView(destinationRect))
-					continue;
+			const ObjectLayer& objectLayer = *(static_cast<ObjectLayer*>(layer.second.get()));
 
-				const Tile* tile = GetTile(x, y, layer.second);
-				if (tile == nullptr)
-					continue;
-				DrawSprite(tile->Sprite, destinationRect.x, destinationRect.y, 0, 1, WHITE, tile->Flip);
+			for (const auto& object : objectLayer.Objects)
+			{
+				if (object->SubType == TileObject::SubTypes::Text)
+				{
+					const TileTextObject* textObject = static_cast<TileTextObject*>(object.get());
+					DrawText(textObject->Text.c_str(), textObject->Bounds.x, textObject->Bounds.y, textObject->FontSize, textObject->TextColor);
+				}
+			}
+		}
+		else
+		{
+			const TileLayer& tileLayer = *(static_cast<TileLayer*>(layer.second.get()));
+
+			for (int y = 0; y < int(tileLayer.Size.y); ++y)
+			{
+				for (int x = 0; x < int(tileLayer.Size.x); ++x)
+				{
+					Rectangle destinationRect = GetTileDisplayRect(x, y, map.MapType == TileMapTypes::Orthographic, tileLayer.TileSize);
+					if (!RectInView(destinationRect))
+						continue;
+
+					const Tile* tile = GetTile(x, y, tileLayer);
+					if (tile == nullptr)
+						continue;
+					DrawSprite(tile->Sprite, destinationRect.x, destinationRect.y, 0, 1, WHITE, tile->Flip);
+				}
 			}
 		}
 	}
