@@ -18,8 +18,15 @@ struct PlayerData
 
 	float Speed = 100;
 };
-PlayerData Player;
 
+struct Exit
+{
+	Rectangle Bounds;
+	std::string Destination;
+};
+
+PlayerData Player;
+std::vector<Exit> Exits;
 
 void LoadLevel(const char* level)
 {
@@ -40,14 +47,28 @@ void StartLevel()
 	}
 
 	Player.TargetActive = false;
+
+	Exits.clear();
+	for (const TileObject* exit : GetMapObjectsOfType("exit"))
+	{
+		std::string level;
+		for (auto prop : exit->Properties)
+		{
+			if (prop.Name == "target_level")
+			{
+				level = prop.Value;
+			}
+		}
+
+		Exits.emplace_back(Exit{ exit->Bounds,"level" + level + ".tmx" });
+	}
 }
 
 void InitGame()
 {
-	// load background world
+	// load start level
 	LoadLevel("resources/maps/level0.tmx");
 	StartLevel();
-	
 }
 
 void QuitGame()
@@ -64,11 +85,8 @@ void SetSpritePos(SpriteInstance* sprite, Vector2 pos)
 	}
 }
 
-void UpdateGame()
+void GetMoveInput()
 {
-	if (IsKeyPressed(KEY_ESCAPE))
-		PauseGame();
-
 	// check for clicks
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
@@ -80,7 +98,10 @@ void UpdateGame()
 			Player.Target = mousePos;
 		}
 	}
+}
 
+void MovePlayer()
+{
 	// does the player want to move
 	if (Player.TargetActive)
 	{
@@ -97,10 +118,33 @@ void UpdateGame()
 		else
 		{
 			movement = Vector2Normalize(movement);
-			Player.Position = Vector2Add(Player.Position, Vector2Scale(movement, frameSpeed));
+			Vector2 newPos = Vector2Add(Player.Position, Vector2Scale(movement, frameSpeed));
+
+			if (!PointInMap(newPos))
+			{
+				Player.TargetActive = false;
+			}
+			else
+			{
+				Player.Position = newPos;
+			}
 		}
 	}
 
+	// see if the player entered an exit
+	for (auto exit : Exits)
+	{
+		if (CheckCollisionPointRec(Player.Position, exit.Bounds))
+		{
+			std::string map = "resources/maps/" + exit.Destination;
+			LoadLevel(map.c_str());
+			StartLevel();
+		}
+	}
+}
+
+void UpdatePlayerSprite()
+{
 	SetSpritePos(Player.Sprite, Player.Position);
 
 	if (Player.TargetSprite != nullptr)
@@ -108,4 +152,21 @@ void UpdateGame()
 		Player.TargetSprite->Active = Player.TargetActive;
 		Player.TargetSprite->Position = Player.Target;
 	}
+}
+
+void UpdateSprites()
+{
+	UpdatePlayerSprite();
+}
+
+void UpdateGame()
+{
+	if (IsKeyPressed(KEY_ESCAPE))
+		PauseGame();
+
+	GetMoveInput();
+	MovePlayer();
+
+
+	UpdateSprites();
 }

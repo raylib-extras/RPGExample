@@ -188,6 +188,20 @@ bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 
 			object->GridTile = child.attribute("gid").as_int();
 
+			auto properties = child.child("properties");
+			if (!properties.empty())
+			{
+				for (auto prop : properties.children())
+				{
+					TileObject::Property propertyRectord;
+					propertyRectord.Name = prop.attribute("name").as_string();
+					propertyRectord.Type = prop.attribute("type").as_string();
+					propertyRectord.Value = prop.attribute("value").as_string();
+
+					object->Properties.emplace_back(std::move(propertyRectord));
+				}
+			}
+
 			layer.Objects.emplace_back(object);
 		}
 	}

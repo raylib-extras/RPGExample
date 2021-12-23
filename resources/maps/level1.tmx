@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="25">
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="140" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="356"/>
+ </tileset>
+ <layer id="2" name="Base Level" width="24" height="15">
+  <data encoding="csv">
+1,2,60,2,2,60,4,16,16,1,2,60,2,2,2,2,60,2,2,60,2,59,2,4,
+15,61,16,16,16,16,18,16,16,15,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+15,16,16,61,16,16,18,16,16,15,16,16,16,16,16,16,16,61,16,16,16,16,61,18,
+15,61,16,16,16,16,18,16,16,15,61,16,16,16,16,61,16,16,16,16,16,16,16,18,
+15,16,16,16,16,16,18,16,16,15,61,16,16,16,16,16,16,61,16,16,61,16,16,18,
+15,16,16,16,16,16,43,2,2,44,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+15,16,16,16,16,61,16,16,16,16,16,61,61,16,61,16,61,16,16,16,16,16,16,18,
+15,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,61,16,16,18,
+15,16,16,16,16,16,61,16,61,16,16,16,16,16,16,61,16,16,16,16,16,16,16,18,
+15,16,16,16,16,16,45,2,2,46,16,61,16,16,16,16,16,16,61,16,16,16,16,18,
+15,61,16,16,16,16,18,16,16,15,16,16,16,16,61,16,16,16,16,16,16,16,61,18,
+15,16,61,16,16,16,18,16,16,15,16,61,16,16,16,16,61,16,16,16,61,16,16,18,
+15,16,16,61,16,61,18,16,16,15,61,61,16,16,61,16,16,16,16,61,16,16,61,18,
+15,61,16,16,16,16,18,16,16,15,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+29,59,59,60,2,59,32,16,16,29,2,60,59,2,2,2,2,2,59,59,2,59,59,32
+</data>
+ </layer>
+ <layer id="5" name="Level Items" width="24" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,52,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,2147483696,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,47,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="7" name="Walls">
+  <object id="9" type="wall" x="0.558919" y="0" width="768" height="32"/>
+  <object id="10" type="wall" x="0" y="32" width="15.0199" height="414.718"/>
+  <object id="11" type="wall" x="752.213" y="33.5352" width="15.1825" height="414.159"/>
+  <object id="12" type="wall" x="0" y="447" width="770.75" height="32"/>
+  <object id="23" type="wall" x="210" y="0.919705" width="95" height="200"/>
+  <object id="24" type="wall" x="210" y="281.95" width="93" height="187.62"/>
+ </objectgroup>
+ <objectgroup id="4" name="Objects">
+  <object id="1" name="rat spawn" type="mob_spawn" x="659.414" y="106.643">
+   <properties>
+    <property name="mob_type" value="rat"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="5" name="Treasure" type="chest" x="64.4795" y="65.8137" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="tutorial_loot_0"/>
+   </properties>
+  </object>
+  <object id="7" name="Exit" type="exit" x="705.158" y="385.669" width="33.5352" height="29.6227">
+   <properties>
+    <property name="target_level" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="13" x="107.095" y="55.1536" width="99.7227" height="32.8759">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Loot Me</text>
+  </object>
+  <object id="19" x="565.387" y="381.817" width="131.744" height="33.7956">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Next Level</text>
+  </object>
+  <object id="20" name="spawn" type="player_spawn" x="98.4085" y="391.795">
+   <point/>
+  </object>
+  <object id="21" x="349.291" y="60.8173" width="174.219" height="32.8759">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Click To Attack</text>
+  </object>
+ </objectgroup>
+</map>

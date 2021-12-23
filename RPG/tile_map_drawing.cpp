@@ -18,7 +18,6 @@ Rectangle GetTileDisplayRect(int x, int y, bool orthographic, const Vector2& til
 	return Rectangle{ x * halfWidth - y * halfWidth - halfWidth, y * halfHeight + (x * halfHeight), tileSize.x, tileSize.y };
 }
 
-
 const Tile* GetTile(int x, int y, const TileLayer& layer)
 {
 	if (x < 0 || y < 0 || x >= layer.Size.x || y >= layer.Size.y)
