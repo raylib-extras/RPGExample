@@ -1,23 +1,11 @@
 #include "game.h"
 #include "main.h"
 #include "map.h"
+#include "game_hud.h"
 
 #include "raylib.h"
 #include "raymath.h"
 
-// game state data
-
-struct PlayerData
-{
-	Vector2 Position = { 0,0 };
-	SpriteInstance* Sprite = nullptr;
-
-	bool TargetActive = false;
-	Vector2 Target = { 0, 0 };
-	SpriteInstance* TargetSprite = nullptr;
-
-	float Speed = 100;
-};
 
 struct Exit
 {
@@ -28,6 +16,8 @@ struct Exit
 PlayerData Player;
 std::vector<Exit> Exits;
 
+GameHudScreen GameHud(Player);
+
 void LoadLevel(const char* level)
 {
 	LoadMap(level);
@@ -35,6 +25,7 @@ void LoadLevel(const char* level)
 	Player.TargetSprite->Tint = ColorAlpha(Player.TargetSprite->Tint, 0.5f);
 
 	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
+	Player.Sprite->Bobble = true;
 }
 
 void StartLevel()
@@ -66,6 +57,8 @@ void StartLevel()
 
 void InitGame()
 {
+	ActivateGame();
+
 	// load start level
 	LoadLevel("resources/maps/level0.tmx");
 	StartLevel();
@@ -76,13 +69,9 @@ void QuitGame()
 	ClearMap();
 }
 
-void SetSpritePos(SpriteInstance* sprite, Vector2 pos)
+void ActivateGame()
 {
-	if (sprite != nullptr)
-	{
-		sprite->Position = pos;
-		sprite->Position.y += fabsf(sinf(float(GetTime() * 5)) * 3);
-	}
+	SetActiveScreen(&GameHud);
 }
 
 void GetMoveInput()
@@ -145,7 +134,8 @@ void MovePlayer()
 
 void UpdatePlayerSprite()
 {
-	SetSpritePos(Player.Sprite, Player.Position);
+	if (Player.Sprite != nullptr)
+		Player.Sprite->Position = Player.Position;
 
 	if (Player.TargetSprite != nullptr)
 	{
@@ -166,7 +156,6 @@ void UpdateGame()
 
 	GetMoveInput();
 	MovePlayer();
-
 
 	UpdateSprites();
 }

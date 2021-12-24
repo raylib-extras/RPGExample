@@ -96,7 +96,7 @@ void CleanupResources()
 
 void FinalizeLoad()
 {
-	LoadSpriteFrames(TileSetTexture, 14, 10, 4);
+	LoadSpriteFrames(TileSetTexture, 14, 11, 4);
 
 	for (int i = 4; i < 14; i++)
 	{
@@ -105,6 +105,7 @@ void FinalizeLoad()
 	}
 
 	CenterSprite(ClickTargetSprite);
+	CenterSprite(CoinSprite);
 }
 
 void UpdateLoad()

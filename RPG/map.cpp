@@ -89,7 +89,13 @@ void DrawMap()
 	{
 		const SpriteInstance& sprite = entry.second;
 		if (sprite.Active)
-			DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y, 0.0f, 1.0f, sprite.Tint);
+		{
+			float offset = 0;
+			if (sprite.Bobble)
+				offset =  fabsf(sinf(float(GetTime() * 5)) * 3);
+
+			DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y + offset, 0.0f, 1.0f, sprite.Tint);
+		}
 	}
 	EndMode2D();
 }

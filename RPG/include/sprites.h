@@ -19,4 +19,5 @@ void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint = { 255,
 // sprite IDs
 constexpr int BackgroundSprite = 60;
 constexpr int PlayerSprite = 5;
-constexpr int ClickTargetSprite = 78;
+constexpr int ClickTargetSprite = 140;
+constexpr int CoinSprite = 141;

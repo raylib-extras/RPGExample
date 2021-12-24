@@ -109,6 +109,7 @@ void ResumeGame()
 {
 	ApplicationState = ApplicationStates::Running;
 	SetActiveScreen(nullptr);
+	ActivateGame();
 }
 
 void EndGame()
