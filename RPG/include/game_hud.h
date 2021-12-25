@@ -11,4 +11,11 @@ public:
 	void Draw() override;
 
 	PlayerData& Player;
+
+private:
+	void DrawButton(float x, float y, int sprite = -1, Color border = BROWN, Color center = BEIGE);
+
+private:
+	float ButtonSize = 70;
+	float ButtonInset = 6;
 };

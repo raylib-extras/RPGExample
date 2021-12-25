@@ -88,6 +88,8 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/game.o
+GENERATED += $(OBJDIR)/game_hud.o
+GENERATED += $(OBJDIR)/items.o
 GENERATED += $(OBJDIR)/loading.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/map.o
@@ -98,6 +100,8 @@ GENERATED += $(OBJDIR)/sprites.o
 GENERATED += $(OBJDIR)/tile_map_drawing.o
 GENERATED += $(OBJDIR)/tile_map_io.o
 OBJECTS += $(OBJDIR)/game.o
+OBJECTS += $(OBJDIR)/game_hud.o
+OBJECTS += $(OBJDIR)/items.o
 OBJECTS += $(OBJDIR)/loading.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/map.o
@@ -171,6 +175,12 @@ endif
 # #############################################
 
 $(OBJDIR)/game.o: game.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/game_hud.o: game_hud.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/items.o: items.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/loading.o: loading.cpp

@@ -75,6 +75,16 @@ public:
 	};
 
 	std::vector<Property> Properties;
+
+	inline const Property* GetProperty(const char* name) const
+	{
+		for (const auto& prop : Properties)
+		{
+			if (prop.Name == name)
+				return &prop;
+		}
+		return nullptr;
+	}
 };
 
 class TilePolygonObject : public TileObject

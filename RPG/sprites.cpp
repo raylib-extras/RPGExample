@@ -2,6 +2,7 @@
 #include "resource_ids.h"
 
 #include "raylib.h"
+#include "raymath.h"
 
 #include <vector>
 
@@ -84,7 +85,7 @@ void DrawSprite(int spriteId, float x, float y, float rotation, float scale, Col
 	if (flip & SpriteFlipDiagonal)
 		destination.y += destination.height;
 
-	DrawTexturePro(GetTexture(sprite.TextureId), source, destination, sprite.Origin, rotation, tint);
+	DrawTexturePro(GetTexture(sprite.TextureId), source, destination, Vector2Scale(sprite.Origin,scale), rotation, tint);
 }
 
 void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t flip)

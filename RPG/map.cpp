@@ -6,6 +6,7 @@
 
 #include "raylib.h"
 
+#include <math.h>
 #include <unordered_map>
 
 Camera2D MapCamera = { 0 };

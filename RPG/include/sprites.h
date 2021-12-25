@@ -21,3 +21,6 @@ constexpr int BackgroundSprite = 60;
 constexpr int PlayerSprite = 5;
 constexpr int ClickTargetSprite = 140;
 constexpr int CoinSprite = 141;
+constexpr int BagSprite = 108;
+constexpr int SwordSprite = 62;
+constexpr int LeatherArmorSprite = 142;

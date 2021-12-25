@@ -21,7 +21,6 @@ enum class ApplicationStates
 
 ApplicationStates ApplicationState = ApplicationStates::Startup;
 
-
 // the main menu screen
 class MainMenuScreen : public Screen
 {

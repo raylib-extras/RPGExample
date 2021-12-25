@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="25">
- <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="140" columns="14">
-  <image source="../colored_tilemap.png" width="500" height="356"/>
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="154" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="392"/>
  </tileset>
  <layer id="2" name="Base Level" width="24" height="15">
   <data encoding="csv">
@@ -58,7 +58,7 @@
   </object>
   <object id="5" name="Treasure" type="chest" x="64.4795" y="65.8137" width="31.2995" height="31.2995">
    <properties>
-    <property name="contents" value="tutorial_loot_0"/>
+    <property name="contents" value="tutorial_loot_1"/>
    </properties>
   </object>
   <object id="7" name="Exit" type="exit" x="705.158" y="385.669" width="33.5352" height="29.6227">

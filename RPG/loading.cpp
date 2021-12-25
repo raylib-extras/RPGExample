@@ -3,6 +3,7 @@
 #include "resource_ids.h"
 #include "screens.h"
 #include "sprites.h"
+#include "items.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -70,7 +71,6 @@ void InitResources()
 	TexturesToLoad.emplace_back("resources/colored_tilemap.png"); //TileSetTexture
 	TexturesToLoad.emplace_back("resources/icons/Icon.5_46.png"); //LogoTexture
 
-
 	// setup default texture
 	Image checkered = GenImageChecked(32, 32, 8, 8, GRAY, RAYWHITE);
 	DefaultTexture = LoadTextureFromImage(checkered);
@@ -106,6 +106,8 @@ void FinalizeLoad()
 
 	CenterSprite(ClickTargetSprite);
 	CenterSprite(CoinSprite);
+
+	SetupDefaultItems();
 }
 
 void UpdateLoad()

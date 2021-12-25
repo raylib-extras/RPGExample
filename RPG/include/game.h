@@ -4,12 +4,20 @@
 #include "sprites.h"
 #include "map.h"
 
+#include <vector>
+
 void InitGame();
 void ActivateGame();
 void QuitGame();
 void UpdateGame();
 
 // game state data
+
+struct InventoryContents
+{
+	int ItemId;
+	int Quantity;
+};
 
 struct PlayerData
 {
@@ -29,6 +37,9 @@ struct PlayerData
 	int Gold = 0;
 
 	// inventory
+	int EquipedWeapon = -1;
+	int EquipedArmor = -1;
+	std::vector<InventoryContents> BackpackContents;
 
 	// event callbacks
 };

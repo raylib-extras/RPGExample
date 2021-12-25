@@ -171,6 +171,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\game_hud.h" />
+    <ClInclude Include="include\items.h" />
+    <ClInclude Include="include\treasure.h" />
     <ClInclude Include="PUGIXML\pugiconfig.hpp" />
     <ClInclude Include="PUGIXML\pugixml.hpp" />
     <ClInclude Include="include\game.h" />
@@ -185,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game_hud.cpp" />
+    <ClCompile Include="items.cpp" />
     <ClCompile Include="PUGIXML\pugixml.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="loading.cpp" />
@@ -195,6 +198,7 @@
     <ClCompile Include="sprites.cpp" />
     <ClCompile Include="tile_map_drawing.cpp" />
     <ClCompile Include="tile_map_io.cpp" />
+    <ClCompile Include="treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\build\raylib.vcxproj">
