@@ -29,6 +29,6 @@ void SetupDefaultMobs()
 	mob = AddMob("Rat", RatSprite, 1);
 	mob->Defense.Defense = 0;
 	mob->Attack.Name = "Claw";
-	mob->Attack.Damage = 1;
+	mob->Attack.MinDamage = mob->Attack.MaxDamage = 1;
 	mob->Attack.Cooldown = 1;
 }

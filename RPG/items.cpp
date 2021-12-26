@@ -6,12 +6,12 @@
 std::vector<Item> ItemDB;
 
 // ItemDatabase
-Item* AddItem(const char* name, int sprite)
+Item* AddItem(const char* name, int sprite, ItemTypes type)
 {
 	int id = int(ItemDB.size());
 
 	CenterSprite(sprite);
-	ItemDB.emplace_back(Item{ id, std::string(name), sprite });
+	ItemDB.emplace_back(Item{ id, std::string(name), sprite, type });
 	return GetItem(id);
 }
 
@@ -25,7 +25,13 @@ Item* GetItem(int id)
 
 void SetupDefaultItems()
 {
-	AddItem("Sword", SwordSprite)->IsWeapon = true;
-	AddItem("Pleather Armor", LeatherArmorSprite)->IsArmor = true;
-	AddItem("Bag-o-Gold", BagSprite);
+	auto* item = AddItem("Sword", SwordSprite, ItemTypes::Weapon);
+	item->Attack.MinDamage = 0;
+	item->Attack.MaxDamage = 2;
+	item->Attack.Cooldown = 1;
+
+	item = AddItem("Pleather Armor", LeatherArmorSprite, ItemTypes::Armor);
+	item->Defense.Defense = 2;
+
+	item = AddItem("Bag-o-Gold", BagSprite, ItemTypes::None);
 }

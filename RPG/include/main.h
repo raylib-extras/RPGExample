@@ -8,6 +8,6 @@ void GoToMainMenu();
 void StartGame();
 void PauseGame();
 void ResumeGame();
-void EndGame();
+void EndGame(bool win, int gold);
 void QuitApplication();
 

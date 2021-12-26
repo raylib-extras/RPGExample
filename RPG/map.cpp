@@ -280,5 +280,6 @@ void ClearSprites()
 
 void AddEffect(const Vector2& position, EffectType effect, int spriteId, float lifetime)
 {
+	CenterSprite(spriteId);
 	Effects.emplace_back(EffectInstance{ position,effect,spriteId,lifetime,lifetime });
 }

@@ -87,6 +87,10 @@ void InitResources()
 	SoundsToLoad.emplace_back("resources/sounds/doorOpen_1.ogg");
 	SoundsToLoad.emplace_back("resources/sounds/metalPot1.ogg");
 	SoundsToLoad.emplace_back("resources/sounds/creature1.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/woosh4.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/knifeSlice2.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/chop.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/creature5.ogg");
 
 	TotalToLoad = TexturesToLoad.size() + SoundsToLoad.size();
 }
@@ -123,6 +127,7 @@ void FinalizeLoad()
 
 	CenterSprite(AwakeSprite);
 	CenterSprite(LootSprite);
+	CenterSprite(MobAttackSprite);
 
 	SetSpriteBorders(InventoryBackgroundSprite, 10);
 	SetSpriteBorders(ItemBackgroundSprite, 10);

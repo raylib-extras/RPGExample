@@ -21,7 +21,7 @@ public:
 			ResumeGame();
 
 		if (CenteredButton(GetScreenHeight() / 2, "Quit to Menu"))
-			EndGame();
+			GoToMainMenu();
 
 		if (CenteredButton(GetScreenHeight() - (GetScreenHeight() / 4), "Quit to Desktop"))
 			QuitApplication();

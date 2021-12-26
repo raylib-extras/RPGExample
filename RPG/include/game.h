@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "sprites.h"
 #include "map.h"
+#include "combat.h"
 
 #include <vector>
 
@@ -12,15 +13,15 @@ void QuitGame();
 void UpdateGame();
 
 // game state data
-
 struct InventoryContents
 {
 	int ItemId;
 	int Quantity;
 };
 
-struct PlayerData
+class PlayerData
 {
+public:
 	Vector2 Position = { 0,0 };
 	SpriteInstance* Sprite = nullptr;
 
@@ -36,6 +37,13 @@ struct PlayerData
 
 	int Gold = 0;
 
+	const AttackInfo& GetAttack() const;
+	const DefenseInfo& GetDefense() const;
+
+	float LastAttack = -100;
+	float AttackCooldown = 0;
+	float ItemCooldown = 0;
+
 	// inventory
 	int EquipedWeapon = -1;
 	int EquipedArmor = -1;
@@ -44,4 +52,8 @@ struct PlayerData
 	float PickupDistance = 20;
 
 	// event callbacks
+
+private:
+	AttackInfo DefaultAttack = { "Slap", true, 1,1 };
+	DefenseInfo DefaultDefense = { 0 };
 };

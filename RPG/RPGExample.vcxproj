@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
+    <ClCompile Include="combat.cpp" />
     <ClCompile Include="game_hud.cpp" />
     <ClCompile Include="items.cpp" />
     <ClCompile Include="monsters.cpp" />

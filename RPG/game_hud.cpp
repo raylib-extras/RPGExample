@@ -35,20 +35,21 @@ void GameHudScreen::DrawInventory()
 		HoveredItem = weaponItem;
 	}
 	DrawText("Weapon", int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 20), 20, DARKBROWN);
-
+	DrawText(TextFormat("%d - %d", Player.GetAttack().MinDamage, Player.GetAttack().MaxDamage), int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 40), 20, WHITE);
+	
 	Item* armorItem = GetItem(Player.EquipedArmor);
 	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, DARKBROWN, BROWN))
 	{
 		HoveredItem = armorItem;
 	}
 	DrawText("Armor", int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62)), int(inventoryWindowRect.y + ButtonSize), 20, DARKBROWN);
+	DrawText(TextFormat("%d", Player.GetDefense().Defense), int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 22)), int(inventoryWindowRect.y + ButtonSize - 20), 20, WHITE);
 
 	// backpack contents
 	constexpr int inventoryItemSize = 64;
 	constexpr int inventoryItemPadding = 4;
 
 	DrawText("Backpack", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 20, DARKBROWN);
-
 
 	int itemIndex = 0;
 	for (int y = 0; y < 4; y++)
@@ -112,11 +113,17 @@ void GameHudScreen::Draw()
 	// equipped weapon
 	DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, DARKGRAY, GRAY);
 
+	if (Player.AttackCooldown > 0)
+	{
+		float height = ButtonSize * Player.AttackCooldown;
+		DrawRectangleRec(Rectangle{ buttonX,buttonY + (ButtonSize - height),ButtonSize,height }, ColorAlpha(RED, 0.5f));
+	}
+
 	std::vector<int> activatableItems;
 	for (int i = 0; i < Player.BackpackContents.size(); i++)
 	{
 		Item* item = GetItem(Player.BackpackContents[i].ItemId);
-		if (item != nullptr && item->IsActivatable)
+		if (item != nullptr && item->IsActivatable())
 			activatableItems.push_back(i);
 	}
 

@@ -28,6 +28,8 @@ constexpr int InventoryBackgroundSprite = 147;
 constexpr int ItemBackgroundSprite = 148;
 constexpr int AwakeSprite = 149;
 constexpr int LootSprite = 150;
+constexpr int MobAttackSprite = 114;
+constexpr int DamageSprite = 151;
 
 // equipment sprites
 constexpr int BagSprite = 108;
@@ -37,4 +39,5 @@ constexpr int LeatherArmorSprite = 142;
 // MOB sprites
 constexpr int PlayerSprite = 5;
 constexpr int RatSprite = 20;
+
 

@@ -13,8 +13,12 @@ struct AttackInfo
 
 	bool Melee = true;
 
-	int Damage = 0;
+	int MinDamage = 0;
+	int MaxDamage = 0;
+
 	float Cooldown = 1;
 
 	float Range = 10;
 };
+
+int ResolveAttack(const AttackInfo& attack, const DefenseInfo& defense);

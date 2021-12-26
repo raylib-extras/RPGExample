@@ -17,6 +17,7 @@ enum class ApplicationStates
 	Menu,
 	Running,
 	Paused,
+	GameOver,
 	Quiting
 };
 
@@ -52,6 +53,44 @@ public:
 };
 
 MainMenuScreen MainMenu;
+
+// the main menu screen
+class GameOverScreen : public Screen
+{
+public:
+	void Draw() override
+	{
+		// dim the background
+		DimSceen();
+
+		// title
+		DrawCenteredText(40, "Raylib RPG Example", 40, BLUE);
+
+		if (IsWin)
+			DrawCenteredText(120, "Congratulations You WON!", 60, WHITE);
+		else
+			DrawCenteredText(120, "You died, better luck next time.", 60, RED);
+
+		DrawCenteredText(200, TextFormat("Score = %d", Gold), 60, YELLOW);
+
+		// version and copyright
+		DrawText(VersionString, 2, GetScreenHeight() - 10, 10, GRAY);
+		DrawText(CopyrightString, GetScreenWidth() - 2 - MeasureText(CopyrightString, 10), GetScreenHeight() - 10, 10, GRAY);
+
+		// options button
+		if (CenteredButton(GetScreenHeight() / 2, "Main Menu"))
+			GoToMainMenu();
+
+		// quit button
+		if (CenteredButton(GetScreenHeight() - (GetScreenHeight() / 4), "Quit"))
+			QuitApplication();
+	}
+
+	bool IsWin = false;
+	int Gold = 0;
+};
+
+GameOverScreen GameOver;
 
 // setup the window and icon
 void SetupWindow()
@@ -114,9 +153,12 @@ void ResumeGame()
 	ActivateGame();
 }
 
-void EndGame()
+void EndGame(bool win, int gold)
 {
-	GoToMainMenu();
+	ApplicationState = ApplicationStates::GameOver;
+	SetActiveScreen(&GameOver);
+	GameOver.IsWin = win;
+	GameOver.Gold = gold;
 }
 
 void QuitApplication()
