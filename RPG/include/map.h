@@ -18,6 +18,7 @@ const TileObject* GetFirstMapObjectOfType(const char* objType, TileObject::SubTy
 
 // map collisions
 bool PointInMap(const Vector2& point);
+bool Ray2DHitsMap(const Vector2& startPoint, const Vector2& endPoint);
 
 // map sprites
 struct SpriteInstance
@@ -32,11 +33,23 @@ struct SpriteInstance
 };
 
 SpriteInstance* AddSprite(int frame, const Vector2& position);
+void UpdateSprite(int spriteId, const Vector2& position);
 void RemoveSprite(SpriteInstance* sprite);
 void RemoveSprite(int id);
 void ClearSprites();
 
+// Effects
+enum class EffectType
+{
+	Fade,
+	RiseFade,
+	RotateFade,
+	ScaleFade,
+};
+void AddEffect(const Vector2& position, EffectType effect, int spriteId, float lifetime = 1);
+
 // common object types
 constexpr char PlayerSpawnType[] = "player_spawn";
+constexpr char MobSpawnType[] = "mob_spawn";
 constexpr char ChestType[] = "chest";
 constexpr char ExitType[] = "exit";

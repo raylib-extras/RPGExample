@@ -9,6 +9,19 @@
 #include <math.h>
 #include <unordered_map>
 
+
+class EffectInstance
+{
+public:
+	Vector2 Position = { 0,0 };
+	EffectType Effect = EffectType::Fade;
+	int SpriteId = -1;
+	float Lifetime = 1;
+	float MaxLifetime = 1;
+};
+
+std::list<EffectInstance> Effects;
+
 Camera2D MapCamera = { 0 };
 TileMap CurrentMap;
 
@@ -40,6 +53,52 @@ bool PointInMap(const Vector2& point)
 	}
 
 	return true;
+}
+
+// check to see if a line collides with a rectangle
+bool CheckCollisionLineRec(const Vector2& startPoint, const Vector2& endPoint, const Rectangle& rectangle)
+{
+	// ether point is in the rectangle
+	if (CheckCollisionPointRec(startPoint, rectangle) || CheckCollisionPointRec(endPoint, rectangle))
+		return true;
+
+	// top
+	if (CheckCollisionLines(startPoint, endPoint, Vector2{ rectangle.x,rectangle.y }, Vector2{ rectangle.x + rectangle.width, rectangle.y }, nullptr))
+		return true;
+
+	// right
+	if (CheckCollisionLines(startPoint, endPoint, Vector2{ rectangle.x + rectangle.width,rectangle.y }, Vector2{ rectangle.x + rectangle.width, rectangle.y + rectangle.height }, nullptr))
+		return true;
+
+	// bottom
+	if (CheckCollisionLines(startPoint, endPoint, Vector2{ rectangle.x, rectangle.y + rectangle.height }, Vector2{ rectangle.x + rectangle.width, rectangle.y + rectangle.height }, nullptr))
+		return true;
+
+	// left
+	if (CheckCollisionLines(startPoint, endPoint, Vector2{ rectangle.x,rectangle.y }, Vector2{ rectangle.x, rectangle.y + rectangle.height }, nullptr))
+		return true;
+
+	return false;
+}
+
+bool Ray2DHitsMap(const Vector2& startPoint, const Vector2& endPoint)
+{
+	if (!PointInMap(startPoint) || !PointInMap(endPoint))
+		return true;
+
+	for (const auto& layerInfo : CurrentMap.ObjectLayers)
+	{
+		for (const auto& object : layerInfo.second->Objects)
+		{
+			if (object->Type == "wall")
+			{
+				if (CheckCollisionLineRec(startPoint, endPoint, object->Bounds))
+					return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 void LoadMap(const char* file)
@@ -75,6 +134,7 @@ void ClearMap()
 	CurrentMap.ObjectLayers.clear();
 	CurrentMap.TileLayers.clear();
 	ClearSprites();
+	Effects.clear();
 }
 
 void DrawMap()
@@ -100,6 +160,51 @@ void DrawMap()
 			DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y + offset, 0.0f, 1.0f, sprite.Tint);
 		}
 	}
+
+	for (std::list<EffectInstance>::iterator effect = Effects.begin(); effect != Effects.end();)
+	{
+		effect->Lifetime -= GetFrameTime();
+		
+		if (effect->Lifetime < 0)
+		{
+			effect = Effects.erase(effect);
+			continue;
+		}
+
+		float param = effect->Lifetime / effect->MaxLifetime;
+		float rotation = 0;
+		float alpha = 1;
+		float scale = 1;
+
+		Vector2 pos = effect->Position;
+
+		switch (effect->Effect)
+		{
+		case EffectType::Fade:
+				alpha = param;
+				break;
+
+		case EffectType::RiseFade:
+			alpha = param;
+			pos.y -= (1.0f - param) * 30;
+			break;
+
+		case EffectType::RotateFade:
+			rotation = (1.0f-param) * 360;
+			alpha = param;
+			break;
+
+		case EffectType::ScaleFade:
+			alpha = param;
+			scale = 1 + (1.0f - param);
+			break;
+		}
+
+		DrawSprite(effect->SpriteId, pos.x, pos.y, rotation, scale, ColorAlpha(WHITE, alpha));
+
+		effect++;
+	}
+
 	EndMode2D();
 }
 
@@ -145,15 +250,24 @@ SpriteInstance* AddSprite(int frame, const Vector2& position)
 	return &(SpriteInstances.insert_or_assign(NextSpriteId, SpriteInstance{ NextSpriteId, true, frame, position }).first->second);
 }
 
+void UpdateSprite(int spriteId, const Vector2& position)
+{
+	auto itr = SpriteInstances.find(spriteId);
+	if (itr == SpriteInstances.end())
+		return;
+
+	itr->second.Position = position;
+}
+
 void RemoveSprite(SpriteInstance* sprite)
 {
 	if (sprite != nullptr)
 		RemoveSprite(sprite->Id);
 }
 
-void RemoveSprite(int id)
+void RemoveSprite(int spriteId)
 {
-	auto itr = SpriteInstances.find(id);
+	auto itr = SpriteInstances.find(spriteId);
 	if (itr != SpriteInstances.end())
 		SpriteInstances.erase(itr);
 }
@@ -162,4 +276,9 @@ void ClearSprites()
 {
 	SpriteInstances.clear();
 	NextSpriteId = 0;
+}
+
+void AddEffect(const Vector2& position, EffectType effect, int spriteId, float lifetime)
+{
+	Effects.emplace_back(EffectInstance{ position,effect,spriteId,lifetime,lifetime });
 }

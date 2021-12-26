@@ -170,8 +170,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\combat.h" />
     <ClInclude Include="include\game_hud.h" />
     <ClInclude Include="include\items.h" />
+    <ClInclude Include="include\monsters.h" />
     <ClInclude Include="include\treasure.h" />
     <ClInclude Include="PUGIXML\pugiconfig.hpp" />
     <ClInclude Include="PUGIXML\pugixml.hpp" />
@@ -188,6 +190,7 @@
   <ItemGroup>
     <ClCompile Include="game_hud.cpp" />
     <ClCompile Include="items.cpp" />
+    <ClCompile Include="monsters.cpp" />
     <ClCompile Include="PUGIXML\pugixml.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="loading.cpp" />

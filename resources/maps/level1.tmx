@@ -52,7 +52,7 @@
  <objectgroup id="4" name="Objects">
   <object id="1" name="rat spawn" type="mob_spawn" x="659.414" y="106.643">
    <properties>
-    <property name="mob_type" value="rat"/>
+    <property name="mob_type" value="0"/>
    </properties>
    <point/>
   </object>
@@ -66,16 +66,16 @@
     <property name="target_level" type="int" value="2"/>
    </properties>
   </object>
-  <object id="13" x="107.095" y="55.1536" width="99.7227" height="32.8759">
+  <object id="13" x="103.416" y="49.6354" width="99.7227" height="32.8759">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Loot Me</text>
   </object>
-  <object id="19" x="565.387" y="381.817" width="131.744" height="33.7956">
+  <object id="19" x="555.27" y="381.817" width="131.744" height="33.7956">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Next Level</text>
   </object>
   <object id="20" name="spawn" type="player_spawn" x="98.4085" y="391.795">
    <point/>
   </object>
-  <object id="21" x="349.291" y="60.8173" width="174.219" height="32.8759">
+  <object id="21" x="450.459" y="49.7808" width="174.219" height="32.8759">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Click To Attack</text>
   </object>
  </objectgroup>

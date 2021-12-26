@@ -137,10 +137,10 @@ void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t
 	{
 		NPatchInfo info;
 		info.source = source;
-		info.left = sprite.Borders.x;
-		info.right = sprite.Borders.width;
-		info.top = sprite.Borders.y;
-		info.bottom = sprite.Borders.height;
+		info.left = int(sprite.Borders.x);
+		info.right = int(sprite.Borders.width);
+		info.top = int(sprite.Borders.y);
+		info.bottom = int(sprite.Borders.height);
 		info.layout = NPATCH_NINE_PATCH;
 
 		DrawTextureNPatch(GetTexture(sprite.TextureId), info, rect, Vector2{ 0,0 }, rotation, tint);

@@ -72,6 +72,27 @@ public:
 		std::string Name;
 		std::string Type;
 		std::string Value;
+
+		inline int GetInt() const
+		{
+			if (Type != "int" || Value.empty())
+				return 0;
+
+			return atoi(Value.c_str());
+		}
+
+		inline float GetFloat() const
+		{
+			if (Type != "float" || Value.empty())
+				return 0;
+
+			return float(atof(Value.c_str()));
+		}
+
+		inline const char* GetString() const
+		{
+			return Value.c_str();
+		}
 	};
 
 	std::vector<Property> Properties;

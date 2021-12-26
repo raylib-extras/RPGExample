@@ -19,13 +19,22 @@ void DrawSprite(int spriteId, float x, float y, float rotation = 0, float scale 
 void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint = { 255, 255, 255, 255 }, uint8_t flip = SpriteFlipNone);
 
 // sprite IDs
+
+// UI sprites
 constexpr int BackgroundSprite = 60;
-constexpr int PlayerSprite = 5;
 constexpr int ClickTargetSprite = 140;
 constexpr int CoinSprite = 141;
 constexpr int InventoryBackgroundSprite = 147;
 constexpr int ItemBackgroundSprite = 148;
+constexpr int AwakeSprite = 149;
+constexpr int LootSprite = 150;
 
+// equipment sprites
 constexpr int BagSprite = 108;
 constexpr int SwordSprite = 62;
 constexpr int LeatherArmorSprite = 142;
+
+// MOB sprites
+constexpr int PlayerSprite = 5;
+constexpr int RatSprite = 20;
+

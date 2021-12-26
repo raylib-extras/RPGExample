@@ -4,6 +4,7 @@
 #include "game_hud.h"
 #include "items.h"
 #include "treasure.h"
+#include "monsters.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -21,12 +22,24 @@ struct Chest
 	bool Opened = false;
 };
 
+struct MobInstance
+{
+	int MobId = -1;
+	Vector2 Position;
+	int Health;
+	int SpriteId;
+	
+	bool Triggered = false;
+	float LastAttack = -100;
+};
+
 PlayerData Player;
 std::vector<Exit> Exits;
 std::vector<Chest> Chests;
 Chest* TargetChest = nullptr;
 
 std::vector<TreasureInstance> ItemDrops;
+std::vector<MobInstance> Mobs;
 
 GameHudScreen GameHud(Player);
 
@@ -53,7 +66,7 @@ void StartLevel()
 	Player.TargetActive = false;
 
 	Exits.clear();
-	for (const TileObject* exit : GetMapObjectsOfType("exit"))
+	for (const TileObject* exit : GetMapObjectsOfType(ExitType))
 	{
 		const TileObject::Property* level = exit->GetProperty("target_level");
 		if (level != nullptr)
@@ -62,11 +75,29 @@ void StartLevel()
 
 	Chests.clear();
 	TargetChest = nullptr;
-	for (const TileObject* chest : GetMapObjectsOfType("chest"))
+	for (const TileObject* chest : GetMapObjectsOfType(ChestType))
 	{
 		const TileObject::Property* contents = chest->GetProperty("contents");
 		if (contents != nullptr)
 			Chests.emplace_back(Chest{ chest->Bounds, contents->Value });
+	}
+
+	ItemDrops.clear();
+
+	for (const TileObject* mobSpawn : GetMapObjectsOfType(MobSpawnType))
+	{
+		const TileObject::Property* mobType = mobSpawn->GetProperty("mob_type");
+
+		MOB* monster = GetMob(mobType->GetInt());
+		if (monster == nullptr)
+			continue;
+
+		Vector2 pos = Vector2{ mobSpawn->Bounds.x,mobSpawn->Bounds.y };
+		auto* sprite = AddSprite(monster->Sprite, pos);
+		sprite->Bobble = true;
+		sprite->Shadow = true;
+
+		Mobs.push_back(MobInstance{ monster->Id ,pos ,monster->Health, sprite->Id });
 	}
 }
 
@@ -139,6 +170,8 @@ void OpenChest(Chest* chest, Vector2& dropPoint)
 		item.SpriteId = sprite->Id;
 
 		ItemDrops.emplace_back(std::move(item));
+
+		AddEffect(item.Position, EffectType::ScaleFade, LootSprite, 1);
 	}
 }
 
@@ -271,6 +304,53 @@ void MovePlayer()
 	}
 }
 
+void UpdateMobs()
+{
+	for (auto& mob : Mobs)
+	{
+		Vector2 vecToPlayer = Vector2Subtract(Player.Position, mob.Position);
+		float distance = Vector2Length(vecToPlayer);
+
+		MOB* monsterInfo = GetMob(mob.MobId);
+		if (monsterInfo == nullptr)
+			continue;
+
+		if (!mob.Triggered)
+		{
+			// see if the mob should wake up
+			if (distance > monsterInfo->DetectionRadius)		// too far away
+				continue;
+
+			if (Ray2DHitsMap(Player.Position, mob.Position))
+				continue; // something is blocking line of sight
+	
+			// we see our prey, wake up and get em.
+			mob.Triggered = true;
+
+			AddEffect(mob.Position, EffectType::RiseFade, AwakeSprite, 1);
+		}
+
+		if (mob.Triggered)
+		{
+			if (distance < 15)
+			{
+				// try to attack the player
+			}
+			else
+			{
+				// try to move
+				Vector2 movement = Vector2Normalize(vecToPlayer);
+
+				float frameSpeed = monsterInfo->Speed * GetFrameTime();
+				Vector2 newPos = Vector2Add(mob.Position, Vector2Scale(movement, frameSpeed));
+
+				if (PointInMap(newPos))
+					mob.Position = newPos;
+			}
+		}
+	}
+}
+
 void UpdatePlayerSprite()
 {
 	if (Player.Sprite != nullptr)
@@ -283,9 +363,18 @@ void UpdatePlayerSprite()
 	}
 }
 
+void UpdateMobSprites()
+{
+	for (auto& mob : Mobs)
+	{
+		UpdateSprite(mob.SpriteId, mob.Position);
+	}
+}
+
 void UpdateSprites()
 {
 	UpdatePlayerSprite();
+	UpdateMobSprites();
 }
 
 void UpdateGame()
@@ -295,6 +384,8 @@ void UpdateGame()
 
 	GetMoveInput();
 	MovePlayer();
+
+	UpdateMobs();
 
 	UpdateSprites();
 }

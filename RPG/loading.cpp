@@ -4,6 +4,7 @@
 #include "screens.h"
 #include "sprites.h"
 #include "items.h"
+#include "monsters.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -107,10 +108,14 @@ void FinalizeLoad()
 	CenterSprite(ClickTargetSprite);
 	CenterSprite(CoinSprite);
 
+	CenterSprite(AwakeSprite);
+	CenterSprite(LootSprite);
+
 	SetSpriteBorders(InventoryBackgroundSprite, 10);
 	SetSpriteBorders(ItemBackgroundSprite, 10);
 
 	SetupDefaultItems();
+	SetupDefaultMobs();
 }
 
 void UpdateLoad()

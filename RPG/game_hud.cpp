@@ -16,7 +16,7 @@ void GameHudScreen::ShowItemToolTip(const Item* item, const Rectangle& rect)
 		return;
 
 	DrawRectangleRec(Rectangle{ rect.x,rect.y,100,100 }, ColorAlpha(BLACK, 0.75f));
-	DrawText(item->Name.c_str(), rect.x, rect.y, 10, WHITE);
+	DrawText(item->Name.c_str(), int(rect.x), int(rect.y), 10, WHITE);
 }
 
 void GameHudScreen::DrawInventory()
@@ -34,20 +34,20 @@ void GameHudScreen::DrawInventory()
 	{
 		HoveredItem = weaponItem;
 	}
-	DrawText("Weapon", inventoryWindowRect.x + 20 + ButtonSize + 2, inventoryWindowRect.y + 20, 20, DARKBROWN);
+	DrawText("Weapon", int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 20), 20, DARKBROWN);
 
 	Item* armorItem = GetItem(Player.EquipedArmor);
 	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, DARKBROWN, BROWN))
 	{
 		HoveredItem = armorItem;
 	}
-	DrawText("Armor", inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62), inventoryWindowRect.y + ButtonSize, 20, DARKBROWN);
+	DrawText("Armor", int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62)), int(inventoryWindowRect.y + ButtonSize), 20, DARKBROWN);
 
 	// backpack contents
 	constexpr int inventoryItemSize = 64;
 	constexpr int inventoryItemPadding = 4;
 
-	DrawText("Backpack", inventoryWindowRect.x + 10, inventoryWindowRect.y + 100, 20, DARKBROWN);
+	DrawText("Backpack", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 20, DARKBROWN);
 
 
 	int itemIndex = 0;
@@ -55,8 +55,8 @@ void GameHudScreen::DrawInventory()
 	{
 		for (int x = 0; x < 5; x++)
 		{
-			int itemY = inventoryWindowRect.y + (inventoryWindowRect.height - inventoryItemPadding) - ((inventoryItemPadding + inventoryItemSize) * (4 - y));
-			int itemX = inventoryWindowRect.x + (inventoryItemPadding * 2) + ((inventoryItemSize + inventoryItemPadding) * x);
+			float itemY = inventoryWindowRect.y + (inventoryWindowRect.height - inventoryItemPadding) - ((inventoryItemPadding + inventoryItemSize) * (4 - y));
+			float itemX = inventoryWindowRect.x + (inventoryItemPadding * 2) + ((inventoryItemSize + inventoryItemPadding) * x);
 
 			Rectangle itemRect = { itemX, itemY, inventoryItemSize, inventoryItemSize };
 			Rectangle shadowRect = itemRect;
@@ -158,7 +158,7 @@ void GameHudScreen::Draw()
 		Rectangle toolTipRect = { GetMousePosition().x - (size.x/2 + 2), GetMousePosition().y - (size.y + 2), size.x + 4, size.y + 4 };
 
 		DrawRectangleRec(toolTipRect, ColorAlpha(BLACK, 0.5f));
-		DrawText(HoveredItem->Name.c_str(), toolTipRect.x + 2, toolTipRect.y + 2, 20, WHITE);
+		DrawText(HoveredItem->Name.c_str(), int(toolTipRect.x) + 2, int(toolTipRect.y) + 2, 20, WHITE);
 	}
 }
 
