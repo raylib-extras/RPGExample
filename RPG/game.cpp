@@ -5,6 +5,7 @@
 #include "items.h"
 #include "treasure.h"
 #include "monsters.h"
+#include "audio.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -151,12 +152,14 @@ void OpenChest(Chest* chest, Vector2& dropPoint)
 
 	chest->Opened = true;
 
+	PlaySound(ChestOpenSoundId);
+
 	std::vector<TreasureInstance> loot = GetLoot(chest->Contents);
 	for (TreasureInstance& item : loot)
 	{
 		float angle = float(GetRandomValue(-180, 180));
 		Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
-		vec = Vector2Scale(vec, 20);
+		vec = Vector2Scale(vec, 40);
 
 		item.Position = Vector2Add(dropPoint, vec);
 
@@ -180,6 +183,7 @@ bool PickupItem(TreasureInstance& drop)
 	// special case for bag of gold, because it's not a real item
 	if (drop.ItemId == GoldBagItem)
 	{
+		PlaySound(CoinSoundId);
 		Player.Gold += drop.Quantity;
 		return true;
 	}
@@ -196,6 +200,7 @@ bool PickupItem(TreasureInstance& drop)
 	{
 		Player.EquipedWeapon = item->Id;
 		drop.Quantity--;
+		PlaySound(ItemPickupSoundId);
 	}
 
 	// see if this is armor, and we are naked, if so, equip one
@@ -203,6 +208,7 @@ bool PickupItem(TreasureInstance& drop)
 	{
 		Player.EquipedArmor = item->Id;
 		drop.Quantity--;
+		PlaySound(ItemPickupSoundId);
 	}
 
 	// Try to add items to any stacks we already have
@@ -215,6 +221,7 @@ bool PickupItem(TreasureInstance& drop)
 			{
 				content.Quantity += drop.Quantity;
 				drop.Quantity = 0;
+				PlaySound(ItemPickupSoundId);
 				break;
 			}
 		}
@@ -225,6 +232,8 @@ bool PickupItem(TreasureInstance& drop)
 	{
 		Player.BackpackContents.emplace_back(InventoryContents{item->Id,drop.Quantity });
 		drop.Quantity = 0;
+
+		PlaySound(ItemPickupSoundId);
 	}
 
 	// if we picked them all up, we can destroy the item
@@ -327,12 +336,13 @@ void UpdateMobs()
 			// we see our prey, wake up and get em.
 			mob.Triggered = true;
 
+			PlaySound(AlertSoundId);
 			AddEffect(mob.Position, EffectType::RiseFade, AwakeSprite, 1);
 		}
 
 		if (mob.Triggered)
 		{
-			if (distance < 15)
+			if (distance < monsterInfo->Attack.Range)
 			{
 				// try to attack the player
 			}

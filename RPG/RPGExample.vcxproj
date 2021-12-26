@@ -170,6 +170,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\audio.h" />
     <ClInclude Include="include\combat.h" />
     <ClInclude Include="include\game_hud.h" />
     <ClInclude Include="include\items.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="include\tile_map.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="audio.cpp" />
     <ClCompile Include="game_hud.cpp" />
     <ClCompile Include="items.cpp" />
     <ClCompile Include="monsters.cpp" />

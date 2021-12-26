@@ -57,6 +57,9 @@
     <ClInclude Include="include\combat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PUGIXML\pugixml.cpp">
@@ -99,6 +102,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="monsters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "screens.h"
+#include "audio.h"
 
 Screen* ActiveScreen = nullptr;
 
@@ -43,7 +44,12 @@ bool Screen::CenteredButton(int y, const char* text)
 	DrawText(text, int(textXOrigin), int(textYOrigin), ButtonFontSize, color);
 	DrawRectangleLinesEx(buttonRect, 2, color);
 
-	return hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+	bool clicked = hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+
+	if (clicked)
+		PlaySound(ClickSoundId);
+
+	return clicked;
 }
 
 void Screen::DimSceen(float alpha)

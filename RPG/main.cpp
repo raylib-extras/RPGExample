@@ -7,6 +7,7 @@
 #include "pause.h"
 #include "resource_ids.h"
 #include "screens.h"
+#include "audio.h"
 
 // all the states the program can be in 
 enum class ApplicationStates
@@ -89,6 +90,7 @@ void GoToMainMenu()
 	if (ApplicationState == ApplicationStates::Running || ApplicationState == ApplicationStates::Paused)
 		QuitGame();
 
+	StartBGM("resources/sounds/Flowing Rocks.ogg");
 	LoadComplete();
 }
 
@@ -96,6 +98,7 @@ void StartGame()
 {
 	ApplicationState = ApplicationStates::Running;
 	SetActiveScreen(nullptr);
+	StopBGM();
 	InitGame();
 }
 
@@ -133,6 +136,7 @@ int main()
 	InitWindow(1280,800,"RPG Example");
 	SetupWindow();
 
+	InitAudio();
 	InitResources();
 
 	ApplicationState = ApplicationStates::Loading;
@@ -165,9 +169,11 @@ int main()
 
 		DrawScreen();
 
+		UpdateAudio();
 		EndDrawing();
 	}
 
+	ShutdownAudio();
 	CleanupResources();
 	CloseWindow();
 

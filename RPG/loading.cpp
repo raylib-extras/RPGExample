@@ -5,6 +5,7 @@
 #include "sprites.h"
 #include "items.h"
 #include "monsters.h"
+#include "audio.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -58,10 +59,14 @@ public:
 LoadingScreen* LoadScreen = nullptr;
 
 std::deque<std::string> TexturesToLoad;
+std::deque<std::string> SoundsToLoad;
 
 std::vector<Texture> LoadedTextures;
 
 Texture DefaultTexture = { 0 };
+
+size_t LoadedItems = 0;
+size_t TotalToLoad = 0;
 
 void InitResources()
 {
@@ -76,6 +81,14 @@ void InitResources()
 	Image checkered = GenImageChecked(32, 32, 8, 8, GRAY, RAYWHITE);
 	DefaultTexture = LoadTextureFromImage(checkered);
 	UnloadImage(checkered);
+
+	SoundsToLoad.emplace_back("resources/sounds/click3.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/handleCoins.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/doorOpen_1.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/metalPot1.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/creature1.ogg");
+
+	TotalToLoad = TexturesToLoad.size() + SoundsToLoad.size();
 }
 
 void CleanupResources()
@@ -120,7 +133,7 @@ void FinalizeLoad()
 
 void UpdateLoad()
 {
-	if (TexturesToLoad.empty())
+	if (TexturesToLoad.empty() && SoundsToLoad.empty())
 	{
 		FinalizeLoad();
 		LoadComplete();
@@ -134,18 +147,23 @@ void UpdateLoad()
 
 	for (int i = 0; i < maxToLoadPerFrame; ++i)
 	{
-		if (TexturesToLoad.empty())
-			break;
+		if (!TexturesToLoad.empty())
+		{
+			LoadedTextures.push_back(LoadTexture(TexturesToLoad.front().c_str()));
+			TexturesToLoad.pop_front();
 
-		LoadedTextures.push_back(LoadTexture(TexturesToLoad.front().c_str()));
-		TexturesToLoad.pop_front();
+			LoadedItems++;
+		}
+		else if (!SoundsToLoad.empty())
+		{
+			LoadSoundFile(SoundsToLoad.front().c_str());
+			SoundsToLoad.pop_front();
+			LoadedItems++;
+		}
 	}
 
-	// update the progress by computing how many we have left to load out of the total
-	LoadScreen->Progress = TexturesToLoad.size() / float(LoadedTextures.size() + TexturesToLoad.size());
-
 	// then get the inverse to get how much we have loaded
-	LoadScreen->Progress = 1.0f - LoadScreen->Progress;
+	LoadScreen->Progress = LoadedItems/float(TotalToLoad);
 }
 
 // gets a texture from an ID. The textures are loaded in ID order.

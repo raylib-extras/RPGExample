@@ -15,4 +15,6 @@ struct AttackInfo
 
 	int Damage = 0;
 	float Cooldown = 1;
+
+	float Range = 10;
 };
