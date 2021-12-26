@@ -11,6 +11,8 @@
 
 void LoadSpriteFrames(int textureId, int colums, int rows, int spacing);
 void SetSpriteOrigin(int spriteId, int x, int y);
+void SetSpriteBorders(int spriteId, int left, int top, int right, int bottom);
+void SetSpriteBorders(int spriteId, int inset);
 void CenterSprite(int spriteId);
 
 void DrawSprite(int spriteId, float x, float y, float rotation = 0, float scale = 1, Color tint = { 255, 255, 255, 255 }, uint8_t flip = SpriteFlipNone);
@@ -21,6 +23,9 @@ constexpr int BackgroundSprite = 60;
 constexpr int PlayerSprite = 5;
 constexpr int ClickTargetSprite = 140;
 constexpr int CoinSprite = 141;
+constexpr int InventoryBackgroundSprite = 147;
+constexpr int ItemBackgroundSprite = 148;
+
 constexpr int BagSprite = 108;
 constexpr int SwordSprite = 62;
 constexpr int LeatherArmorSprite = 142;

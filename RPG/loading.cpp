@@ -107,6 +107,9 @@ void FinalizeLoad()
 	CenterSprite(ClickTargetSprite);
 	CenterSprite(CoinSprite);
 
+	SetSpriteBorders(InventoryBackgroundSprite, 10);
+	SetSpriteBorders(ItemBackgroundSprite, 10);
+
 	SetupDefaultItems();
 }
 

@@ -10,6 +10,78 @@ GameHudScreen::GameHudScreen(PlayerData& player)
 
 }
 
+void GameHudScreen::ShowItemToolTip(const Item* item, const Rectangle& rect)
+{
+	if (item == nullptr || !CheckCollisionPointRec(GetMousePosition(), rect))
+		return;
+
+	DrawRectangleRec(Rectangle{ rect.x,rect.y,100,100 }, ColorAlpha(BLACK, 0.75f));
+	DrawText(item->Name.c_str(), rect.x, rect.y, 10, WHITE);
+}
+
+void GameHudScreen::DrawInventory()
+{
+	Rectangle inventoryWindowRect = { GetScreenWidth() - 475.0f ,GetScreenHeight() - 500.0f, 354, 400.0f };
+	Rectangle shadowRect = inventoryWindowRect;
+	shadowRect.x += 10;
+	shadowRect.y += 10;
+	DrawRectangleRec(shadowRect, ColorAlpha(DARKBROWN, 0.5f));
+	FillRectWithSprite(InventoryBackgroundSprite, inventoryWindowRect);
+
+	// equipment
+	Item* weaponItem = GetItem(Player.EquipedWeapon);
+	if (DrawButton(inventoryWindowRect.x + 20, inventoryWindowRect.y + 20, weaponItem != nullptr ? weaponItem->Sprite : -1, DARKGRAY, GRAY))
+	{
+		HoveredItem = weaponItem;
+	}
+	DrawText("Weapon", inventoryWindowRect.x + 20 + ButtonSize + 2, inventoryWindowRect.y + 20, 20, DARKBROWN);
+
+	Item* armorItem = GetItem(Player.EquipedArmor);
+	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, DARKBROWN, BROWN))
+	{
+		HoveredItem = armorItem;
+	}
+	DrawText("Armor", inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62), inventoryWindowRect.y + ButtonSize, 20, DARKBROWN);
+
+	// backpack contents
+	constexpr int inventoryItemSize = 64;
+	constexpr int inventoryItemPadding = 4;
+
+	DrawText("Backpack", inventoryWindowRect.x + 10, inventoryWindowRect.y + 100, 20, DARKBROWN);
+
+
+	int itemIndex = 0;
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 5; x++)
+		{
+			int itemY = inventoryWindowRect.y + (inventoryWindowRect.height - inventoryItemPadding) - ((inventoryItemPadding + inventoryItemSize) * (4 - y));
+			int itemX = inventoryWindowRect.x + (inventoryItemPadding * 2) + ((inventoryItemSize + inventoryItemPadding) * x);
+
+			Rectangle itemRect = { itemX, itemY, inventoryItemSize, inventoryItemSize };
+			Rectangle shadowRect = itemRect;
+			shadowRect.x += 2;
+			shadowRect.y += 2;
+
+			DrawRectangleRec(shadowRect, ColorAlpha(BLACK, 0.5f));
+			FillRectWithSprite(ItemBackgroundSprite, itemRect);
+
+			if (itemIndex < Player.BackpackContents.size())
+			{
+				Item* item = GetItem(Player.BackpackContents[itemIndex].ItemId);
+				if (item != nullptr)
+				{
+					DrawSprite(item->Sprite, itemRect.x + itemRect.width / 2, itemRect.y + itemRect.height / 2);
+
+					if (CheckCollisionPointRec(GetMousePosition(), itemRect))
+						HoveredItem = item;
+				}
+			}
+			itemIndex++;
+		}
+	}
+}
+
 void GameHudScreen::Draw()
 {
 	float barHieght = GetScreenHeight() - 80.0f;
@@ -29,13 +101,16 @@ void GameHudScreen::Draw()
 	float healthPram = Player.Health / float(Player.MaxHealth);
 	DrawRectangleRec(Rectangle{ 22,barHieght + 32,healthBarWidth * healthPram - 4,28 }, RED);
 
+	// clear the hover item from last frame
+	HoveredItem = nullptr;
+
 	// action buttons
 	float buttonX = 20 + healthBarWidth + 10;
 	float buttonY = barHieght + 4;
 
+	Item* weapon = GetItem(Player.EquipedWeapon);
 	// equipped weapon
-	DrawButton(buttonX, buttonY, Player.EquipedWeapon, DARKGRAY, GRAY);
-
+	DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, DARKGRAY, GRAY);
 
 	std::vector<int> activatableItems;
 	for (int i = 0; i < Player.BackpackContents.size(); i++)
@@ -47,29 +122,58 @@ void GameHudScreen::Draw()
 
 	// activatable items
 	int backpackSlot = 0;
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		buttonX += ButtonSize + 4;
 
-		int item = -1;
 		if (i < activatableItems.size())
 		{
-			item = Player.BackpackContents[activatableItems[i]].ItemId;
+			Item* item = GetItem(Player.BackpackContents[activatableItems[i]].ItemId);
+			if (DrawButton(buttonX, buttonY, item->Sprite) && item != nullptr)
+			{
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					// item clicked
+				}
+				else
+				{
+					HoveredItem = item;
+				}
+			}
 		}
-
-		DrawButton(buttonX, buttonY, item);
 	}
 
 	buttonX += ButtonSize + 4;
-	DrawSprite(BagSprite, buttonX + ButtonSize/2, buttonY + ButtonSize/2, 0, 1.5f);
+	if (DrawButton(buttonX, buttonY, BagSprite, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	{
+		InventoryOpen = !InventoryOpen;
+	}
+
+	if (InventoryOpen)
+		DrawInventory();
+
+	if (HoveredItem != nullptr)
+	{
+		Vector2 size = MeasureTextEx(GetFontDefault(), HoveredItem->Name.c_str(), 20, 2);
+		Rectangle toolTipRect = { GetMousePosition().x - (size.x/2 + 2), GetMousePosition().y - (size.y + 2), size.x + 4, size.y + 4 };
+
+		DrawRectangleRec(toolTipRect, ColorAlpha(BLACK, 0.5f));
+		DrawText(HoveredItem->Name.c_str(), toolTipRect.x + 2, toolTipRect.y + 2, 20, WHITE);
+	}
 }
 
-void GameHudScreen::DrawButton(float x, float y, int itemId, Color border, Color center )
+bool GameHudScreen::DrawButton(float x, float y, int sprite, Color border, Color center )
 {
-	Item* item = GetItem(itemId);
-	DrawRectangleRec(Rectangle{ x, y, ButtonSize, ButtonSize }, border);
+	Rectangle buttonRect = { x, y, ButtonSize, ButtonSize };
+	DrawRectangleRec(buttonRect, border);
 	DrawRectangleRec(Rectangle{ x + ButtonInset, y + ButtonInset, ButtonSize - ButtonInset * 2, ButtonSize - ButtonInset * 2 }, center);
 
-	if (item)
-		DrawSprite(item->Sprite, x + ButtonSize / 2, y + ButtonSize / 2, 0, 2);
+	if (sprite != -1)
+	{
+		Vector2 center = { x + ButtonSize / 2, y + ButtonSize / 2 };
+		DrawSprite(sprite, center.x+2, center.y+2, 0, 2, BLACK);
+	;	DrawSprite(sprite, center.x, center.y, 0, 2);
+	}
+
+	return CheckCollisionPointRec(GetMousePosition(), buttonRect);
 }

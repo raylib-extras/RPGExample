@@ -22,7 +22,6 @@ Camera2D& GetMapCamera()
 	return MapCamera;
 }
 
-
 bool PointInMap(const Vector2& point)
 {
 	if (!CheckCollisionPointRec(point, MapBounds))
@@ -94,6 +93,9 @@ void DrawMap()
 			float offset = 0;
 			if (sprite.Bobble)
 				offset =  fabsf(sinf(float(GetTime() * 5)) * 3);
+
+			if (sprite.Shadow)
+				DrawSprite(sprite.SpriteFrame, sprite.Position.x+2, sprite.Position.y+2 + offset, 0.0f, 1.0f, ColorAlpha(BLACK,0.5f));
 
 			DrawSprite(sprite.SpriteFrame, sprite.Position.x, sprite.Position.y + offset, 0.0f, 1.0f, sprite.Tint);
 		}

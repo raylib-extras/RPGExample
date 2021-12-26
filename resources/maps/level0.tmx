@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="20">
- <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="140" columns="14">
-  <image source="../colored_tilemap.png" width="500" height="356"/>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="21">
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="154" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="392"/>
  </tileset>
- <layer id="2" name="Base Level" width="24" height="15">
+ <layer id="2" name="Base Level" width="24" height="17">
   <data encoding="csv">
 1,2,60,2,2,60,2,59,2,60,2,60,2,2,2,2,60,2,2,60,2,59,2,4,
 15,61,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
@@ -19,10 +19,12 @@
 15,16,61,16,16,16,16,16,16,16,16,61,16,16,16,16,61,16,16,16,61,16,16,18,
 15,16,16,61,16,61,16,16,61,16,61,61,16,16,61,16,16,16,16,61,16,16,61,18,
 15,61,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
-29,59,59,60,2,59,2,59,2,59,2,60,59,2,2,2,2,2,59,59,2,59,59,32
+29,59,59,60,2,59,2,59,2,59,2,60,59,2,2,2,2,2,59,59,2,59,59,32,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="5" name="Level Items" width="24" height="15">
+ <layer id="5" name="Level Items" width="24" height="17">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -32,6 +34,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,1610612838,2684354659,0,0,0,0,0,0,0,0,0,0,
 0,0,99,100,100,100,100,100,100,100,100,100,1073741925,3221225573,100,100,100,100,100,100,100,102,47,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -69,6 +73,9 @@
   </object>
   <object id="19" x="650" y="185" width="83" height="20">
    <text wrap="1" color="#ffffff">Next Level</text>
+  </object>
+  <object id="20" x="434.14" y="544.389" width="333.955" height="34.0908">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Click Bag To See Inventory</text>
   </object>
  </objectgroup>
 </map>

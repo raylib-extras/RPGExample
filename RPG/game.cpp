@@ -38,6 +38,7 @@ void LoadLevel(const char* level)
 
 	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
 	Player.Sprite->Bobble = true;
+	Player.Sprite->Shadow = true;
 }
 
 void StartLevel()
@@ -132,7 +133,10 @@ void OpenChest(Chest* chest, Vector2& dropPoint)
 		if (!itemRecord)
 			continue;
 
-		item.SpriteId = AddSprite(itemRecord->Sprite, item.Position)->Id;
+		auto* sprite = AddSprite(itemRecord->Sprite, item.Position);
+		sprite->Shadow = true;
+		sprite->Bobble = true;
+		item.SpriteId = sprite->Id;
 
 		ItemDrops.emplace_back(std::move(item));
 	}

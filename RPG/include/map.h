@@ -28,6 +28,7 @@ struct SpriteInstance
 	Vector2 Position = { 0,0 };
 	Color Tint = WHITE;
 	bool Bobble = false;
+	bool Shadow = true;
 };
 
 SpriteInstance* AddSprite(int frame, const Vector2& position);

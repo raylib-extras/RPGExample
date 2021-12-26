@@ -11,6 +11,8 @@ struct SpriteInfo
 	int TextureId = -1;
 	Rectangle SourceRect = { 0,0,0,0 };
 	Vector2 Origin = { 0,0 };
+
+	Rectangle Borders = { 0,0,0,0 };
 };
 
 std::vector<SpriteInfo> Sprites;
@@ -52,6 +54,32 @@ void SetSpriteOrigin(int spriteId, int x, int y)
 	SpriteInfo& sprite = Sprites[spriteId];
 	sprite.Origin.x = float(x);
 	sprite.Origin.y = float(y);
+}
+
+void SetSpriteBorders(int spriteId, int left, int top, int right, int bottom)
+{
+	if (spriteId < 0 || spriteId >= int(Sprites.size()))
+		return;
+
+	SpriteInfo& sprite = Sprites[spriteId];
+	sprite.Borders.x = float(left);
+	sprite.Borders.y = float(top);
+
+	sprite.Borders.width = float(right);
+	sprite.Borders.height = float(bottom);
+}
+
+void SetSpriteBorders(int spriteId, int inset)
+{
+	if (spriteId < 0 || spriteId >= int(Sprites.size()))
+		return;
+
+	SpriteInfo& sprite = Sprites[spriteId];
+	sprite.Borders.x = float(inset);
+	sprite.Borders.y = float(inset);
+
+	sprite.Borders.width = float(sprite.SourceRect.width - inset);
+	sprite.Borders.height = float(sprite.SourceRect.height - inset);
 }
 
 void CenterSprite(int spriteId)
@@ -105,5 +133,30 @@ void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t
 	if (flip && SpriteFlipY == 0)
 		source.height *= -1;
 
-	DrawTextureTiled(GetTexture(sprite.TextureId), source, rect, Vector2{ 0, 0 }, rotation, 1, tint);
+	if (sprite.Borders.width != 0 || sprite.Borders.height != 0)
+	{
+		NPatchInfo info;
+		info.source = source;
+		info.left = sprite.Borders.x;
+		info.right = sprite.Borders.width;
+		info.top = sprite.Borders.y;
+		info.bottom = sprite.Borders.height;
+		info.layout = NPATCH_NINE_PATCH;
+
+		DrawTextureNPatch(GetTexture(sprite.TextureId), info, rect, Vector2{ 0,0 }, rotation, tint);
+	}
+	else
+	{
+		Rectangle source = sprite.SourceRect;
+		float rotation = 0;
+
+		if (flip && SpriteFlipDiagonal == 0)
+			rotation += 90;
+		if (flip && SpriteFlipX == 0)
+			source.width *= -1;
+		if (flip && SpriteFlipY == 0)
+			source.height *= -1;
+
+		DrawTextureTiled(GetTexture(sprite.TextureId), source, rect, Vector2{ 0, 0 }, rotation, 1, tint);
+	}
 }
