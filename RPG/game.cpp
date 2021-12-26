@@ -157,12 +157,20 @@ void OpenChest(Chest* chest, Vector2& dropPoint)
 	std::vector<TreasureInstance> loot = GetLoot(chest->Contents);
 	for (TreasureInstance& item : loot)
 	{
-		float angle = float(GetRandomValue(-180, 180));
-		Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
-		vec = Vector2Scale(vec, 40);
+		bool valid = false;
+		while (!valid)
+		{
+			float angle = float(GetRandomValue(-180, 180));
+			Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
+			vec = Vector2Add(dropPoint,Vector2Scale(vec, 60));
 
-		item.Position = Vector2Add(dropPoint, vec);
-
+			if (Vector2Distance(vec, Player.Position) > Player.PickupDistance)
+			{
+				item.Position = vec;
+				valid = true;
+			}
+		}
+	
 		Item* itemRecord = GetItem(item.ItemId);
 		if (!itemRecord)
 			continue;
@@ -288,7 +296,7 @@ void MovePlayer()
 	for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end(); )
 	{
 		float distance = Vector2Distance(item->Position, Player.Position);
-		if (distance <= 20)
+		if (distance <= Player.PickupDistance)
 		{
 			if (PickupItem(*item))
 			{

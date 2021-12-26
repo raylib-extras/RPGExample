@@ -41,5 +41,7 @@ struct PlayerData
 	int EquipedArmor = -1;
 	std::vector<InventoryContents> BackpackContents;
 
+	float PickupDistance = 20;
+
 	// event callbacks
 };
