@@ -13,3 +13,14 @@ The RPG Example uses premake just like all other items in raylib extras. A tutor
 
 This example includes the visual studio projects that were created by premake, but other build systems can be used (like make files for linux) by running premake5 for the desired platform.
 The example uses raylib as a sub module, so be sure that you have updated it.
+
+
+# TODO
+- Mobs
+- Combat
+- Death
+- AI
+- Activatables
+- Inventory Drop
+- Win Condition
+- Sounds
