@@ -34,4 +34,8 @@ void SetupDefaultItems()
 	item->Defense.Defense = 2;
 
 	item = AddItem("Bag-o-Gold", BagSprite, ItemTypes::None);
+
+	item = AddItem("Fud", FoodSprite, ItemTypes::Activatable);
+	item->Effect = ActivatableEffects::Healing;
+	item->Value = 5;
 }

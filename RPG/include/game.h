@@ -41,6 +41,7 @@ public:
 	const DefenseInfo& GetDefense() const;
 
 	float LastAttack = -100;
+	float LastConsumeable = -100;
 	float AttackCooldown = 0;
 	float ItemCooldown = 0;
 
@@ -52,6 +53,14 @@ public:
 	float PickupDistance = 20;
 
 	// event callbacks
+	// a callback that takes an int
+	typedef void(*ItemCallback)(int);
+
+	// callbacks that the HUD can trigger on inventory
+	ItemCallback ActivateItemCallback = nullptr;
+	ItemCallback EquipArmorCallback = nullptr;
+	ItemCallback EquipWeaponCallback = nullptr;
+	ItemCallback DropItemCallback = nullptr;
 
 private:
 	AttackInfo DefaultAttack = { "Slap", true, 1,1 };

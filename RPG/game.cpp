@@ -66,6 +66,9 @@ std::vector<MobInstance> Mobs;
 
 GameHudScreen GameHud(Player);
 
+void ActivateItem(int item);
+void DropItem(int item);
+
 void LoadLevel(const char* level)
 {
 	LoadMap(level);
@@ -75,6 +78,11 @@ void LoadLevel(const char* level)
 	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
 	Player.Sprite->Bobble = true;
 	Player.Sprite->Shadow = true;
+
+	Player.ActivateItemCallback = ActivateItem;
+	Player.DropItemCallback = DropItem;
+	Player.EquipWeaponCallback = ActivateItem;
+	Player.EquipArmorCallback = ActivateItem;
 }
 
 void StartLevel()
@@ -178,38 +186,72 @@ void GetPlayerInput()
 	}
 }
 
+void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
+{
+	Item* itemRecord = GetItem(item.ItemId);
+	if (!itemRecord)
+		return;
+
+	bool valid = false;
+	while (!valid)
+	{
+		float angle = float(GetRandomValue(-180, 180));
+		Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
+		vec = Vector2Add(dropPoint, Vector2Scale(vec, 45));
+
+		if (PointInMap(vec) && Vector2Distance(vec, Player.Position) > Player.PickupDistance)
+		{
+			item.Position = vec;
+			valid = true;
+		}
+	}
+
+	auto* sprite = AddSprite(itemRecord->Sprite, item.Position);
+	sprite->Shadow = true;
+	sprite->Bobble = true;
+	item.SpriteId = sprite->Id;
+
+	ItemDrops.emplace_back(std::move(item));
+}
+
 void DropLoot(const char* contents, Vector2& dropPoint)
 {
 	std::vector<TreasureInstance> loot = GetLoot(contents);
 	for (TreasureInstance& item : loot)
 	{
-		bool valid = false;
-		while (!valid)
-		{
-			float angle = float(GetRandomValue(-180, 180));
-			Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
-			vec = Vector2Add(dropPoint,Vector2Scale(vec, 45));
-
-			if (PointInMap(vec) && Vector2Distance(vec, Player.Position) > Player.PickupDistance)
-			{
-				item.Position = vec;
-				valid = true;
-			}
-		}
-	
-		Item* itemRecord = GetItem(item.ItemId);
-		if (!itemRecord)
-			continue;
-
-		auto* sprite = AddSprite(itemRecord->Sprite, item.Position);
-		sprite->Shadow = true;
-		sprite->Bobble = true;
-		item.SpriteId = sprite->Id;
-
-		ItemDrops.emplace_back(std::move(item));
-
+		PlaceItemDrop(item, dropPoint);
 		AddEffect(item.Position, EffectType::ScaleFade, LootSprite, 1);
 	}
+}
+
+TreasureInstance RemoveInventoryItem(int slot, int quantity)
+{
+	TreasureInstance treasure = { -1,0 };
+
+	// is it a valid slot?
+	if (slot < 0 || slot >= Player.BackpackContents.size())
+		return treasure;
+
+	// can't take more than we have
+	InventoryContents& inventory = Player.BackpackContents[slot];
+	if (inventory.Quantity < quantity)
+		quantity = inventory.Quantity;
+
+	// make an item for what we removed
+	treasure.ItemId = inventory.ItemId;
+	treasure.Quantity = quantity;
+
+	// reduce quantity in inventory
+	inventory.Quantity -= quantity;
+
+	// delete the item in inventory if it's empty
+	if (inventory.Quantity <= 0)
+	{
+		Player.BackpackContents.erase(Player.BackpackContents.begin() + slot);
+	}
+
+	// return the drop instance
+	return treasure;
 }
 
 bool PickupItem(TreasureInstance& drop)
@@ -528,4 +570,101 @@ void UpdateGame()
 	}
 
 	UpdateSprites();
+}
+
+void UseConsumable(Item* item)
+{
+	if (item == nullptr || !item->IsActivatable())
+		return;
+
+	float time = GetGameTime() - Player.LastConsumeable;
+	if (time < 1)
+		return;
+
+	Player.LastConsumeable = time;
+
+	switch (item->Effect)
+	{
+	case ActivatableEffects::Healing:
+		Player.Health += item->Value;
+		if (Player.Health > Player.MaxHealth)
+			Player.Health = Player.MaxHealth;
+
+		AddEffect(Player.Position, EffectType::RiseFade, HealingSprite);
+		break;
+
+	case ActivatableEffects::Defense:
+	case ActivatableEffects::Damage:
+
+	default:
+		break;
+	}
+}
+
+void ActivateItem(int slotIndex)
+{
+	if (slotIndex < 0 || slotIndex >= Player.BackpackContents.size())
+		return;
+
+	InventoryContents& inventorySlot = Player.BackpackContents[slotIndex];
+
+	Item* item = GetItem(inventorySlot.ItemId);
+	if (item == nullptr)
+		return;
+
+	TreasureInstance removedItem = RemoveInventoryItem(slotIndex, 1);
+
+	if (removedItem.Quantity == 0)
+		return;
+
+	switch (item->ItemType)
+	{
+		case ItemTypes::Activatable:
+			UseConsumable(item);
+			removedItem.ItemId = -1;
+			removedItem.Quantity = 0;
+			break;
+
+		case ItemTypes::Weapon:
+		{
+			// save our current weapon
+			int weapon = Player.EquipedWeapon;
+
+			// equip new weapon
+			Player.EquipedWeapon = removedItem.ItemId;
+
+			// replace the removed item with the old weapon
+			removedItem.ItemId = weapon;
+		}
+
+		case ItemTypes::Armor:
+		{
+			// save our current armor
+			int armor = Player.EquipedArmor;
+
+			// equip new weapon
+			Player.EquipedArmor = removedItem.ItemId;
+
+			// replace the removed item with the old weapon
+			removedItem.ItemId = armor;
+			break;
+		}
+
+	}
+
+	// put whatever we have back, or drop it
+	if (removedItem.ItemId != -1)
+	{
+		// stick it back in our bag
+		if (!PickupItem(removedItem))
+		{
+			// no room, drop it
+			PlaceItemDrop(removedItem, Player.Position);
+		}
+	}
+}
+
+void DropItem(int item)
+{
+
 }

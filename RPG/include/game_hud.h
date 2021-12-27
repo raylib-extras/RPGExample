@@ -14,7 +14,7 @@ public:
 	PlayerData& Player;
 
 private:
-	bool DrawButton(float x, float y, int itemId = -1, Color border = BROWN, Color center = BEIGE);
+	bool DrawButton(float x, float y, int itemId = -1, int quantity = 1, Color border = BROWN, Color center = BEIGE);
 	void DrawInventory();	
 	void ShowItemToolTip(const Item* item, const Rectangle& rect);
 

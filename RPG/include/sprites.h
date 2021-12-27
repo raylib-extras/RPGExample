@@ -30,11 +30,13 @@ constexpr int AwakeSprite = 149;
 constexpr int LootSprite = 150;
 constexpr int MobAttackSprite = 114;
 constexpr int DamageSprite = 151;
+constexpr int HealingSprite = 90;
 
 // equipment sprites
 constexpr int BagSprite = 108;
 constexpr int SwordSprite = 62;
 constexpr int LeatherArmorSprite = 142;
+constexpr int FoodSprite = 122;
 
 // MOB sprites
 constexpr int PlayerSprite = 5;

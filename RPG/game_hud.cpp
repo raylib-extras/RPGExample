@@ -7,7 +7,6 @@ GameHudScreen::GameHudScreen(PlayerData& player)
 	: Screen()
 	, Player(player)
 {
-
 }
 
 void GameHudScreen::ShowItemToolTip(const Item* item, const Rectangle& rect)
@@ -30,7 +29,7 @@ void GameHudScreen::DrawInventory()
 
 	// equipment
 	Item* weaponItem = GetItem(Player.EquipedWeapon);
-	if (DrawButton(inventoryWindowRect.x + 20, inventoryWindowRect.y + 20, weaponItem != nullptr ? weaponItem->Sprite : -1, DARKGRAY, GRAY))
+	if (DrawButton(inventoryWindowRect.x + 20, inventoryWindowRect.y + 20, weaponItem != nullptr ? weaponItem->Sprite : -1, 0, DARKGRAY, GRAY))
 	{
 		HoveredItem = weaponItem;
 	}
@@ -38,7 +37,7 @@ void GameHudScreen::DrawInventory()
 	DrawText(TextFormat("%d - %d", Player.GetAttack().MinDamage, Player.GetAttack().MaxDamage), int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 40), 20, WHITE);
 	
 	Item* armorItem = GetItem(Player.EquipedArmor);
-	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, DARKBROWN, BROWN))
+	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, 0, DARKBROWN, BROWN))
 	{
 		HoveredItem = armorItem;
 	}
@@ -74,8 +73,25 @@ void GameHudScreen::DrawInventory()
 				{
 					DrawSprite(item->Sprite, itemRect.x + itemRect.width / 2, itemRect.y + itemRect.height / 2);
 
-					if (CheckCollisionPointRec(GetMousePosition(), itemRect))
+					if (Player.BackpackContents[itemIndex].Quantity > 1)
+						DrawText(TextFormat("%d", Player.BackpackContents[itemIndex].Quantity), int(itemRect.x) + 2, int(itemRect.y + itemRect.height - 10), 10, WHITE);
+
+					bool hovered = CheckCollisionPointRec(GetMousePosition(), itemRect);
+
+					if (hovered)
 						HoveredItem = item;
+
+					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+					{
+						if (item->IsActivatable() && Player.ActivateItemCallback != nullptr)
+							Player.ActivateItemCallback(itemIndex);
+						else if (item->IsWeapon() && Player.EquipWeaponCallback != nullptr)
+							Player.EquipWeaponCallback(itemIndex);
+						else if (item->IsArmor() && Player.EquipArmorCallback != nullptr)
+							Player.EquipArmorCallback(itemIndex);
+					}
+					else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && Player.DropItemCallback != nullptr)
+						Player.DropItemCallback(itemIndex);
 				}
 			}
 			itemIndex++;
@@ -111,7 +127,7 @@ void GameHudScreen::Draw()
 
 	Item* weapon = GetItem(Player.EquipedWeapon);
 	// equipped weapon
-	DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, DARKGRAY, GRAY);
+	DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, 0, DARKGRAY, GRAY);
 
 	if (Player.AttackCooldown > 0)
 	{
@@ -136,11 +152,12 @@ void GameHudScreen::Draw()
 		if (i < activatableItems.size())
 		{
 			Item* item = GetItem(Player.BackpackContents[activatableItems[i]].ItemId);
-			if (DrawButton(buttonX, buttonY, item->Sprite) && item != nullptr)
+			if (DrawButton(buttonX, buttonY, item->Sprite, Player.BackpackContents[activatableItems[i]].Quantity) && item != nullptr)
 			{
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					// item clicked
+					if (Player.ActivateItemCallback != nullptr)
+						Player.ActivateItemCallback(activatableItems[i]);
 				}
 				else
 				{
@@ -151,7 +168,7 @@ void GameHudScreen::Draw()
 	}
 
 	buttonX += ButtonSize + 4;
-	if (DrawButton(buttonX, buttonY, BagSprite, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	if (DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		InventoryOpen = !InventoryOpen;
 	}
@@ -169,7 +186,7 @@ void GameHudScreen::Draw()
 	}
 }
 
-bool GameHudScreen::DrawButton(float x, float y, int sprite, Color border, Color center )
+bool GameHudScreen::DrawButton(float x, float y, int sprite, int quantity, Color border, Color center )
 {
 	Rectangle buttonRect = { x, y, ButtonSize, ButtonSize };
 	DrawRectangleRec(buttonRect, border);
@@ -179,7 +196,12 @@ bool GameHudScreen::DrawButton(float x, float y, int sprite, Color border, Color
 	{
 		Vector2 center = { x + ButtonSize / 2, y + ButtonSize / 2 };
 		DrawSprite(sprite, center.x+2, center.y+2, 0, 2, BLACK);
-	;	DrawSprite(sprite, center.x, center.y, 0, 2);
+		DrawSprite(sprite, center.x, center.y, 0, 2);
+	}
+
+	if (quantity > 1)
+	{
+		DrawText(TextFormat("%d", quantity), int(x + 2), int(y + ButtonSize - 12), 10, WHITE);
 	}
 
 	return CheckCollisionPointRec(GetMousePosition(), buttonRect);

@@ -16,11 +16,6 @@ The example uses raylib as a sub module, so be sure that you have updated it.
 
 
 # TODO
-- Mobs
-- Combat
-- Death
-- AI
 - Activatables
 - Inventory Drop
 - Win Condition
-- Sounds

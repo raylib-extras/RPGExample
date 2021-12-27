@@ -51,3 +51,4 @@ void SetupDefaultItems();
 constexpr int SwordItem = 0;
 constexpr int LeatherArmorItem = 1;
 constexpr int GoldBagItem = 2;
+constexpr int FoodItem = 3;
