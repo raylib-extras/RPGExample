@@ -21,4 +21,4 @@ struct AttackInfo
 	float Range = 10;
 };
 
-int ResolveAttack(const AttackInfo& attack, const DefenseInfo& defense);
+int ResolveAttack(const AttackInfo& attack, int defense);

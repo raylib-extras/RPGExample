@@ -42,7 +42,7 @@ void GameHudScreen::DrawInventory()
 		HoveredItem = armorItem;
 	}
 	DrawText("Armor", int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62)), int(inventoryWindowRect.y + ButtonSize), 20, DARKBROWN);
-	DrawText(TextFormat("%d", Player.GetDefense().Defense), int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 22)), int(inventoryWindowRect.y + ButtonSize - 20), 20, WHITE);
+	DrawText(TextFormat("%d", Player.GetDefense()), int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 22)), int(inventoryWindowRect.y + ButtonSize - 20), 20, WHITE);
 
 	// backpack contents
 	constexpr int inventoryItemSize = 64;
@@ -100,6 +100,19 @@ void GameHudScreen::DrawInventory()
 			itemIndex++;
 		}
 	}
+}
+
+bool GameHudScreen::IsUiClick(const Vector2& pos)
+{
+	if (pos.y > GetScreenHeight() - 80.0f)
+		return true;
+
+	Rectangle inventoryWindowRect = { GetScreenWidth() - 475.0f ,GetScreenHeight() - 500.0f, 354, 400.0f };
+
+	if (InventoryOpen && CheckCollisionPointRec(pos, inventoryWindowRect))
+		return true;
+
+	return false;
 }
 
 void GameHudScreen::Draw()
@@ -176,10 +189,20 @@ void GameHudScreen::Draw()
 		}
 	}
 
+	// backpack buttons
 	buttonX += ButtonSize + 4;
 	if (DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		InventoryOpen = !InventoryOpen;
+	}
+
+	buttonX += ButtonSize + 4;
+
+	// buff icon
+	if (Player.BuffLifetimeLeft > 0)
+	{
+		DrawSprite(Player.BuffItem, buttonX + ButtonSize/2, buttonY + ButtonSize/2, 0, 2);
+		DrawText(TextFormat("%0.0f", Player.BuffLifetimeLeft), int(buttonX), int(buttonY + ButtonSize-30), 30, RED);
 	}
 
 	if (InventoryOpen)

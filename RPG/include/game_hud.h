@@ -13,6 +13,8 @@ public:
 
 	PlayerData& Player;
 
+	bool IsUiClick(const Vector2& pos);
+
 private:
 	bool DrawButton(float x, float y, int itemId = -1, int quantity = 1, Color border = BROWN, Color center = BEIGE);
 	void DrawInventory();	

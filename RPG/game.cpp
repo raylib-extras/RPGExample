@@ -44,12 +44,12 @@ const AttackInfo& PlayerData::GetAttack() const
 	return GetItem(EquipedWeapon)->Attack;
 }
 
-const DefenseInfo& PlayerData::GetDefense() const
+const int PlayerData::GetDefense() const
 {
 	if (EquipedArmor == -1)
-		return DefaultDefense;
+		return 0 + BuffDefense;
 
-	return GetItem(Player.EquipedArmor)->Defense;
+	return GetItem(Player.EquipedArmor)->Defense.Defense + BuffDefense;
 }
 
 std::vector<Exit> Exits;
@@ -88,6 +88,9 @@ void LoadLevel(const char* level)
 void StartLevel()
 {
 	GameClock = 0;
+
+	Player.LastConsumeable = -1;
+	Player.LastAttack = -100;
 
 	auto* spawn = GetFirstMapObjectOfType(PlayerSpawnType);
 	if (spawn != nullptr)
@@ -161,7 +164,7 @@ void ActivateGame()
 void GetPlayerInput()
 {
 	// check for clicks
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !GameHud.IsUiClick(GetMousePosition()))
 	{
 		Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), GetMapCamera());
 
@@ -395,7 +398,7 @@ void ApplyPlayerActions()
 					if (!monsterInfo->Attack.Melee)
 						AddEffect(Player.Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
 
-					int damage = ResolveAttack(Player.GetAttack(), monsterInfo->Defense);
+					int damage = ResolveAttack(Player.GetAttack(), monsterInfo->Defense.Defense);
 					if (damage == 0)
 					{
 						PlaySound(MissSoundId);
@@ -452,8 +455,22 @@ void ApplyPlayerActions()
 		item++;
 	}
 
-	Player.AttackCooldown = 1.0f - std::min(1.0f, (GetGameTime() - Player.LastAttack) / Player.GetAttack().Cooldown);
-	Player.ItemCooldown = 1.0f - std::min(1.0f, (GetGameTime() - Player.LastConsumeable) / 1);
+
+	float time = GetGameTime();
+
+	Player.AttackCooldown = 1.0f - std::min(1.0f, (time - Player.LastAttack) / Player.GetAttack().Cooldown);
+	Player.ItemCooldown = 1.0f - std::min(1.0f, (time - Player.LastConsumeable) / 1);
+
+	if (Player.BuffLifetimeLeft > 0)
+	{
+		Player.BuffLifetimeLeft -= GetFrameTime();
+		if (Player.BuffLifetimeLeft <= 0)
+		{
+			Player.BuffDefense = 0;
+			Player.BuffItem = -1;
+			Player.BuffLifetimeLeft = 0;
+		}
+	}
 }
 
 void CullDeadMobs()
@@ -556,6 +573,14 @@ void UpdatePlayerSprite()
 	if (Player.Sprite != nullptr)
 		Player.Sprite->Position = Player.Position;
 
+	if (Player.EquipedArmor == ChainArmorItem)
+		Player.Sprite->SpriteFrame = PlayerChainSprite;
+	else if (Player.EquipedArmor == PlateArmorItem)
+		Player.Sprite->SpriteFrame = PlayerPlateSprite;
+	else
+		Player.Sprite->SpriteFrame = PlayerSprite;
+
+
 	if (Player.TargetSprite != nullptr)
 	{
 		Player.TargetSprite->Active = Player.TargetActive;
@@ -569,6 +594,28 @@ void UpdateMobSprites()
 	{
 		UpdateSprite(mob.SpriteId, mob.Position);
 	}
+}
+
+MobInstance* GetNearestMobInSight()
+{
+	MobInstance* nearest = nullptr;
+	float nearestDistance = 9999999.9f;
+
+	for (auto& mob : Mobs)
+	{
+		if (Ray2DHitsMap(mob.Position,Player.Position))
+			continue;
+
+		float dist = Vector2Distance(mob.Position, Player.Position);
+
+		if (dist < nearestDistance)
+		{
+			nearest = &mob;
+			nearestDistance = dist;
+		}
+	}
+
+	return nearest;
 }
 
 void UpdateSprites()
@@ -625,10 +672,22 @@ void UseConsumable(Item* item)
 		break;
 
 	case ActivatableEffects::Defense:
-	case ActivatableEffects::Damage:
-
-	default:
+		Player.BuffDefense = item->Value;
+		Player.BuffLifetimeLeft = item->Durration;
+		Player.BuffItem = item->Sprite;
 		break;
+
+	case ActivatableEffects::Damage:
+	{
+		MobInstance* mob = GetNearestMobInSight();
+		if (mob != nullptr)
+		{
+			mob->Health -= item->Value;
+			PlaySound(CreatureDamageSoundId);
+			AddEffect(mob->Position, EffectType::RotateFade, item->Sprite, 1);
+		}
+		break;
+	}
 	}
 }
 

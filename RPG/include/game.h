@@ -38,12 +38,17 @@ public:
 	int Gold = 0;
 
 	const AttackInfo& GetAttack() const;
-	const DefenseInfo& GetDefense() const;
+	const int GetDefense() const;
 
 	float LastAttack = 0;
 	float LastConsumeable = 0;
 	float AttackCooldown = 0;
 	float ItemCooldown = 0;
+
+	int BuffItem = -1;
+	float BuffLifetimeLeft = 0;
+
+	int BuffDefense = 0;
 
 	// inventory
 	int EquipedWeapon = -1;

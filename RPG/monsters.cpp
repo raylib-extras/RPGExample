@@ -52,7 +52,7 @@ void SetupDefaultMobs()
 
 	// Troll
 	mob = AddMob("Troll", TrollSprite, 30);
-	mob->Defense.Defense = 10;
+	mob->Defense.Defense = 8;
 	mob->Attack.Name = "Punch";
 	mob->Attack.Range = 10;
 	mob->Attack.Melee = true;
@@ -62,7 +62,7 @@ void SetupDefaultMobs()
 
 	// Turtle
 	mob = AddMob("Tortile", TurtleSprite, 5);
-	mob->Defense.Defense = 15;
+	mob->Defense.Defense = 10;
 	mob->Attack.Name = "Headbut";
 	mob->Attack.Range = 10;
 	mob->Attack.Melee = true;
@@ -72,7 +72,7 @@ void SetupDefaultMobs()
 
 	// Blob
 	mob = AddMob("Blorb", BlobSprite, 20);
-	mob->Defense.Defense = 10;
+	mob->Defense.Defense = 6;
 	mob->Attack.Name = "Ewwww Gross";
 	mob->Attack.Range = 15;
 	mob->Attack.Melee = true;
@@ -82,7 +82,7 @@ void SetupDefaultMobs()
 
 	// Ogre
 	mob = AddMob("DudeBro", OgreSprite, 20);
-	mob->Defense.Defense = 10;
+	mob->Defense.Defense = 7;
 	mob->Attack.Name = "Talk about how rust is a better language";
 	mob->Attack.Range = 20;
 	mob->Attack.Melee = true;
@@ -92,7 +92,7 @@ void SetupDefaultMobs()
 
 	// Monk
 	mob = AddMob("Munk", OgreSprite, 15);
-	mob->Defense.Defense = 14;
+	mob->Defense.Defense = 8;
 	mob->Attack.Name = "GPL Virus Attack";
 	mob->Attack.Range = 100;
 	mob->Attack.Melee = false;
@@ -102,7 +102,7 @@ void SetupDefaultMobs()
 
 	// EyeballMonster
 	mob = AddMob("Moderator", BeholderSprite, 50);
-	mob->Defense.Defense = 10;
+	mob->Defense.Defense = 4;
 	mob->Attack.Name = "Cast Ray";
 	mob->Attack.Range = 100;
 	mob->Attack.Melee = false;

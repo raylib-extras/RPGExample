@@ -113,7 +113,7 @@ void SetupDefaultItems()
 	item->Effect = ActivatableEffects::Healing;
 	item->Value = 20;
 
-	item = AddItem("Shield", PotionSprite, ItemTypes::Activatable);
+	item = AddItem("Shield", ShieldSprite, ItemTypes::Activatable);
 	item->Effect = ActivatableEffects::Defense;
 	item->Value = 10;
 	item->Durration = 30;
