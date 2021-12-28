@@ -15,7 +15,7 @@ This example includes the visual studio projects that were created by premake, b
 The example uses raylib as a sub module, so be sure that you have updated it.
 
 # State
-The current example is feature complete and would be considered in 'alpha' state. It has all the main features that are required by the game, it just needs more levels, monsters and items.
+The current example is feature complete and would be considered in 'beta' state. It has all the main features that are required by the game.
 
 # Features
 This sample has examples of how to do the following things in raylib
