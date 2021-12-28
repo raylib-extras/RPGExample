@@ -31,15 +31,35 @@ constexpr int LootSprite = 150;
 constexpr int MobAttackSprite = 114;
 constexpr int DamageSprite = 151;
 constexpr int HealingSprite = 90;
+constexpr int ProjectileSprite = 158;
 
 // equipment sprites
 constexpr int BagSprite = 108;
 constexpr int SwordSprite = 62;
+constexpr int CoolSwordSprite = 154;
+constexpr int AwesomeSwordSprite = 155;
+constexpr int AxeSprite = 63;
+constexpr int MightyAxeSprite = 156;
+constexpr int ForkSprite = 66;
+constexpr int BowSprite = 64;
+constexpr int GoodBowSprite = 157;
+constexpr int ClubSprite = 52;
 constexpr int LeatherArmorSprite = 142;
+constexpr int ChainArmorSprite = 143;
+constexpr int PlateArmorSprite = 38;
 constexpr int FoodSprite = 122;
+constexpr int PotionSprite = 119;
+constexpr int ShieldSprite = 94;
+constexpr int FireballSprite = 120;
 
 // MOB sprites
 constexpr int PlayerSprite = 5;
 constexpr int RatSprite = 20;
-
-
+constexpr int SnakeSprite = 8;
+constexpr int GhostSprite = 23;
+constexpr int TrollSprite = 11;
+constexpr int TurtleSprite = 24;
+constexpr int BlobSprite = 22;
+constexpr int OgreSprite = 8;
+constexpr int MonkSprite = 10;
+constexpr int BeholderSprite = 13;

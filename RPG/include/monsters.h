@@ -31,5 +31,13 @@ MOB* GetMob(int id);
 
 void SetupDefaultMobs();
 
-// Item constants
+// monster constants
 constexpr int RatMob = 0;
+constexpr int SnakeMob = 1;
+constexpr int GhostMob = 2;
+constexpr int TrollMob = 3;
+constexpr int TurtleMob = 4;
+constexpr int BlobMob = 5;
+constexpr int OgreMob = 6;
+constexpr int MonkMob = 7;
+constexpr int BeholderMob = 8;

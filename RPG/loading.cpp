@@ -115,7 +115,7 @@ void CleanupResources()
 
 void FinalizeLoad()
 {
-	LoadSpriteFrames(TileSetTexture, 14, 11, 4);
+	LoadSpriteFrames(TileSetTexture, 14, 12, 4);
 
 	for (int i = 4; i < 14; i++)
 	{

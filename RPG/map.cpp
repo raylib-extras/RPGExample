@@ -5,6 +5,7 @@
 #include "tile_map.h"
 
 #include "raylib.h"
+#include "raymath.h"
 
 #include <math.h>
 #include <unordered_map>
@@ -18,6 +19,7 @@ public:
 	int SpriteId = -1;
 	float Lifetime = 1;
 	float MaxLifetime = 1;
+	Vector2 Target = { 0,0 };
 };
 
 std::list<EffectInstance> Effects;
@@ -199,8 +201,8 @@ void DrawMap()
 		switch (effect->Effect)
 		{
 		case EffectType::Fade:
-				alpha = param;
-				break;
+			alpha = param;
+			break;
 
 		case EffectType::RiseFade:
 			alpha = param;
@@ -208,7 +210,7 @@ void DrawMap()
 			break;
 
 		case EffectType::RotateFade:
-			rotation = (1.0f-param) * 360;
+			rotation = (1.0f - param) * 360;
 			alpha = param;
 			break;
 
@@ -216,6 +218,16 @@ void DrawMap()
 			alpha = param;
 			scale = 1 + (1.0f - param);
 			break;
+
+		case EffectType::ToTarget:
+		{
+			Vector2 vec = Vector2Subtract(effect->Target, effect->Position);
+			float dist = Vector2Length(vec);
+			vec = Vector2Normalize(vec);
+
+			pos = Vector2Add(effect->Position, Vector2Scale(vec, dist * param));
+			break;
+		}
 		}
 
 		DrawSprite(effect->SpriteId, pos.x, pos.y, rotation, scale, ColorAlpha(WHITE, alpha));
@@ -300,4 +312,10 @@ void AddEffect(const Vector2& position, EffectType effect, int spriteId, float l
 {
 	CenterSprite(spriteId);
 	Effects.emplace_back(EffectInstance{ position,effect,spriteId,lifetime,lifetime });
+}
+
+void AddEffect(const Vector2& position, EffectType effect, int spriteId, const Vector2& target, float lifetime)
+{
+	CenterSprite(spriteId);
+	Effects.emplace_back(EffectInstance{ position, effect, spriteId, lifetime, lifetime, target });
 }

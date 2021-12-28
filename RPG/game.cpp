@@ -392,6 +392,8 @@ void ApplyPlayerActions()
 				if (monsterInfo != nullptr)
 				{
 					AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
+					if (!monsterInfo->Attack.Melee)
+						AddEffect(Player.Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
 
 					int damage = ResolveAttack(Player.GetAttack(), monsterInfo->Defense);
 					if (damage == 0)
@@ -404,6 +406,9 @@ void ApplyPlayerActions()
 						PlaySound(CreatureDamageSoundId);
 						AddEffect(Vector2{ TargetMob->Position.x, TargetMob->Position.y - 16 }, EffectType::RiseFade, DamageSprite);
 						TargetMob->Health -= damage;
+
+						// if you hit them, they wake up!
+						TargetMob->Triggered = true;
 					}
 				}
 			}
@@ -466,7 +471,8 @@ void CullDeadMobs()
 			DropLoot(monsterInfo->lootTable.c_str(), mobItr->Position);
 
 		RemoveSprite(mobItr->SpriteId);
-		AddEffect(mobItr->Position, EffectType::RotateFade, monsterInfo->Sprite, 3.5f);
+		if (monsterInfo != nullptr)
+			AddEffect(mobItr->Position, EffectType::RotateFade, monsterInfo->Sprite, 3.5f);
 
 		mobItr = Mobs.erase(mobItr);
 	}
@@ -512,7 +518,11 @@ void UpdateMobs()
 					mob.LastAttack = GetGameTime();
 					int damage = ResolveAttack(monsterInfo->Attack, Player.GetDefense());
 
-					AddEffect(Player.Position, EffectType::RotateFade, MobAttackSprite);
+					if (monsterInfo->Attack.Melee)
+						AddEffect(Player.Position, EffectType::RotateFade, MobAttackSprite);
+					else
+						AddEffect(mob.Position, EffectType::ToTarget, ProjectileSprite, Player.Position, 0.5f);
+
 					if (damage == 0)
 					{
 						PlaySound(MissSoundId);

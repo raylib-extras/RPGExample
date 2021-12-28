@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="21">
- <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="154" columns="14">
-  <image source="../colored_tilemap.png" width="500" height="392"/>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="22">
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="168" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="428"/>
  </tileset>
  <layer id="2" name="Base Level" width="24" height="17">
   <data encoding="csv">
@@ -76,6 +76,9 @@
   </object>
   <object id="20" x="434.14" y="544.389" width="333.955" height="34.0908">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Click Bag To See Inventory</text>
+  </object>
+  <object id="21" x="242.71" y="-36.0487" width="333.955" height="34.0908">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Get to the end to win!</text>
   </object>
  </objectgroup>
 </map>

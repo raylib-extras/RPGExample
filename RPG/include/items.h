@@ -54,3 +54,18 @@ constexpr int SwordItem = 0;
 constexpr int LeatherArmorItem = 1;
 constexpr int GoldBagItem = 2;
 constexpr int FoodItem = 3;
+constexpr int CoolSwordItem = 4;
+constexpr int AwesomeSwordItem = 5;
+constexpr int AxeItem = 6;
+constexpr int MightyAxeItem = 7;
+constexpr int ForkItem = 8;
+constexpr int BowItem = 9;
+constexpr int GoodBowItem = 10;
+constexpr int ClubItem = 11;
+constexpr int ChainArmorItem = 12;
+constexpr int PlateArmorItem = 13;
+constexpr int PotionItem = 14;
+constexpr int ShieldItem = 15;
+constexpr int FireballItem = 16;
+
+

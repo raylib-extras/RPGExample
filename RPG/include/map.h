@@ -47,8 +47,10 @@ enum class EffectType
 	RiseFade,
 	RotateFade,
 	ScaleFade,
+	ToTarget,
 };
 void AddEffect(const Vector2& position, EffectType effect, int spriteId, float lifetime = 1);
+void AddEffect(const Vector2& position, EffectType effect, int spriteId, const Vector2& target, float lifetime = 1);
 
 // common object types
 constexpr char PlayerSpawnType[] = "player_spawn";

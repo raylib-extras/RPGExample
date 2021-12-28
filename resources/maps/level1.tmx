@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="25">
- <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="154" columns="14">
-  <image source="../colored_tilemap.png" width="500" height="392"/>
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="168" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="428"/>
  </tileset>
  <layer id="2" name="Base Level" width="24" height="15">
   <data encoding="csv">
@@ -68,9 +68,6 @@
   </object>
   <object id="13" x="103.416" y="49.6354" width="99.7227" height="32.8759">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Loot Me</text>
-  </object>
-  <object id="19" x="555.27" y="381.817" width="131.744" height="33.7956">
-   <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Next Level</text>
   </object>
   <object id="20" name="spawn" type="player_spawn" x="98.4085" y="391.795">
    <point/>
