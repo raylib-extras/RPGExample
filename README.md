@@ -2,7 +2,8 @@
 
 An example RPG Game.
 
-Work in progress.
+Demo Gamplay
+https://youtu.be/9apXiHKIlsg
 
 ## Design Document
 https://docs.google.com/document/d/1lxpR6WbbjmCi9X_seGPYPYz7UhFcAKkX5Xl3pVfEwHs/edit?usp=sharing
