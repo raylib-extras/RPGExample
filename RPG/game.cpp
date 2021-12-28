@@ -194,7 +194,7 @@ void GetPlayerInput()
 	}
 }
 
-void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
+void PlaceItemDrop(TreasureInstance item, Vector2& dropPoint)
 {
 	Item* itemRecord = GetItem(item.ItemId);
 	if (!itemRecord)
@@ -219,7 +219,7 @@ void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
 	sprite->Bobble = true;
 	item.SpriteId = sprite->Id;
 
-	ItemDrops.emplace_back(std::move(item));
+	ItemDrops.push_back(item);
 }
 
 void DropLoot(const char* contents, Vector2& dropPoint)

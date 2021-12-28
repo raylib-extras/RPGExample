@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include <unordered_map>
+#include <list>
 
 
 class EffectInstance

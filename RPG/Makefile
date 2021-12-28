@@ -87,30 +87,38 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/audio.o
+GENERATED += $(OBJDIR)/combat.o
 GENERATED += $(OBJDIR)/game.o
 GENERATED += $(OBJDIR)/game_hud.o
 GENERATED += $(OBJDIR)/items.o
 GENERATED += $(OBJDIR)/loading.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/map.o
+GENERATED += $(OBJDIR)/monsters.o
 GENERATED += $(OBJDIR)/pause.o
 GENERATED += $(OBJDIR)/pugixml.o
 GENERATED += $(OBJDIR)/screens.o
 GENERATED += $(OBJDIR)/sprites.o
 GENERATED += $(OBJDIR)/tile_map_drawing.o
 GENERATED += $(OBJDIR)/tile_map_io.o
+GENERATED += $(OBJDIR)/treasure.o
+OBJECTS += $(OBJDIR)/audio.o
+OBJECTS += $(OBJDIR)/combat.o
 OBJECTS += $(OBJDIR)/game.o
 OBJECTS += $(OBJDIR)/game_hud.o
 OBJECTS += $(OBJDIR)/items.o
 OBJECTS += $(OBJDIR)/loading.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/map.o
+OBJECTS += $(OBJDIR)/monsters.o
 OBJECTS += $(OBJDIR)/pause.o
 OBJECTS += $(OBJDIR)/pugixml.o
 OBJECTS += $(OBJDIR)/screens.o
 OBJECTS += $(OBJDIR)/sprites.o
 OBJECTS += $(OBJDIR)/tile_map_drawing.o
 OBJECTS += $(OBJDIR)/tile_map_io.o
+OBJECTS += $(OBJDIR)/treasure.o
 
 # Rules
 # #############################################
@@ -174,6 +182,12 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/audio.o: audio.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/combat.o: combat.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/game.o: game.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -192,6 +206,9 @@ $(OBJDIR)/main.o: main.cpp
 $(OBJDIR)/map.o: map.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/monsters.o: monsters.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/pause.o: pause.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -208,6 +225,9 @@ $(OBJDIR)/tile_map_drawing.o: tile_map_drawing.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/tile_map_io.o: tile_map_io.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/treasure.o: treasure.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
