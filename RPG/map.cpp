@@ -10,7 +10,6 @@
 #include <unordered_map>
 #include <list>
 
-
 class EffectInstance
 {
 public:
@@ -23,7 +22,7 @@ public:
 
 std::list<EffectInstance> Effects;
 
-float VisibilityInset = 100;
+float VisibilityInset = 200;
 Camera2D MapCamera = { 0 };
 TileMap CurrentMap;
 

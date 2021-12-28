@@ -656,6 +656,7 @@ void ActivateItem(int slotIndex)
 
 			// replace the removed item with the old weapon
 			removedItem.ItemId = weapon;
+			break;
 		}
 
 		case ItemTypes::Armor:
