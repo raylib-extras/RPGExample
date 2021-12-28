@@ -40,8 +40,8 @@ public:
 	const AttackInfo& GetAttack() const;
 	const DefenseInfo& GetDefense() const;
 
-	float LastAttack = -100;
-	float LastConsumeable = -100;
+	float LastAttack = 0;
+	float LastConsumeable = 0;
 	float AttackCooldown = 0;
 	float ItemCooldown = 0;
 

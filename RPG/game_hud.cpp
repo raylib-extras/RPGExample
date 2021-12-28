@@ -48,7 +48,7 @@ void GameHudScreen::DrawInventory()
 	constexpr int inventoryItemSize = 64;
 	constexpr int inventoryItemPadding = 4;
 
-	DrawText("Backpack", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 20, DARKBROWN);
+	DrawText("Backpack (LMB)Use/Equip (RMB)Drop", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 10, DARKBROWN);
 
 	int itemIndex = 0;
 	for (int y = 0; y < 4; y++)
@@ -79,19 +79,22 @@ void GameHudScreen::DrawInventory()
 					bool hovered = CheckCollisionPointRec(GetMousePosition(), itemRect);
 
 					if (hovered)
-						HoveredItem = item;
-
-					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
-						if (item->IsActivatable() && Player.ActivateItemCallback != nullptr)
-							Player.ActivateItemCallback(itemIndex);
-						else if (item->IsWeapon() && Player.EquipWeaponCallback != nullptr)
-							Player.EquipWeaponCallback(itemIndex);
-						else if (item->IsArmor() && Player.EquipArmorCallback != nullptr)
-							Player.EquipArmorCallback(itemIndex);
+						HoveredItem = item;
+						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+						{
+							if (item->IsActivatable() && Player.ActivateItemCallback != nullptr)
+								Player.ActivateItemCallback(itemIndex);
+							else if (item->IsWeapon() && Player.EquipWeaponCallback != nullptr)
+								Player.EquipWeaponCallback(itemIndex);
+							else if (item->IsArmor() && Player.EquipArmorCallback != nullptr)
+								Player.EquipArmorCallback(itemIndex);
+						}
+						else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && Player.DropItemCallback != nullptr)
+						{
+							Player.DropItemCallback(itemIndex);
+						}
 					}
-					else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && Player.DropItemCallback != nullptr)
-						Player.DropItemCallback(itemIndex);
 				}
 			}
 			itemIndex++;
@@ -154,7 +157,7 @@ void GameHudScreen::Draw()
 			Item* item = GetItem(Player.BackpackContents[activatableItems[i]].ItemId);
 			if (DrawButton(buttonX, buttonY, item->Sprite, Player.BackpackContents[activatableItems[i]].Quantity) && item != nullptr)
 			{
-				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Player.ItemCooldown == 0)
 				{
 					if (Player.ActivateItemCallback != nullptr)
 						Player.ActivateItemCallback(activatableItems[i]);
@@ -163,6 +166,12 @@ void GameHudScreen::Draw()
 				{
 					HoveredItem = item;
 				}
+			}
+
+			if (Player.ItemCooldown > 0)
+			{
+				float height = ButtonSize * Player.ItemCooldown;
+				DrawRectangleRec(Rectangle{ buttonX,buttonY + (ButtonSize - height),ButtonSize,height }, ColorAlpha(BLACK, 0.5f));
 			}
 		}
 	}

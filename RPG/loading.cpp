@@ -91,6 +91,7 @@ void InitResources()
 	SoundsToLoad.emplace_back("resources/sounds/knifeSlice2.ogg");
 	SoundsToLoad.emplace_back("resources/sounds/chop.ogg");
 	SoundsToLoad.emplace_back("resources/sounds/creature5.ogg");
+	SoundsToLoad.emplace_back("resources/sounds/powerUp2.ogg");
 
 	TotalToLoad = TexturesToLoad.size() + SoundsToLoad.size();
 }

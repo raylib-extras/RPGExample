@@ -23,6 +23,21 @@ Item* GetItem(int id)
 	return &ItemDB[id];
 }
 
+int GetRandomItem(int except)
+{
+	int id = -1;
+	while (id == -1)
+	{
+		int index = GetRandomValue(0, int(ItemDB.size()) - 1);
+		id = ItemDB[index].Id;
+		if (id == except)
+			id = -1;
+	}
+
+	return id;
+}
+
+
 void SetupDefaultItems()
 {
 	auto* item = AddItem("Sword", SwordSprite, ItemTypes::Weapon);

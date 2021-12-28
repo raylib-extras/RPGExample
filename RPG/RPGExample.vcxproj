@@ -170,35 +170,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\audio.h" />
-    <ClInclude Include="include\combat.h" />
-    <ClInclude Include="include\game_hud.h" />
-    <ClInclude Include="include\items.h" />
-    <ClInclude Include="include\monsters.h" />
-    <ClInclude Include="include\treasure.h" />
     <ClInclude Include="PUGIXML\pugiconfig.hpp" />
     <ClInclude Include="PUGIXML\pugixml.hpp" />
+    <ClInclude Include="include\audio.h" />
+    <ClInclude Include="include\combat.h" />
     <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\game_hud.h" />
+    <ClInclude Include="include\items.h" />
     <ClInclude Include="include\loading.h" />
     <ClInclude Include="include\main.h" />
     <ClInclude Include="include\map.h" />
+    <ClInclude Include="include\monsters.h" />
     <ClInclude Include="include\pause.h" />
     <ClInclude Include="include\resource_ids.h" />
     <ClInclude Include="include\screens.h" />
     <ClInclude Include="include\sprites.h" />
     <ClInclude Include="include\tile_map.h" />
+    <ClInclude Include="include\treasure.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PUGIXML\pugixml.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="combat.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="game_hud.cpp" />
     <ClCompile Include="items.cpp" />
-    <ClCompile Include="monsters.cpp" />
-    <ClCompile Include="PUGIXML\pugixml.cpp" />
-    <ClCompile Include="game.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="monsters.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="screens.cpp" />
     <ClCompile Include="sprites.cpp" />

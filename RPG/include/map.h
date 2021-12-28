@@ -12,6 +12,8 @@ void DrawMap();
 
 Camera2D& GetMapCamera();
 
+void SetVisiblePoint(const Vector2& point);
+
 // tile map objects
 std::vector<const TileObject*> GetMapObjectsOfType(const char* objType, TileObject::SubTypes requiredType = TileObject::SubTypes::None);
 const TileObject* GetFirstMapObjectOfType(const char* objType, TileObject::SubTypes requiredType = TileObject::SubTypes::None);

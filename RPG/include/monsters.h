@@ -22,7 +22,7 @@ public:
 	float DetectionRadius = 200;
 	float Speed = 50;
 
-	std::string lootTable = "default_mob_loot";
+	std::string lootTable = "mob_loot";
 };
 
 // Mob Database

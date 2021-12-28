@@ -21,3 +21,4 @@ constexpr int MissSoundId = 5;
 constexpr int HitSoundId = 6;
 constexpr int PlayerDamageSoundId = 7;
 constexpr int CreatureDamageSoundId = 8;
+constexpr int PlayerHealSoundId = 9;

@@ -22,6 +22,7 @@ public:
 
 std::list<EffectInstance> Effects;
 
+float VisibilityInset = 100;
 Camera2D MapCamera = { 0 };
 TileMap CurrentMap;
 
@@ -33,6 +34,23 @@ Rectangle MapBounds = { 0,0,0,0 };
 Camera2D& GetMapCamera()
 {
 	return MapCamera;
+}
+
+void SetVisiblePoint(const Vector2& point)
+{
+	Vector2 screenPoint = GetWorldToScreen2D(point, MapCamera);
+
+	if (screenPoint.x < VisibilityInset)
+		MapCamera.target.x -= VisibilityInset - screenPoint.x;
+
+	if (screenPoint.x > GetScreenWidth() -  VisibilityInset)
+		MapCamera.target.x += screenPoint.x - (GetScreenWidth() - VisibilityInset);
+
+	if (screenPoint.y < VisibilityInset)
+		MapCamera.target.y -= VisibilityInset - screenPoint.y;
+
+	if (screenPoint.y > GetScreenHeight() - VisibilityInset)
+		MapCamera.target.y += screenPoint.y -(GetScreenHeight() - VisibilityInset);
 }
 
 bool PointInMap(const Vector2& point)

@@ -15,7 +15,19 @@
     <ClInclude Include="PUGIXML\pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\combat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game_hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\items.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\loading.h">
@@ -25,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\monsters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pause.h">
@@ -42,22 +57,7 @@
     <ClInclude Include="include\tile_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\game_hud.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\items.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\treasure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\monsters.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\combat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +65,19 @@
     <ClCompile Include="PUGIXML\pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="combat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_hud.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="loading.cpp">
@@ -75,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="monsters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pause.cpp">
@@ -92,22 +107,7 @@
     <ClCompile Include="tile_map_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_hud.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="items.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="treasure.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="monsters.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="audio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="combat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

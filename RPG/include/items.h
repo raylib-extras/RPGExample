@@ -45,6 +45,8 @@ public:
 Item* AddItem(const char* name, int sprite, ItemTypes type);
 Item* GetItem(int id);
 
+int GetRandomItem(int except = -1);
+
 void SetupDefaultItems();
 
 // Item constants

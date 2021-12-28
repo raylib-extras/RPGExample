@@ -103,7 +103,12 @@ void StartLevel()
 	{
 		const TileObject::Property* level = exit->GetProperty("target_level");
 		if (level != nullptr)
-			Exits.emplace_back(Exit{ exit->Bounds,"level" + level->Value + ".tmx" });
+		{
+			if (level->Value == "-1")
+				Exits.emplace_back(Exit{ exit->Bounds,"endgame" });
+			else
+				Exits.emplace_back(Exit{ exit->Bounds,"level" + level->Value + ".tmx" });
+		}
 	}
 
 	Chests.clear();
@@ -177,9 +182,12 @@ void GetPlayerInput()
 
 		for (auto& mob : Mobs)
 		{
-			if (CheckCollisionPointCircle(mousePos, mob.Position, Player.GetAttack().Range + 20))
+			if (CheckCollisionPointCircle(mousePos, mob.Position, 20))
 			{
 				TargetMob = &mob;
+
+				if (Vector2Distance(Player.Position,mob.Position) <= Player.GetAttack().Range + 40)
+					Player.TargetActive = false;
 				break;
 			}
 		}
@@ -353,9 +361,18 @@ void MovePlayer()
 	{
 		if (CheckCollisionPointRec(Player.Position, exit.Bounds))
 		{
-			std::string map = "resources/maps/" + exit.Destination;
-			LoadLevel(map.c_str());
-			StartLevel();
+			if (exit.Destination == "endgame")
+			{
+				EndGame(true, Player.Gold + 100);
+			}
+			else
+			{
+				std::string map = "resources/maps/" + exit.Destination;
+				LoadLevel(map.c_str());
+				StartLevel();
+			}
+
+			break;
 		}
 	}
 }
@@ -369,7 +386,7 @@ void ApplyPlayerActions()
 		if (GetGameTime() - Player.LastAttack >= Player.GetAttack().Cooldown)
 		{
 			float distance = Vector2Distance(TargetMob->Position, Player.Position);
-			if (distance < Player.GetAttack().Range)
+			if (distance < Player.GetAttack().Range + 40)
 			{
 				MOB* monsterInfo = GetMob(TargetMob->MobId);
 				if (monsterInfo != nullptr)
@@ -431,6 +448,7 @@ void ApplyPlayerActions()
 	}
 
 	Player.AttackCooldown = 1.0f - std::min(1.0f, (GetGameTime() - Player.LastAttack) / Player.GetAttack().Cooldown);
+	Player.ItemCooldown = 1.0f - std::min(1.0f, (GetGameTime() - Player.LastConsumeable) / 1);
 }
 
 void CullDeadMobs()
@@ -570,6 +588,8 @@ void UpdateGame()
 	}
 
 	UpdateSprites();
+
+	SetVisiblePoint(Player.Position);
 }
 
 void UseConsumable(Item* item)
@@ -590,7 +610,8 @@ void UseConsumable(Item* item)
 		if (Player.Health > Player.MaxHealth)
 			Player.Health = Player.MaxHealth;
 
-		AddEffect(Player.Position, EffectType::RiseFade, HealingSprite);
+		PlaySound(PlayerHealSoundId);
+		AddEffect(Player.Position, EffectType::RiseFade, HealingSprite, 2);
 		break;
 
 	case ActivatableEffects::Defense:
@@ -666,5 +687,5 @@ void ActivateItem(int slotIndex)
 
 void DropItem(int item)
 {
-
+	PlaceItemDrop(RemoveInventoryItem(item, 999), Player.Position);
 }
