@@ -6,6 +6,7 @@
 #include "treasure.h"
 #include "monsters.h"
 #include "audio.h"
+#include "resource_ids.h"
 
 #include "raylib.h"
 #include "raymath.h"
