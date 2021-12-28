@@ -89,7 +89,7 @@ void StartLevel()
 {
 	GameClock = 0;
 
-	Player.LastConsumeable = -1;
+	Player.LastConsumeable = -100;
 	Player.LastAttack = -100;
 
 	auto* spawn = GetFirstMapObjectOfType(PlayerSpawnType);
@@ -104,7 +104,7 @@ void StartLevel()
 	Exits.clear();
 	for (const TileObject* exit : GetMapObjectsOfType(ExitType))
 	{
-		const TileObject::Property* level = exit->GetProperty("target_level");
+		const Property* level = exit->GetProperty("target_level");
 		if (level != nullptr)
 		{
 			if (level->Value == "-1")
@@ -118,7 +118,7 @@ void StartLevel()
 	TargetChest = nullptr;
 	for (const TileObject* chest : GetMapObjectsOfType(ChestType))
 	{
-		const TileObject::Property* contents = chest->GetProperty("contents");
+		const Property* contents = chest->GetProperty("contents");
 		if (contents != nullptr)
 			Chests.emplace_back(Chest{ chest->Bounds, contents->Value });
 	}
@@ -127,7 +127,7 @@ void StartLevel()
 
 	for (const TileObject* mobSpawn : GetMapObjectsOfType(MobSpawnType))
 	{
-		const TileObject::Property* mobType = mobSpawn->GetProperty("mob_type");
+		const Property* mobType = mobSpawn->GetProperty("mob_type");
 
 		MOB* monster = GetMob(mobType->GetInt());
 		if (monster == nullptr)
@@ -189,7 +189,7 @@ void GetPlayerInput()
 			{
 				TargetMob = &mob;
 
-				if (Vector2Distance(Player.Position,mob.Position) <= Player.GetAttack().Range + 40)
+				if (Vector2Distance(Player.Position, mob.Position) <= Player.GetAttack().Range + 40)
 					Player.TargetActive = false;
 				break;
 			}
@@ -395,7 +395,7 @@ void ApplyPlayerActions()
 				if (monsterInfo != nullptr)
 				{
 					AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
-					if (!monsterInfo->Attack.Melee)
+					if (!Player.GetAttack().Melee)
 						AddEffect(Player.Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
 
 					int damage = ResolveAttack(Player.GetAttack(), monsterInfo->Defense.Defense);
@@ -458,8 +458,20 @@ void ApplyPlayerActions()
 
 	float time = GetGameTime();
 
-	Player.AttackCooldown = 1.0f - std::min(1.0f, (time - Player.LastAttack) / Player.GetAttack().Cooldown);
-	Player.ItemCooldown = 1.0f - std::min(1.0f, (time - Player.LastConsumeable) / 1);
+	float attackTime = time - Player.LastAttack;
+	float itemTime = time - Player.LastConsumeable;
+
+	if (attackTime >= Player.GetAttack().Cooldown)
+		Player.AttackCooldown = 0;
+	else
+		Player.AttackCooldown = 1.0f - (attackTime / Player.AttackCooldown);
+
+	float itemCooldown = 1;
+
+	if (itemTime >= itemCooldown)
+		Player.ItemCooldown = 0;
+	else
+		Player.ItemCooldown = 1.0f - (itemTime / itemCooldown);
 
 	if (Player.BuffLifetimeLeft > 0)
 	{
@@ -577,9 +589,10 @@ void UpdatePlayerSprite()
 		Player.Sprite->SpriteFrame = PlayerChainSprite;
 	else if (Player.EquipedArmor == PlateArmorItem)
 		Player.Sprite->SpriteFrame = PlayerPlateSprite;
+	else if (Player.EquipedArmor == LeatherArmorItem)
+		Player.Sprite->SpriteFrame = PlayerLeatherSprite;
 	else
 		Player.Sprite->SpriteFrame = PlayerSprite;
-
 
 	if (Player.TargetSprite != nullptr)
 	{
@@ -627,8 +640,13 @@ void UpdateSprites()
 void UpdateGame()
 {
 	if (IsKeyPressed(KEY_ESCAPE))
-		PauseGame();
-	
+	{
+		if (GameHud.InventoryOpen)
+			GameHud.InventoryOpen = false;
+		else
+			PauseGame();
+	}
+
 	// only update our game clock when we are unpaused
 	GameClock += GetFrameTime();
 
@@ -658,7 +676,7 @@ void UseConsumable(Item* item)
 	if (time < 1)
 		return;
 
-	Player.LastConsumeable = time;
+	Player.LastConsumeable = GetGameTime();
 
 	switch (item->Effect)
 	{
@@ -684,6 +702,7 @@ void UseConsumable(Item* item)
 		{
 			mob->Health -= item->Value;
 			PlaySound(CreatureDamageSoundId);
+			AddEffect(Player.Position, EffectType::ToTarget, item->Sprite, mob->Position, 1);
 			AddEffect(mob->Position, EffectType::RotateFade, item->Sprite, 1);
 		}
 		break;

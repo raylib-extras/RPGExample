@@ -10,7 +10,7 @@ std::vector<Sound> Sounds;
 void InitAudio()
 {
 	InitAudioDevice();
-	SetMasterVolume(0.5f);
+	SetMasterVolume(0.25f);
 	StartBGM("resources/sounds/Flowing Rocks.ogg");
 }
 

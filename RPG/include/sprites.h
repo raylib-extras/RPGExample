@@ -53,11 +53,12 @@ constexpr int ShieldSprite = 94;
 constexpr int FireballSprite = 120;
 
 // MOB sprites
-constexpr int PlayerSprite = 4;
+constexpr int PlayerSprite = 159;
+constexpr int PlayerLeatherSprite = 4;
 constexpr int PlayerChainSprite = 5;
 constexpr int PlayerPlateSprite = 6;
 constexpr int RatSprite = 20;
-constexpr int SnakeSprite = 8;
+constexpr int SnakeSprite = 18;
 constexpr int GhostSprite = 23;
 constexpr int TrollSprite = 11;
 constexpr int TurtleSprite = 24;

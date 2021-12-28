@@ -85,14 +85,14 @@ void SetupDefaultItems()
 	item->Attack.MinDamage = 1;
 	item->Attack.MaxDamage = 3;
 	item->Attack.Melee = false;
-	item->Attack.Range = 75.0;
+	item->Attack.Range = 150.0f;
 	item->Attack.Cooldown = 0.25f;
 
 	item = AddItem("Sweet Bow", GoodBowSprite, ItemTypes::Weapon);
 	item->Attack.MinDamage = 3;
 	item->Attack.MaxDamage = 6;
 	item->Attack.Melee = false;
-	item->Attack.Range = 125.0f;
+	item->Attack.Range = 250.0f;
 	item->Attack.Cooldown = 0.25f;
 
 	item = AddItem("Bonkmaster 5000", ClubSprite, ItemTypes::Weapon);

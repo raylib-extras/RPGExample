@@ -159,6 +159,8 @@ void GameHudScreen::Draw()
 			activatableItems.push_back(i);
 	}
 
+	int activatedItem = -1;
+
 	// activatable items
 	int backpackSlot = 0;
 	for (int i = 0; i < 7; i++)
@@ -167,13 +169,14 @@ void GameHudScreen::Draw()
 
 		if (i < activatableItems.size())
 		{
+			bool shortcutPressed = IsKeyPressed(KEY_ONE + i);
+
 			Item* item = GetItem(Player.BackpackContents[activatableItems[i]].ItemId);
-			if (DrawButton(buttonX, buttonY, item->Sprite, Player.BackpackContents[activatableItems[i]].Quantity) && item != nullptr)
+			if ((DrawButton(buttonX, buttonY, item->Sprite, Player.BackpackContents[activatableItems[i]].Quantity) || shortcutPressed) && item != nullptr)
 			{
-				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Player.ItemCooldown == 0)
+				if ((IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || shortcutPressed) && Player.ItemCooldown == 0)
 				{
-					if (Player.ActivateItemCallback != nullptr)
-						Player.ActivateItemCallback(activatableItems[i]);
+					activatedItem = activatableItems[i];
 				}
 				else
 				{
@@ -189,9 +192,12 @@ void GameHudScreen::Draw()
 		}
 	}
 
+	if (activatedItem != -1 && Player.ActivateItemCallback != nullptr)
+		Player.ActivateItemCallback(activatedItem);
+
 	// backpack buttons
 	buttonX += ButtonSize + 4;
-	if (DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	if ((DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_I))
 	{
 		InventoryOpen = !InventoryOpen;
 	}

@@ -15,6 +15,8 @@ public:
 
 	bool IsUiClick(const Vector2& pos);
 
+	bool InventoryOpen = false;
+
 private:
 	bool DrawButton(float x, float y, int itemId = -1, int quantity = 1, Color border = BROWN, Color center = BEIGE);
 	void DrawInventory();	
@@ -23,8 +25,6 @@ private:
 private:
 	float ButtonSize = 70;
 	float ButtonInset = 6;
-
-	bool InventoryOpen = false;
 
 	const Item* HoveredItem = nullptr;
 };

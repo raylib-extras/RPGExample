@@ -193,7 +193,7 @@ bool ReadObjectsLayer(pugi::xml_node& root, TileMap& map)
 			{
 				for (auto prop : properties.children())
 				{
-					TileObject::Property propertyRectord;
+					Property propertyRectord;
 					propertyRectord.Name = prop.attribute("name").as_string();
 					propertyRectord.Type = prop.attribute("type").as_string();
 					propertyRectord.Value = prop.attribute("value").as_string();
@@ -249,6 +249,21 @@ bool ReadTiledXML(pugi::xml_document& doc, TileMap& map, const std::string& file
 			}
 			else if (!ReadTileSetFile(GetRelativeResource(filePath, tilesetFile), idOffset, map))
 				return false;
+		}
+		else if (childName == "properties")
+		{
+			if (!child.empty())
+			{
+				for (auto prop : child.children())
+				{
+					Property propertyRectord;
+					propertyRectord.Name = prop.attribute("name").as_string();
+					propertyRectord.Type = prop.attribute("type").as_string();
+					propertyRectord.Value = prop.attribute("value").as_string();
+
+					map.Properties.emplace_back(std::move(propertyRectord));
+				}
+			}
 		}
 		else if (childName == "objectgroup")
 		{

@@ -123,6 +123,11 @@ void FinalizeLoad()
 		CenterSprite(i + 14);
 	}
 
+	CenterSprite(PlayerSprite);
+	CenterSprite(PlayerLeatherSprite);
+	CenterSprite(PlayerChainSprite);
+	CenterSprite(PlayerPlateSprite);
+
 	CenterSprite(ClickTargetSprite);
 	CenterSprite(CoinSprite);
 

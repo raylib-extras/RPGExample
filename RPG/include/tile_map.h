@@ -39,6 +39,35 @@ public:
 	std::vector<Tile> Tiles;
 };
 
+class Property
+{
+public:
+	std::string Name;
+	std::string Type;
+	std::string Value;
+
+	inline int GetInt() const
+	{
+		if (Type != "int" || Value.empty())
+			return 0;
+
+		return atoi(Value.c_str());
+	}
+
+	inline float GetFloat() const
+	{
+		if (Type != "float" || Value.empty())
+			return 0;
+
+		return float(atof(Value.c_str()));
+	}
+
+	inline const char* GetString() const
+	{
+		return Value.c_str();
+	}
+};
+
 class TileObject
 {
 public:
@@ -65,35 +94,6 @@ public:
 	};
 
 	SubTypes SubType = SubTypes::None;
-
-	class Property
-	{
-	public:
-		std::string Name;
-		std::string Type;
-		std::string Value;
-
-		inline int GetInt() const
-		{
-			if (Type != "int" || Value.empty())
-				return 0;
-
-			return atoi(Value.c_str());
-		}
-
-		inline float GetFloat() const
-		{
-			if (Type != "float" || Value.empty())
-				return 0;
-
-			return float(atof(Value.c_str()));
-		}
-
-		inline const char* GetString() const
-		{
-			return Value.c_str();
-		}
-	};
 
 	std::vector<Property> Properties;
 
@@ -149,6 +149,18 @@ public:
 
 	std::map<int, TileLayer*> TileLayers;
 	std::map<int, ObjectLayer*> ObjectLayers;
+
+	std::vector<Property> Properties;
+
+	inline const Property* GetProperty(const char* name) const
+	{
+		for (const auto& prop : Properties)
+		{
+			if (prop.Name == name)
+				return &prop;
+		}
+		return nullptr;
+	}
 };
 
 bool ReadTileMap(const char* filePath, TileMap& map);

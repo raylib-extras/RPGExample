@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="24" height="17" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="27">
+ <properties>
+  <property name="bgm" value="resources/sounds/Mission Plausible.ogg"/>
+ </properties>
+ <tileset firstgid="1" name="Basic" tilewidth="32" tileheight="32" spacing="4" tilecount="168" columns="14">
+  <image source="../colored_tilemap.png" width="500" height="428"/>
+ </tileset>
+ <layer id="2" name="Base Level" width="24" height="17">
+  <data encoding="csv">
+1,2,60,2,2,60,2,59,2,60,2,60,2,2,2,2,60,2,2,60,2,59,2,4,
+15,61,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+15,16,16,61,16,16,16,61,16,16,16,16,16,16,16,16,16,61,16,16,16,16,61,18,
+15,61,16,16,16,16,16,16,16,16,61,16,16,16,16,61,16,16,16,16,16,16,16,18,
+15,16,16,16,16,16,61,16,16,16,61,16,16,16,16,16,16,61,16,16,61,16,16,18,
+15,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+15,16,16,16,16,61,16,61,16,16,16,61,61,16,61,16,61,16,16,16,16,16,16,18,
+15,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,61,16,16,18,
+15,16,16,16,16,16,61,16,61,16,16,16,16,16,16,61,16,16,16,16,16,16,16,18,
+15,16,16,16,16,16,16,16,16,16,16,61,16,16,16,16,16,16,61,16,16,16,16,18,
+15,61,16,16,16,16,16,61,16,16,16,16,16,16,61,16,16,16,16,16,16,16,61,18,
+15,16,61,16,16,16,16,16,16,16,16,61,16,16,16,16,61,16,16,16,61,16,16,18,
+15,16,16,61,16,61,16,16,61,16,61,61,16,16,61,16,16,16,16,61,16,16,61,18,
+15,61,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,18,
+29,59,59,60,2,59,2,59,2,59,2,60,59,2,2,2,2,2,59,59,2,59,59,32,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="5" name="Level Items" width="24" height="17">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,2147483696,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,52,0,52,0,52,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,52,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,52,0,0,0,0,0,0,48,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="7" name="Walls">
+  <object id="9" type="wall" x="0.558919" y="0" width="768" height="32"/>
+  <object id="10" type="wall" x="0" y="32" width="9.50163" height="414.718"/>
+  <object id="11" type="wall" x="759.571" y="33.5352" width="7.82487" height="414.159"/>
+  <object id="12" type="wall" x="0" y="447" width="770.75" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="Objects">
+  <object id="1" name="spawn" type="player_spawn" x="86.7779" y="98.2798">
+   <point/>
+  </object>
+  <object id="5" name="Treasure" type="chest" x="480.044" y="318.448" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="random_loot"/>
+   </properties>
+  </object>
+  <object id="7" name="Exit" type="exit" x="702.389" y="385.221" width="33.5352" height="29.6227">
+   <properties>
+    <property name="bgm" value="endlevel.oog"/>
+    <property name="target_level" type="int" value="-1"/>
+   </properties>
+  </object>
+  <object id="22" type="mob_spawn" x="480" y="260.026">
+   <properties>
+    <property name="mob_type" type="int" value="8"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="23" name="Treasure" type="chest" x="484.068" y="383.631" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="random_loot"/>
+   </properties>
+  </object>
+  <object id="24" name="Treasure" type="chest" x="546.918" y="290.589" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="random_loot"/>
+   </properties>
+  </object>
+  <object id="25" name="Treasure" type="chest" x="609.151" y="291.821" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="random_loot"/>
+   </properties>
+  </object>
+  <object id="26" name="Treasure" type="chest" x="672.617" y="288.74" width="31.2995" height="31.2995">
+   <properties>
+    <property name="contents" value="random_loot"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

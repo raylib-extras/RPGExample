@@ -3,6 +3,7 @@
 #include "resource_ids.h"
 #include "sprites.h"
 #include "tile_map.h"
+#include "audio.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -24,7 +25,7 @@ public:
 
 std::list<EffectInstance> Effects;
 
-float VisibilityInset = 200;
+Rectangle VisibilityInset = { 200, 200, 200, 250 };
 Camera2D MapCamera = { 0 };
 TileMap CurrentMap;
 
@@ -42,17 +43,17 @@ void SetVisiblePoint(const Vector2& point)
 {
 	Vector2 screenPoint = GetWorldToScreen2D(point, MapCamera);
 
-	if (screenPoint.x < VisibilityInset)
-		MapCamera.target.x -= VisibilityInset - screenPoint.x;
+	if (screenPoint.x < VisibilityInset.x)
+		MapCamera.target.x -= VisibilityInset.x - screenPoint.x;
 
-	if (screenPoint.x > GetScreenWidth() -  VisibilityInset)
-		MapCamera.target.x += screenPoint.x - (GetScreenWidth() - VisibilityInset);
+	if (screenPoint.x > GetScreenWidth() -  VisibilityInset.width)
+		MapCamera.target.x += screenPoint.x - (GetScreenWidth() - VisibilityInset.width);
 
-	if (screenPoint.y < VisibilityInset)
-		MapCamera.target.y -= VisibilityInset - screenPoint.y;
+	if (screenPoint.y < VisibilityInset.y)
+		MapCamera.target.y -= VisibilityInset.y - screenPoint.y;
 
-	if (screenPoint.y > GetScreenHeight() - VisibilityInset)
-		MapCamera.target.y += screenPoint.y -(GetScreenHeight() - VisibilityInset);
+	if (screenPoint.y > GetScreenHeight() - VisibilityInset.height)
+		MapCamera.target.y += screenPoint.y -(GetScreenHeight() - VisibilityInset.height);
 }
 
 bool PointInMap(const Vector2& point)
@@ -147,6 +148,13 @@ void LoadMap(const char* file)
 		MapCamera.target.x = MapBounds.width / 2;
 		MapCamera.target.y = MapBounds.height / 2;
 	}
+
+	const auto* bgm = CurrentMap.GetProperty("bgm");
+	if (bgm)
+	{
+		StopBGM();
+		StartBGM(bgm->GetString());
+	}
 }
 
 void ClearMap()
@@ -225,7 +233,7 @@ void DrawMap()
 			float dist = Vector2Length(vec);
 			vec = Vector2Normalize(vec);
 
-			pos = Vector2Add(effect->Position, Vector2Scale(vec, dist * param));
+			pos = Vector2Add(effect->Position, Vector2Scale(vec, dist * (1.0f - param)));
 			break;
 		}
 		}
