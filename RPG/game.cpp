@@ -194,7 +194,7 @@ void GetPlayerInput()
 	}
 }
 
-void PlaceItemDrop(TreasureInstance item, Vector2& dropPoint)
+void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
 {
 	Item* itemRecord = GetItem(item.ItemId);
 	if (!itemRecord)
@@ -687,5 +687,6 @@ void ActivateItem(int slotIndex)
 
 void DropItem(int item)
 {
-	PlaceItemDrop(RemoveInventoryItem(item, 999), Player.Position);
+	TreasureInstance drop = RemoveInventoryItem(item, 999);
+	PlaceItemDrop(drop, Player.Position);
 }
