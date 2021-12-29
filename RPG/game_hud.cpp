@@ -210,6 +210,8 @@ void GameHudScreen::Draw()
 				}
 			}
 
+			DrawText(TextFormat("%d", i + 1), int(buttonX), int(buttonY), 20, WHITE);
+
 			if (Player.ItemCooldown > 0)
 			{
 				float height = ButtonSize * Player.ItemCooldown;
@@ -265,7 +267,7 @@ bool GameHudScreen::DrawButton(float x, float y, int sprite, int quantity, Color
 
 	if (quantity > 1)
 	{
-		DrawText(TextFormat("%d", quantity), int(x + 2), int(y + ButtonSize - 12), 10, WHITE);
+		DrawText(TextFormat("X%d", quantity), int(x + ButtonSize/2), int(y + ButtonSize - 22), 20, WHITE);
 	}
 
 	return CheckCollisionPointRec(GetMousePosition(), buttonRect);
