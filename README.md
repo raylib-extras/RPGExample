@@ -33,3 +33,12 @@ This sample has examples of how to do the following things in raylib
 - Sound Effects
 - Resource Loading
 
+# C++
+This example does use C++. The use of C++ has been keept at a resonable level. C++ is used for
+
+- Containers (vector, list, map, etc...)
+- Simple classes
+- Menu Screens
+
+Every use of C++ in this project can be replicated in C, or any other language. The main reason for using C++ was to not clutter up the project with implementations of common containers such as linked lists.
+Do not fear the C++. C++ is just another tool to use to solve problems.
