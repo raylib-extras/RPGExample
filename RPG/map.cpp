@@ -37,9 +37,8 @@
 #include <unordered_map>
 #include <list>
 
-class EffectInstance
+struct EffectInstance
 {
-public:
 	Vector2 Position = { 0,0 };
 	EffectType Effect = EffectType::Fade;
 	int SpriteId = -1;
