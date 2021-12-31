@@ -8,6 +8,9 @@ https://youtu.be/9apXiHKIlsg
 ## Design Document
 https://docs.google.com/document/d/1lxpR6WbbjmCi9X_seGPYPYz7UhFcAKkX5Xl3pVfEwHs/edit?usp=sharing
 
+## Video Overview
+https://youtu.be/krykjMt9ZKQ
+
 # Building
 The RPG Example uses premake just like all other items in raylib extras. A tutorial on how to build a raylib project with premake can be found here. https://github.com/raylib-extras/game-premake
 
