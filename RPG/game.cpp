@@ -645,7 +645,16 @@ void UpdateGame()
 		if (GameHud.InventoryOpen)
 			GameHud.InventoryOpen = false;
 		else
+		{
 			PauseGame();
+			return;
+		}
+	}
+
+	if (!IsWindowFocused())
+	{
+		PauseGame();
+		return;
 	}
 
 	// only update our game clock when we are unpaused
