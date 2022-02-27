@@ -43,7 +43,7 @@ enum class ApplicationStates
 	Running,
 	Paused,
 	GameOver,
-	Quiting
+	Quitting
 };
 ApplicationStates ApplicationState = ApplicationStates::Startup;
 
@@ -208,7 +208,7 @@ void EndGame(bool win, int gold)
 // quit the entire application
 void QuitApplication()
 {
-	ApplicationState = ApplicationStates::Quiting;
+	ApplicationState = ApplicationStates::Quitting;
 }
 
 // the main application loop
@@ -225,7 +225,7 @@ int main()
 	ApplicationState = ApplicationStates::Loading;
 
 	// game loop
-	while (!WindowShouldClose() && ApplicationState != ApplicationStates::Quiting)
+	while (!WindowShouldClose() && ApplicationState != ApplicationStates::Quitting)
 	{
 		// call the update that goes with our current game state
 		switch (ApplicationState)
