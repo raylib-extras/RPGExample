@@ -14,8 +14,8 @@ https://youtu.be/krykjMt9ZKQ
 # Building
 The RPG Example uses premake just like all other items in raylib extras. A tutorial on how to build a raylib project with premake can be found here. https://github.com/raylib-extras/game-premake
 
-This example includes the visual studio projects that were created by premake, but other build systems can be used (like make files for linux) by running premake5 for the desired platform.
-The example uses raylib as a sub module, so be sure that you have updated it.
+This example includes the visual studio projects and windows makefiles that were created by premake, but other build systems can be used (like make files for linux) by running premake5 for the desired platform.
+The premake system will automatically download raylib for you.
 
 # State
 The current example is feature complete and would be considered in 'beta' state. It has all the main features that are required by the game.
