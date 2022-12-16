@@ -36,7 +36,7 @@ void InitAudio()
 {
 	InitAudioDevice();
 	SetMasterVolume(0.25f);
-	StartBGM("resources/sounds/Flowing Rocks.ogg");
+	StartBGM("sounds/Flowing Rocks.ogg");
 }
 
 void ShutdownAudio()

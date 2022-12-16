@@ -182,6 +182,50 @@ void FillRectWithSprite(int spriteId, const Rectangle& rect, Color tint, uint8_t
 		if (flip && SpriteFlipY == 0)
 			source.height *= -1;
 
-		DrawTextureTiled(GetTexture(sprite.TextureId), source, rect, Vector2{ 0, 0 }, rotation, 1, tint);
+		int yCount = int(floor(rect.height / sprite.SourceRect.height));
+		int xCount = int(floor(rect.width / sprite.SourceRect.width));
+
+		Rectangle destRect = { 0, 0, sprite.SourceRect.width, sprite.SourceRect.height };
+
+		for (int y = 0; y < yCount; y++)
+		{
+			// full rows
+			for (int x = 0; x < xCount; x++)
+			{
+				destRect.x = rect.x + (x * destRect.width);
+				destRect.y = rect.y + (y * destRect.height);
+
+				DrawTexturePro(GetTexture(sprite.TextureId), source, destRect, Vector2Zero(), 0, tint);
+			}
+
+			// remainder column
+			Rectangle remainderRect;
+			remainderRect.x = rect.x + (xCount * destRect.width);
+			remainderRect.y = rect.y + (y * destRect.height);
+
+			remainderRect.width = (rect.x + rect.width) - remainderRect.x;
+			remainderRect.height = destRect.height;
+			if(remainderRect.width > 0)
+				DrawTexturePro(GetTexture(sprite.TextureId), source, remainderRect, Vector2Zero(), 0, tint);
+		}
+
+		destRect = { 0, (yCount * destRect.height), sprite.SourceRect.width, (rect.y + rect.height) - (yCount * destRect.height) };
+
+		if (destRect.height > 0)
+		{
+			// remainder row
+			for (int x = 0; x < xCount; x++)
+			{
+				destRect.x = rect.x + (x * destRect.width);
+				DrawTexturePro(GetTexture(sprite.TextureId), source, destRect, Vector2Zero(), 0, tint);
+			}
+
+			// last item
+			destRect.x = (xCount * destRect.width);
+			destRect.width = (rect.x + rect.width) - destRect.x;
+
+			if (destRect.x > 0)
+				DrawTexturePro(GetTexture(sprite.TextureId), source, destRect, Vector2Zero(), 0, tint);
+		}
 	}
 }

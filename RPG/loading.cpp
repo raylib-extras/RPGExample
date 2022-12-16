@@ -99,24 +99,24 @@ void InitResources()
 	SetActiveScreen(LoadScreen);
 
 	// setup the assets to load
-	TexturesToLoad.emplace_back("resources/colored_tilemap.png"); //TileSetTexture
-	TexturesToLoad.emplace_back("resources/icons/Icon.5_46.png"); //LogoTexture
+	TexturesToLoad.emplace_back("colored_tilemap.png"); //TileSetTexture
+	TexturesToLoad.emplace_back("icons/Icon.5_46.png"); //LogoTexture
 
 	// setup default texture
 	Image checkered = GenImageChecked(32, 32, 8, 8, GRAY, RAYWHITE);
 	DefaultTexture = LoadTextureFromImage(checkered);
 	UnloadImage(checkered);
 
-	SoundsToLoad.emplace_back("resources/sounds/click3.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/handleCoins.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/doorOpen_1.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/metalPot1.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/creature1.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/woosh4.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/knifeSlice2.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/chop.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/creature5.ogg");
-	SoundsToLoad.emplace_back("resources/sounds/powerUp2.ogg");
+	SoundsToLoad.emplace_back("sounds/click3.ogg");
+	SoundsToLoad.emplace_back("sounds/handleCoins.ogg");
+	SoundsToLoad.emplace_back("sounds/doorOpen_1.ogg");
+	SoundsToLoad.emplace_back("sounds/metalPot1.ogg");
+	SoundsToLoad.emplace_back("sounds/creature1.ogg");
+	SoundsToLoad.emplace_back("sounds/woosh4.ogg");
+	SoundsToLoad.emplace_back("sounds/knifeSlice2.ogg");
+	SoundsToLoad.emplace_back("sounds/chop.ogg");
+	SoundsToLoad.emplace_back("sounds/creature5.ogg");
+	SoundsToLoad.emplace_back("sounds/powerUp2.ogg");
 
 	TotalToLoad = TexturesToLoad.size() + SoundsToLoad.size();
 }

@@ -93,6 +93,6 @@ public:
 	ItemCallback DropItemCallback = nullptr;
 
 private:
-	AttackInfo DefaultAttack = { "Slap", true, 1,1 };
+	AttackInfo DefaultAttack = { "Slap", true, 1, 1, 1.0f, 10.0f };
 	DefenseInfo DefaultDefense = { 0 };
 };

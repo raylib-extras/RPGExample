@@ -29,7 +29,7 @@
 
 struct DefenseInfo
 {
-	int Defense;
+	int Defense = 0;
 };
 
 struct AttackInfo

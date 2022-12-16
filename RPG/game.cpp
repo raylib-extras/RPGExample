@@ -148,7 +148,7 @@ void InitGame()
 	ActivateGame();
 
 	// load start level
-	LoadLevel("resources/maps/level0.tmx");
+	LoadLevel("maps/level0.tmx");
 	StartLevel();
 }
 
@@ -371,7 +371,7 @@ void MovePlayer()
 			}
 			else
 			{
-				std::string map = "resources/maps/" + exit.Destination;
+				std::string map = "maps/" + exit.Destination;
 				LoadLevel(map.c_str());
 				StartLevel();
 			}

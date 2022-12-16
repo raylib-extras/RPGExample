@@ -1,104 +1,104 @@
-newoption 
+
+newoption
 {
-   trigger = "opengl43",
-   description = "use OpenGL 4.3"
+    trigger = "graphics",
+    value = "OPENGL_VERSION",
+    description = "version of OpenGL to build raylib against",
+    allowed = {
+        { "opengl11", "OpenGL 1.1"},
+        { "opengl21", "OpenGL 2.1"},
+        { "opengl33", "OpenGL 3.3"},
+        { "opengl43", "OpenGL 4.3"}
+    },
+    default = "opengl33"
 }
 
-workspace "RPGExample"
-	configurations { "Debug","Debug.DLL", "Release", "Release.DLL" }
-	platforms { "x64"}
+function define_C()
+    language "C"
+end
 
-	filter "configurations:Debug"
-		defines { "DEBUG" }
-		symbols "On"
-		
-	filter "configurations:Debug.DLL"
-		defines { "DEBUG" }
-		symbols "On"
+function define_Cpp()
+    language "C++"
+end
 
-	filter "configurations:Release"
-		defines { "NDEBUG" }
-		optimize "On"	
-		
-	filter "configurations:Release.DLL"
-		defines { "NDEBUG" }
-		optimize "On"	
-		
-	filter { "platforms:x64" }
-		architecture "x86_64"
-		
-	targetdir "bin/%{cfg.buildcfg}/"
-	
-	defines{"PLATFORM_DESKTOP"}
-	if (_OPTIONS["opengl43"]) then
-		defines{"GRAPHICS_API_OPENGL_43"}
-	else
-		defines{"GRAPHICS_API_OPENGL_33"}
-	end
-	
-project "raylib"
-		filter "configurations:Debug.DLL OR Release.DLL"
-			kind "SharedLib"
-			defines {"BUILD_LIBTYPE_SHARED"}
-			
-		filter "configurations:Debug OR Release"
-			kind "StaticLib"
-			
-		filter "action:vs*"
-			defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
-			characterset ("MBCS")
-		
-		filter "system:windows"
-			defines{"_WIN32"}
-			links {"winmm", "kernel32", "opengl32", "kernel32", "gdi32"}
-			
-		filter "system:linux"
-			links {"pthread", "GL", "m", "dl", "rt", "X11"}
-			
-		filter{}
-		
-		location "build"
-		language "C++"
-		targetdir "bin/%{cfg.buildcfg}"
-		cppdialect "C++17"
-		
-		includedirs { "raylib/src", "raylib/src/external/glfw/include"}
-		vpaths 
-		{
-			["Header Files"] = { "raylib/src/**.h"},
-			["Source Files/*"] = {"raylib/src/**.c"},
-		}
-		files {"raylib/src/*.h", "raylib/src/*.c"}
-		
-project "RPGExample"
-	kind "ConsoleApp"
-	location "RPG"
-	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
-	cppdialect "C++17"
-	
-	vpaths 
-	{
-		["Header Files"] = { "**.h", "**.hpp"},
-		["Source Files"] = {"**.c", "**.cpp"},
-	}
-	files {"RPG/**.c", "RPG/**.cpp", "RPG/**.h", "RPG/PUGIXML/*.hpp", "RPG/PUGIXML/*.cpp"}
+function string.starts(String,Start)
+    return string.sub(String,1,string.len(Start))==Start
+end
 
-	links {"raylib"}
-	
-	includedirs { "RPG", "RPG/include", "raylib/src" }
-	defines{"PLATFORM_DESKTOP", "GRAPHICS_API_OPENGL_33"}
-	
-	filter "action:vs*"
-		defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "_WIN32"}
-		dependson {"raylib"}
-		links {"raylib.lib"}
-        characterset ("MBCS")
-		
-	filter "system:windows"
-		defines{"_WIN32"}
-		links {"winmm", "kernel32", "opengl32", "kernel32", "gdi32"}
-		libdirs {"bin/%{cfg.buildcfg}"}
-		
-	filter "system:linux"
-		links {"pthread", "GL", "m", "dl", "rt", "X11"}
+function link_to(lib)
+    links (lib)
+    includedirs ("../"..lib.."/include", "../"..lib.."/" )
+end
+
+function download_progress(total, current)
+    local ratio = current / total;
+    ratio = math.min(math.max(ratio, 0), 1);
+    local percent = math.floor(ratio * 100);
+    print("Download progress (" .. percent .. "%/100%)")
+end
+
+function check_raylib()
+    if(os.isdir("raylib") == false and os.isdir("raylib-master") == false) then
+        if(not os.isfile("raylib-master.zip")) then
+            print("Raylib not found, downloading from github")
+            local result_str, response_code = http.download("https://github.com/raysan5/raylib/archive/refs/heads/master.zip", "raylib-master.zip", {
+                progress = download_progress,
+                headers = { "From: Premake", "Referer: Premake" }
+            })
+        end
+        print("Unzipping to " ..  os.getcwd())
+        zip.extract("raylib-master.zip", os.getcwd())
+        os.remove("raylib-master.zip")
+    end
+end
+
+workspaceName = path.getbasename(os.getcwd())
+
+if (string.lower(workspaceName) == "raylib") then
+    print("raylib is a reserved name. Name your project directory something else.")
+    -- Project generation will succeed, but compilation will definitely fail, so just abort here.
+    os.exit()
+end
+
+workspace (workspaceName)
+    configurations { "Debug", "Release"}
+    platforms { "x64", "x86"}
+
+    filter "configurations:Debug"
+        defines { "DEBUG" }
+        symbols "On"
+
+    filter "configurations:Release"
+        defines { "NDEBUG" }
+        optimize "On"
+
+    filter { "platforms:x64" }
+        architecture "x86_64"
+
+    filter {}
+
+    targetdir "_bin/%{cfg.buildcfg}/"
+
+    if(os.isdir("game")) then
+        startproject(workspaceName)
+    end
+
+    cdialect "C99"
+    cppdialect "C++11"
+check_raylib();
+
+include ("raylib_premake5.lua")
+
+if(os.isdir("game")) then
+    include ("game")
+end
+
+folders = os.matchdirs("*")
+for _, folderName in ipairs(folders) do
+    if (string.starts(folderName, "raylib") == false and string.starts(folderName, "_") == false and string.starts(folderName, ".") == false) then
+        if (os.isfile(folderName .. "/premake5.lua")) then
+            print(folderName)
+            include (folderName)
+        end
+    end
+end

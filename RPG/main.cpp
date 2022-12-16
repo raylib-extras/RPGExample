@@ -126,7 +126,7 @@ void SetupWindow()
 	SetTargetFPS(144);
 
 	// load an image for the window icon
-	Image icon = LoadImage("resources/icons/Icon.6_98.png");
+	Image icon = LoadImage("icons/Icon.6_98.png");
 
 	// ensure that the picture is in the correct format
 	ImageFormat(&icon, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
@@ -149,7 +149,7 @@ void LoadComplete()
 	SetActiveScreen(&MainMenu);
 
 	// load background world so we have something to look at behind the menu
-	LoadMap("resources/maps/menu_map.tmx");
+	LoadMap("maps/menu_map.tmx");
 }
 
 // called when the game wants to go back to the main menu, from pause or game over screens
@@ -160,7 +160,7 @@ void GoToMainMenu()
 		QuitGame();
 
 	// start our background music again
-	StartBGM("resources/sounds/Flowing Rocks.ogg");
+	StartBGM("sounds/Flowing Rocks.ogg");
 
 	// go back to the main menu like we did when we started up
 	LoadComplete();
@@ -211,6 +211,52 @@ void QuitApplication()
 	ApplicationState = ApplicationStates::Quitting;
 }
 
+bool SearchAndSetResourceDir(const char* folderName)
+{
+	// check the working dir
+	if (DirectoryExists(folderName))
+	{
+		ChangeDirectory(TextFormat("%s/%s", GetWorkingDirectory(), folderName));
+		return true;
+	}
+
+	const char* appDir = GetApplicationDirectory();
+
+	// check the applicationDir
+	const char* dir = TextFormat("%s%s", appDir, folderName);
+	if (DirectoryExists(dir))
+	{
+		ChangeDirectory(dir);
+		return true;
+	}
+
+	// check one up from the app dir
+	dir = TextFormat("%s../%s", appDir, folderName);
+	if (DirectoryExists(dir))
+	{
+		ChangeDirectory(dir);
+		return true;
+	}
+
+	// check two up from the app dir
+	dir = TextFormat("%s../../%s", appDir, folderName);
+	if (DirectoryExists(dir))
+	{
+		ChangeDirectory(dir);
+		return true;
+	}
+
+	// check three up from the app dir
+	dir = TextFormat("%s../../../%s", appDir, folderName);
+	if (DirectoryExists(dir))
+	{
+		ChangeDirectory(dir);
+		return true;
+	}
+
+	return false;
+}
+
 // the main application loop
 int main()
 {
@@ -219,6 +265,7 @@ int main()
 	InitWindow(1280,800,"RPG Example");
 	SetupWindow();
 
+	SearchAndSetResourceDir("_resources");
 	InitAudio();
 	InitResources();
 
