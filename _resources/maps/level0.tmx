@@ -74,7 +74,7 @@
   <object id="19" x="650" y="185" width="83" height="20">
    <text wrap="1" color="#ffffff">Next Level</text>
   </object>
-  <object id="20" x="434.14" y="544.389" width="333.955" height="34.0908">
+  <object id="20" x="431.157" y="507.846" width="333.955" height="34.0908">
    <text fontfamily="MS Shell Dlg 2" pixelsize="27" wrap="1" color="#ffffff">Click Bag To See Inventory</text>
   </object>
   <object id="21" x="242.71" y="-36.0487" width="333.955" height="34.0908">

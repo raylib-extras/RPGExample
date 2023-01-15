@@ -122,6 +122,13 @@ GameOverScreen GameOver;
 // setup the window and icon
 void SetupWindow()
 {
+	// Validate that the window is not taller than the monitor size, if so, set it to a smaller size
+	int monitor = GetCurrentMonitor();
+
+	int maxHeight = GetMonitorHeight(monitor) - 40;
+	if (GetScreenHeight() > maxHeight)
+		SetWindowSize(GetScreenWidth(), maxHeight);
+
 	SetExitKey(0);
 	SetTargetFPS(144);
 
@@ -262,7 +269,7 @@ int main()
 {
 	// setup the window
 	SetConfigFlags(FLAG_VSYNC_HINT);
-	InitWindow(1280,800,"RPG Example");
+	InitWindow(1280,700,"RPG Example");
 	SetupWindow();
 
 	SearchAndSetResourceDir("_resources");
