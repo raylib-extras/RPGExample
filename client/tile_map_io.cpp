@@ -26,7 +26,7 @@
 #include "tile_map.h"
 #include "sprites.h"
 
-#include "PUGIXML/pugixml.hpp"
+#include "pugixml.hpp"
 
 const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 const unsigned FLIPPED_VERTICALLY_FLAG = 0x40000000;
