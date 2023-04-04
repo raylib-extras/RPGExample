@@ -69,6 +69,8 @@ public:
 	void UseConsumable(Item *item);
 	void ActivateItem(int slotIndex);
 	void DropItem(int item);
+    void Move();
+    void ApplyPlayerActions();
 
 	float LastAttack = 0;
 	float LastConsumeable = 0;

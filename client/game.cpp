@@ -343,161 +343,163 @@ bool PlayerData::PickupItem(TreasureInstance &drop)
 	return drop.Quantity == 0;
 }
 
-void MovePlayer()
+void PlayerData::Move()
 {
-	// does the player want to move
-	if (Player.TargetActive)
-	{
-		Vector2 movement = Vector2Subtract(Player.Target, Player.Position);
-		float distance = Vector2Length(movement);
+    // does the player want to move
+    if (TargetActive)
+    {
+        Vector2 movement = Vector2Subtract(Target, Position);
+        float distance = Vector2Length(movement);
 
-		float frameSpeed = GetFrameTime() * Player.Speed;
+        float frameSpeed = GetFrameTime() * Speed;
 
-		if (distance <= frameSpeed)
-		{
-			Player.Position = Player.Target;
-			Player.TargetActive = false;
-		}
-		else
-		{
-			movement = Vector2Normalize(movement);
-			Vector2 newPos = Vector2Add(Player.Position, Vector2Scale(movement, frameSpeed));
+        if (distance <= frameSpeed)
+        {
+            Position = Target;
+            TargetActive = false;
+        }
+        else
+        {
+            movement = Vector2Normalize(movement);
+            Vector2 newPos = Vector2Add(Position, Vector2Scale(movement, frameSpeed));
 
-			if (!PointInMap(newPos))
-			{
-				Player.TargetActive = false;
-			}
-			else
-			{
-				Player.Position = newPos;
-			}
-		}
-	}
+            if (!PointInMap(newPos))
+            {
+                TargetActive = false;
+            }
+            else
+            {
+                Position = newPos;
+            }
+        }
+    }
 
-	// see if the player entered an exit
-	for (auto exit : Exits)
-	{
-		if (CheckCollisionPointRec(Player.Position, exit.Bounds))
-		{
-			if (exit.Destination == "endgame")
-			{
-				EndGame(true, Player.Gold + 100);
-			}
-			else
-			{
-				std::string map = "maps/" + exit.Destination;
-				LoadLevel(map.c_str());
-				StartLevel();
-			}
+    // see if the player entered an exit
+    for (auto exit : Exits)
+    {
+        if (CheckCollisionPointRec(Position, exit.Bounds))
+        {
+            if (exit.Destination == "endgame")
+            {
+                EndGame(true, Gold + 100);
+            }
+            else
+            {
+                std::string map = "maps/" + exit.Destination;
+                LoadLevel(map.c_str());
+                StartLevel();
+            }
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 }
 
-void ApplyPlayerActions()
+
+void PlayerData::ApplyPlayerActions()
 {
-	// see if we want to attack any mobs
-	if (TargetMob != nullptr)
-	{
-		// see if we can even attack.
-		if (GetGameTime() - Player.LastAttack >= Player.GetAttack().Cooldown)
-		{
-			float distance = Vector2Distance(TargetMob->Position, Player.Position);
-			if (distance < Player.GetAttack().Range + 40)
-			{
-				MOB *monsterInfo = GetMob(TargetMob->MobId);
-				if (monsterInfo != nullptr)
-				{
-					AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
-					if (!Player.GetAttack().Melee)
-						AddEffect(Player.Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
+    // see if we want to attack any mobs
+    if (TargetMob != nullptr)
+    {
+        // see if we can even attack.
+        if (GetGameTime() - LastAttack >= GetAttack().Cooldown)
+        {
+            float distance = Vector2Distance(TargetMob->Position, Position);
+            if (distance < GetAttack().Range + 40)
+            {
+                MOB *monsterInfo = GetMob(TargetMob->MobId);
+                if (monsterInfo != nullptr)
+                {
+                    AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
+                    if (!GetAttack().Melee)
+                        AddEffect(Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
 
-					int damage = ResolveAttack(Player.GetAttack(), monsterInfo->Defense.Defense);
-					if (damage == 0)
-					{
-						PlaySound(MissSoundId);
-					}
-					else
-					{
-						PlaySound(HitSoundId);
-						PlaySound(CreatureDamageSoundId);
-						AddEffect(Vector2{TargetMob->Position.x, TargetMob->Position.y - 16}, EffectType::RiseFade, DamageSprite);
-						TargetMob->Health -= damage;
+                    int damage = ResolveAttack(GetAttack(), monsterInfo->Defense.Defense);
+                    if (damage == 0)
+                    {
+                        PlaySound(MissSoundId);
+                    }
+                    else
+                    {
+                        PlaySound(HitSoundId);
+                        PlaySound(CreatureDamageSoundId);
+                        AddEffect(Vector2{TargetMob->Position.x, TargetMob->Position.y - 16}, EffectType::RiseFade, DamageSprite);
+                        TargetMob->Health -= damage;
 
-						// if you hit them, they wake up!
-						TargetMob->Triggered = true;
-					}
-				}
-			}
+                        // if you hit them, they wake up!
+                        TargetMob->Triggered = true;
+                    }
+                }
+            }
 
-			TargetMob = nullptr;
-		}
-	}
+            TargetMob = nullptr;
+        }
+    }
 
-	// see if the player is near the last clicked chest, if so open it
-	if (TargetChest != nullptr)
-	{
-		Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
+    // see if the player is near the last clicked chest, if so open it
+    if (TargetChest != nullptr)
+    {
+        Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
 
-		float distance = Vector2Distance(center, Player.Position);
-		if (distance <= 50)
-		{
-			if (!TargetChest->Opened)
-			{
-				PlaySound(ChestOpenSoundId);
-				TargetChest->Opened = true;
-				DropLoot(TargetChest->Contents.c_str(), center);
-			}
-			TargetChest = nullptr;
-		}
-	}
+        float distance = Vector2Distance(center, Position);
+        if (distance <= 50)
+        {
+            if (!TargetChest->Opened)
+            {
+                PlaySound(ChestOpenSoundId);
+                TargetChest->Opened = true;
+                DropLoot(TargetChest->Contents.c_str(), center);
+            }
+            TargetChest = nullptr;
+        }
+    }
 
-	// see if we are under any items to pickup
-	for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end();)
-	{
-		float distance = Vector2Distance(item->Position, Player.Position);
-		if (distance <= Player.PickupDistance)
-		{
-			if (Player.PickupItem(*item))
-			{
-				RemoveSprite(item->SpriteId);
-				item = ItemDrops.erase(item);
-				continue;
-			}
-		}
+    // see if we are under any items to pickup
+    for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end();)
+    {
+        float distance = Vector2Distance(item->Position, Position);
+        if (distance <= PickupDistance)
+        {
+            if (PickupItem(*item))
+            {
+                RemoveSprite(item->SpriteId);
+                item = ItemDrops.erase(item);
+                continue;
+            }
+        }
 
-		item++;
-	}
+        item++;
+    }
 
-	float time = GetGameTime();
+    float time = GetGameTime();
 
-	float attackTime = time - Player.LastAttack;
-	float itemTime = time - Player.LastConsumeable;
+    float attackTime = time - LastAttack;
+    float itemTime = time - LastConsumeable;
 
-	if (attackTime >= Player.GetAttack().Cooldown)
-		Player.AttackCooldown = 0;
-	else
-		Player.AttackCooldown = 1.0f - (attackTime / Player.AttackCooldown);
+    if (attackTime >= GetAttack().Cooldown)
+        AttackCooldown = 0;
+    else
+        AttackCooldown = 1.0f - (attackTime / AttackCooldown);
 
-	float itemCooldown = 1;
+    float itemCooldown = 1;
 
-	if (itemTime >= itemCooldown)
-		Player.ItemCooldown = 0;
-	else
-		Player.ItemCooldown = 1.0f - (itemTime / itemCooldown);
+    if (itemTime >= itemCooldown)
+        ItemCooldown = 0;
+    else
+        ItemCooldown = 1.0f - (itemTime / itemCooldown);
 
-	if (Player.BuffLifetimeLeft > 0)
-	{
-		Player.BuffLifetimeLeft -= GetFrameTime();
-		if (Player.BuffLifetimeLeft <= 0)
-		{
-			Player.BuffDefense = 0;
-			Player.BuffItem = -1;
-			Player.BuffLifetimeLeft = 0;
-		}
-	}
+    if (BuffLifetimeLeft > 0)
+    {
+        BuffLifetimeLeft -= GetFrameTime();
+        if (BuffLifetimeLeft <= 0)
+        {
+            BuffDefense = 0;
+            BuffItem = -1;
+            BuffLifetimeLeft = 0;
+        }
+    }
 }
+
 
 void CullDeadMobs()
 {
@@ -674,8 +676,8 @@ void UpdateGame()
 	GameClock += GetFrameTime();
 
 	GetPlayerInput();
-	MovePlayer();
-	ApplyPlayerActions();
+	Player.Move();
+	Player.ApplyPlayerActions();
 
 	UpdateMobs();
 
