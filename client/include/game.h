@@ -53,7 +53,6 @@ public:
 
 	bool TargetActive = false;
 	Vector2 Target = {0, 0};
-	SpriteInstance *TargetSprite = nullptr;
 
 	float Speed = 100;
 

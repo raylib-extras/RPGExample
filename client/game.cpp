@@ -70,9 +70,6 @@ GameHudScreen GameHud(Player);
 void LoadLevel(const char *level)
 {
 	LoadMap(level);
-	Player.TargetSprite = AddSprite(ClickTargetSprite, Player.Target);
-	Player.TargetSprite->Tint = ColorAlpha(Player.TargetSprite->Tint, 0.5f);
-
 	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
 	Player.Sprite->Bobble = true;
 	Player.Sprite->Shadow = true;
