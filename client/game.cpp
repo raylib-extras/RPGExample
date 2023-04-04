@@ -164,21 +164,43 @@ void ActivateGame()
 
 void GetPlayerInput()
 {
-	// check for clicks
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !GameHud.IsUiClick(GetMousePosition()))
-	{
-		Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), GetMapCamera());
+    bool keyPressed = false;
+    Vector2 targetPosition = Player.Position;
+    float moveUnit = 2.0f;
 
-		if (PointInMap(mousePos))
+    if (IsKeyDown(KEY_LEFT)) {
+        targetPosition.x -= moveUnit;
+        keyPressed = true;
+    }
+
+    if (IsKeyDown(KEY_RIGHT)) {
+        targetPosition.x += moveUnit;
+        keyPressed = true;
+    }
+
+    if (IsKeyDown(KEY_UP)) {
+        targetPosition.y -= moveUnit;
+        keyPressed = true;
+    }
+
+    if (IsKeyDown(KEY_DOWN)) {
+        targetPosition.y += moveUnit;
+        keyPressed = true;
+    }
+
+	// check for key inputs
+	if (keyPressed)
+	{
+		if (PointInMap(targetPosition))
 		{
 			Player.TargetActive = true;
-			Player.Target = mousePos;
+			Player.Target = targetPosition;
 		}
 
 		TargetChest = nullptr;
 		for (auto& chest : Chests)
 		{
-			if (CheckCollisionPointRec(mousePos, chest.Bounds))
+			if (CheckCollisionPointRec(targetPosition, chest.Bounds))
 			{
 				TargetChest = &chest;
 			}
@@ -186,7 +208,7 @@ void GetPlayerInput()
 
 		for (auto& mob : Mobs)
 		{
-			if (CheckCollisionPointCircle(mousePos, mob.Position, 20))
+			if (CheckCollisionPointCircle(targetPosition, mob.Position, 20))
 			{
 				TargetMob = &mob;
 
@@ -595,11 +617,11 @@ void UpdatePlayerSprite()
 	else
 		Player.Sprite->SpriteFrame = PlayerSprite;
 
-	if (Player.TargetSprite != nullptr)
-	{
-		Player.TargetSprite->Active = Player.TargetActive;
-		Player.TargetSprite->Position = Player.Target;
-	}
+//	if (Player.TargetSprite != nullptr)
+//	{
+//		Player.TargetSprite->Active = Player.TargetActive;
+//		Player.TargetSprite->Position = Player.Target;
+//	}
 }
 
 void UpdateMobSprites()
