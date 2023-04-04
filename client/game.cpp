@@ -30,14 +30,14 @@ struct MobInstance
 	Vector2 Position;
 	int Health;
 	int SpriteId;
-	
+
 	bool Triggered = false;
 	float LastAttack = -100;
 };
 
 PlayerData Player;
 
-const AttackInfo& PlayerData::GetAttack() const
+const AttackInfo &PlayerData::GetAttack() const
 {
 	if (EquipedWeapon == -1)
 		return DefaultAttack;
@@ -55,8 +55,8 @@ const int PlayerData::GetDefense() const
 
 std::vector<Exit> Exits;
 std::vector<Chest> Chests;
-Chest* TargetChest = nullptr;
-MobInstance* TargetMob = nullptr;
+Chest *TargetChest = nullptr;
+MobInstance *TargetMob = nullptr;
 
 double GameClock = 0;
 
@@ -67,10 +67,7 @@ std::vector<MobInstance> Mobs;
 
 GameHudScreen GameHud(Player);
 
-void ActivateItem(int item);
-void DropItem(int item);
-
-void LoadLevel(const char* level)
+void LoadLevel(const char *level)
 {
 	LoadMap(level);
 	Player.TargetSprite = AddSprite(ClickTargetSprite, Player.Target);
@@ -79,11 +76,6 @@ void LoadLevel(const char* level)
 	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
 	Player.Sprite->Bobble = true;
 	Player.Sprite->Shadow = true;
-
-	Player.ActivateItemCallback = ActivateItem;
-	Player.DropItemCallback = DropItem;
-	Player.EquipWeaponCallback = ActivateItem;
-	Player.EquipArmorCallback = ActivateItem;
 }
 
 void StartLevel()
@@ -93,7 +85,7 @@ void StartLevel()
 	Player.LastConsumeable = -100;
 	Player.LastAttack = -100;
 
-	auto* spawn = GetFirstMapObjectOfType(PlayerSpawnType);
+	auto *spawn = GetFirstMapObjectOfType(PlayerSpawnType);
 	if (spawn != nullptr)
 	{
 		Player.Position.x = spawn->Bounds.x;
@@ -103,43 +95,43 @@ void StartLevel()
 	Player.TargetActive = false;
 
 	Exits.clear();
-	for (const TileObject* exit : GetMapObjectsOfType(ExitType))
+	for (const TileObject *exit : GetMapObjectsOfType(ExitType))
 	{
-		const Property* level = exit->GetProperty("target_level");
+		const Property *level = exit->GetProperty("target_level");
 		if (level != nullptr)
 		{
 			if (level->Value == "-1")
-				Exits.emplace_back(Exit{ exit->Bounds,"endgame" });
+				Exits.emplace_back(Exit{exit->Bounds, "endgame"});
 			else
-				Exits.emplace_back(Exit{ exit->Bounds,"level" + level->Value + ".tmx" });
+				Exits.emplace_back(Exit{exit->Bounds, "level" + level->Value + ".tmx"});
 		}
 	}
 
 	Chests.clear();
 	TargetChest = nullptr;
-	for (const TileObject* chest : GetMapObjectsOfType(ChestType))
+	for (const TileObject *chest : GetMapObjectsOfType(ChestType))
 	{
-		const Property* contents = chest->GetProperty("contents");
+		const Property *contents = chest->GetProperty("contents");
 		if (contents != nullptr)
-			Chests.emplace_back(Chest{ chest->Bounds, contents->Value });
+			Chests.emplace_back(Chest{chest->Bounds, contents->Value});
 	}
 
 	ItemDrops.clear();
 
-	for (const TileObject* mobSpawn : GetMapObjectsOfType(MobSpawnType))
+	for (const TileObject *mobSpawn : GetMapObjectsOfType(MobSpawnType))
 	{
-		const Property* mobType = mobSpawn->GetProperty("mob_type");
+		const Property *mobType = mobSpawn->GetProperty("mob_type");
 
-		MOB* monster = GetMob(mobType->GetInt());
+		MOB *monster = GetMob(mobType->GetInt());
 		if (monster == nullptr)
 			continue;
 
-		Vector2 pos = Vector2{ mobSpawn->Bounds.x,mobSpawn->Bounds.y };
-		auto* sprite = AddSprite(monster->Sprite, pos);
+		Vector2 pos = Vector2{mobSpawn->Bounds.x, mobSpawn->Bounds.y};
+		auto *sprite = AddSprite(monster->Sprite, pos);
 		sprite->Bobble = true;
 		sprite->Shadow = true;
 
-		Mobs.push_back(MobInstance{ monster->Id ,pos ,monster->Health, sprite->Id });
+		Mobs.push_back(MobInstance{monster->Id, pos, monster->Health, sprite->Id});
 	}
 }
 
@@ -164,29 +156,33 @@ void ActivateGame()
 
 void GetPlayerInput()
 {
-    bool keyPressed = false;
-    Vector2 targetPosition = Player.Position;
-    float moveUnit = 2.0f;
+	bool keyPressed = false;
+	Vector2 targetPosition = Player.Position;
+	float moveUnit = 2.0f;
 
-    if (IsKeyDown(KEY_LEFT)) {
-        targetPosition.x -= moveUnit;
-        keyPressed = true;
-    }
+	if (IsKeyDown(KEY_LEFT))
+	{
+		targetPosition.x -= moveUnit;
+		keyPressed = true;
+	}
 
-    if (IsKeyDown(KEY_RIGHT)) {
-        targetPosition.x += moveUnit;
-        keyPressed = true;
-    }
+	if (IsKeyDown(KEY_RIGHT))
+	{
+		targetPosition.x += moveUnit;
+		keyPressed = true;
+	}
 
-    if (IsKeyDown(KEY_UP)) {
-        targetPosition.y -= moveUnit;
-        keyPressed = true;
-    }
+	if (IsKeyDown(KEY_UP))
+	{
+		targetPosition.y -= moveUnit;
+		keyPressed = true;
+	}
 
-    if (IsKeyDown(KEY_DOWN)) {
-        targetPosition.y += moveUnit;
-        keyPressed = true;
-    }
+	if (IsKeyDown(KEY_DOWN))
+	{
+		targetPosition.y += moveUnit;
+		keyPressed = true;
+	}
 
 	// check for key inputs
 	if (keyPressed)
@@ -198,7 +194,7 @@ void GetPlayerInput()
 		}
 
 		TargetChest = nullptr;
-		for (auto& chest : Chests)
+		for (auto &chest : Chests)
 		{
 			if (CheckCollisionPointRec(targetPosition, chest.Bounds))
 			{
@@ -206,7 +202,7 @@ void GetPlayerInput()
 			}
 		}
 
-		for (auto& mob : Mobs)
+		for (auto &mob : Mobs)
 		{
 			if (CheckCollisionPointCircle(targetPosition, mob.Position, 20))
 			{
@@ -220,9 +216,9 @@ void GetPlayerInput()
 	}
 }
 
-void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
+void PlaceItemDrop(TreasureInstance &item, Vector2 &dropPoint)
 {
-	Item* itemRecord = GetItem(item.ItemId);
+	Item *itemRecord = GetItem(item.ItemId);
 	if (!itemRecord)
 		return;
 
@@ -230,7 +226,7 @@ void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
 	while (!valid)
 	{
 		float angle = float(GetRandomValue(-180, 180));
-		Vector2 vec = { cosf(angle * DEG2RAD), sinf(angle * DEG2RAD) };
+		Vector2 vec = {cosf(angle * DEG2RAD), sinf(angle * DEG2RAD)};
 		vec = Vector2Add(dropPoint, Vector2Scale(vec, 45));
 
 		if (PointInMap(vec) && Vector2Distance(vec, Player.Position) > Player.PickupDistance)
@@ -240,7 +236,7 @@ void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
 		}
 	}
 
-	auto* sprite = AddSprite(itemRecord->Sprite, item.Position);
+	auto *sprite = AddSprite(itemRecord->Sprite, item.Position);
 	sprite->Shadow = true;
 	sprite->Bobble = true;
 	item.SpriteId = sprite->Id;
@@ -248,26 +244,26 @@ void PlaceItemDrop(TreasureInstance& item, Vector2& dropPoint)
 	ItemDrops.push_back(item);
 }
 
-void DropLoot(const char* contents, Vector2& dropPoint)
+void DropLoot(const char *contents, Vector2 &dropPoint)
 {
 	std::vector<TreasureInstance> loot = GetLoot(contents);
-	for (TreasureInstance& item : loot)
+	for (TreasureInstance &item : loot)
 	{
 		PlaceItemDrop(item, dropPoint);
 		AddEffect(item.Position, EffectType::ScaleFade, LootSprite, 1);
 	}
 }
 
-TreasureInstance RemoveInventoryItem(int slot, int quantity)
+TreasureInstance PlayerData::RemoveInventoryItem(int slot, int quantity)
 {
-	TreasureInstance treasure = { -1,0 };
+	TreasureInstance treasure = {-1, 0};
 
 	// is it a valid slot?
-	if (slot < 0 || slot >= Player.BackpackContents.size())
+	if (slot < 0 || slot >= BackpackContents.size())
 		return treasure;
 
 	// can't take more than we have
-	InventoryContents& inventory = Player.BackpackContents[slot];
+	InventoryContents &inventory = BackpackContents[slot];
 	if (inventory.Quantity < quantity)
 		quantity = inventory.Quantity;
 
@@ -281,42 +277,42 @@ TreasureInstance RemoveInventoryItem(int slot, int quantity)
 	// delete the item in inventory if it's empty
 	if (inventory.Quantity <= 0)
 	{
-		Player.BackpackContents.erase(Player.BackpackContents.begin() + slot);
+		BackpackContents.erase(BackpackContents.begin() + slot);
 	}
 
 	// return the drop instance
 	return treasure;
 }
 
-bool PickupItem(TreasureInstance& drop)
+bool PlayerData::PickupItem(TreasureInstance &drop)
 {
 	// special case for bag of gold, because it's not a real item
 	if (drop.ItemId == GoldBagItem)
 	{
 		PlaySound(CoinSoundId);
-		Player.Gold += drop.Quantity;
+		Gold += drop.Quantity;
 		return true;
 	}
 
-	// find our item 
-	Item* item = GetItem(drop.ItemId);
+	// find our item
+	Item *item = GetItem(drop.ItemId);
 
 	// it's an invalid item, remove it but nobody gets it
 	if (item == nullptr)
 		return true;
 
 	// see if this is a weapon, and we are unarmed, if so, equip one
-	if (item->IsWeapon() && Player.EquipedWeapon == -1)
+	if (item->IsWeapon() && EquipedWeapon == -1)
 	{
-		Player.EquipedWeapon = item->Id;
+		EquipedWeapon = item->Id;
 		drop.Quantity--;
 		PlaySound(ItemPickupSoundId);
 	}
 
 	// see if this is armor, and we are naked, if so, equip one
-	if (item->IsArmor() && Player.EquipedArmor == -1)
+	if (item->IsArmor() && EquipedArmor == -1)
 	{
-		Player.EquipedArmor = item->Id;
+		EquipedArmor = item->Id;
 		drop.Quantity--;
 		PlaySound(ItemPickupSoundId);
 	}
@@ -325,7 +321,7 @@ bool PickupItem(TreasureInstance& drop)
 	if (drop.Quantity > 0)
 	{
 		// see if we have any already
-		for (InventoryContents& content : Player.BackpackContents)
+		for (InventoryContents &content : BackpackContents)
 		{
 			if (content.ItemId == item->Id)
 			{
@@ -338,9 +334,9 @@ bool PickupItem(TreasureInstance& drop)
 	}
 
 	// Try to add items to a new inventory slot
-	if (drop.Quantity > 0 && Player.BackpackContents.size() < 20 )
+	if (drop.Quantity > 0 && BackpackContents.size() < 20)
 	{
-		Player.BackpackContents.emplace_back(InventoryContents{item->Id,drop.Quantity });
+		BackpackContents.emplace_back(InventoryContents{item->Id, drop.Quantity});
 		drop.Quantity = 0;
 
 		PlaySound(ItemPickupSoundId);
@@ -349,7 +345,6 @@ bool PickupItem(TreasureInstance& drop)
 	// if we picked them all up, we can destroy the item
 	return drop.Quantity == 0;
 }
-
 
 void MovePlayer()
 {
@@ -414,7 +409,7 @@ void ApplyPlayerActions()
 			float distance = Vector2Distance(TargetMob->Position, Player.Position);
 			if (distance < Player.GetAttack().Range + 40)
 			{
-				MOB* monsterInfo = GetMob(TargetMob->MobId);
+				MOB *monsterInfo = GetMob(TargetMob->MobId);
 				if (monsterInfo != nullptr)
 				{
 					AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
@@ -430,7 +425,7 @@ void ApplyPlayerActions()
 					{
 						PlaySound(HitSoundId);
 						PlaySound(CreatureDamageSoundId);
-						AddEffect(Vector2{ TargetMob->Position.x, TargetMob->Position.y - 16 }, EffectType::RiseFade, DamageSprite);
+						AddEffect(Vector2{TargetMob->Position.x, TargetMob->Position.y - 16}, EffectType::RiseFade, DamageSprite);
 						TargetMob->Health -= damage;
 
 						// if you hit them, they wake up!
@@ -446,7 +441,7 @@ void ApplyPlayerActions()
 	// see if the player is near the last clicked chest, if so open it
 	if (TargetChest != nullptr)
 	{
-		Vector2 center = { TargetChest->Bounds.x + TargetChest->Bounds.width / 2,TargetChest->Bounds.y + TargetChest->Bounds.height / 2 };
+		Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
 
 		float distance = Vector2Distance(center, Player.Position);
 		if (distance <= 50)
@@ -462,12 +457,12 @@ void ApplyPlayerActions()
 	}
 
 	// see if we are under any items to pickup
-	for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end(); )
+	for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end();)
 	{
 		float distance = Vector2Distance(item->Position, Player.Position);
 		if (distance <= Player.PickupDistance)
 		{
-			if (PickupItem(*item))
+			if (Player.PickupItem(*item))
 			{
 				RemoveSprite(item->SpriteId);
 				item = ItemDrops.erase(item);
@@ -477,7 +472,6 @@ void ApplyPlayerActions()
 
 		item++;
 	}
-
 
 	float time = GetGameTime();
 
@@ -512,7 +506,7 @@ void CullDeadMobs()
 {
 	for (std::vector<MobInstance>::iterator mobItr = Mobs.begin(); mobItr != Mobs.end();)
 	{
-		MOB* monsterInfo = GetMob(mobItr->MobId);
+		MOB *monsterInfo = GetMob(mobItr->MobId);
 		if (monsterInfo != nullptr && mobItr->Health > 0)
 		{
 			mobItr++;
@@ -535,24 +529,24 @@ void UpdateMobs()
 	CullDeadMobs();
 
 	// check for mob actions
-	for (auto& mob : Mobs)
+	for (auto &mob : Mobs)
 	{
 		Vector2 vecToPlayer = Vector2Subtract(Player.Position, mob.Position);
 		float distance = Vector2Length(vecToPlayer);
 
-		MOB* monsterInfo = GetMob(mob.MobId);
+		MOB *monsterInfo = GetMob(mob.MobId);
 		if (monsterInfo == nullptr)
 			continue;
 
 		if (!mob.Triggered)
 		{
 			// see if the mob should wake up
-			if (distance > monsterInfo->DetectionRadius)		// too far away
+			if (distance > monsterInfo->DetectionRadius) // too far away
 				continue;
 
 			if (Ray2DHitsMap(Player.Position, mob.Position))
 				continue; // something is blocking line of sight
-	
+
 			// we see our prey, wake up and get em.
 			mob.Triggered = true;
 
@@ -565,7 +559,7 @@ void UpdateMobs()
 			if (distance < monsterInfo->Attack.Range)
 			{
 				// try to attack the player
-				if (GetGameTime() - mob.LastAttack  >= monsterInfo->Attack.Cooldown)
+				if (GetGameTime() - mob.LastAttack >= monsterInfo->Attack.Cooldown)
 				{
 					mob.LastAttack = GetGameTime();
 					int damage = ResolveAttack(monsterInfo->Attack, Player.GetDefense());
@@ -583,7 +577,7 @@ void UpdateMobs()
 					{
 						PlaySound(HitSoundId);
 						PlaySound(PlayerDamageSoundId);
-						AddEffect(Vector2{ Player.Position.x,Player.Position.y - 16 }, EffectType::RiseFade, DamageSprite);
+						AddEffect(Vector2{Player.Position.x, Player.Position.y - 16}, EffectType::RiseFade, DamageSprite);
 						Player.Health -= damage;
 					}
 				}
@@ -617,29 +611,29 @@ void UpdatePlayerSprite()
 	else
 		Player.Sprite->SpriteFrame = PlayerSprite;
 
-//	if (Player.TargetSprite != nullptr)
-//	{
-//		Player.TargetSprite->Active = Player.TargetActive;
-//		Player.TargetSprite->Position = Player.Target;
-//	}
+	//	if (Player.TargetSprite != nullptr)
+	//	{
+	//		Player.TargetSprite->Active = Player.TargetActive;
+	//		Player.TargetSprite->Position = Player.Target;
+	//	}
 }
 
 void UpdateMobSprites()
 {
-	for (auto& mob : Mobs)
+	for (auto &mob : Mobs)
 	{
 		UpdateSprite(mob.SpriteId, mob.Position);
 	}
 }
 
-MobInstance* GetNearestMobInSight()
+MobInstance *GetNearestMobInSight()
 {
-	MobInstance* nearest = nullptr;
+	MobInstance *nearest = nullptr;
 	float nearestDistance = 9999999.9f;
 
-	for (auto& mob : Mobs)
+	for (auto &mob : Mobs)
 	{
-		if (Ray2DHitsMap(mob.Position,Player.Position))
+		if (Ray2DHitsMap(mob.Position, Player.Position))
 			continue;
 
 		float dist = Vector2Distance(mob.Position, Player.Position);
@@ -691,7 +685,7 @@ void UpdateGame()
 	if (Player.Health < 0)
 	{
 		// you died, change to the end screen
-		EndGame(false,Player.Gold);
+		EndGame(false, Player.Gold);
 	}
 
 	UpdateSprites();
@@ -699,42 +693,42 @@ void UpdateGame()
 	SetVisiblePoint(Player.Position);
 }
 
-void UseConsumable(Item* item)
+void PlayerData::UseConsumable(Item *item)
 {
 	if (item == nullptr || !item->IsActivatable())
 		return;
 
-	float time = GetGameTime() - Player.LastConsumeable;
+	float time = GetGameTime() - LastConsumeable;
 	if (time < 1)
 		return;
 
-	Player.LastConsumeable = GetGameTime();
+	LastConsumeable = GetGameTime();
 
 	switch (item->Effect)
 	{
 	case ActivatableEffects::Healing:
-		Player.Health += item->Value;
-		if (Player.Health > Player.MaxHealth)
-			Player.Health = Player.MaxHealth;
+		Health += item->Value;
+		if (Health > MaxHealth)
+			Health = MaxHealth;
 
 		PlaySound(PlayerHealSoundId);
-		AddEffect(Player.Position, EffectType::RiseFade, HealingSprite, 2);
+		AddEffect(Position, EffectType::RiseFade, HealingSprite, 2);
 		break;
 
 	case ActivatableEffects::Defense:
-		Player.BuffDefense = item->Value;
-		Player.BuffLifetimeLeft = item->Durration;
-		Player.BuffItem = item->Sprite;
+		BuffDefense = item->Value;
+		BuffLifetimeLeft = item->Durration;
+		BuffItem = item->Sprite;
 		break;
 
 	case ActivatableEffects::Damage:
 	{
-		MobInstance* mob = GetNearestMobInSight();
+		MobInstance *mob = GetNearestMobInSight();
 		if (mob != nullptr)
 		{
 			mob->Health -= item->Value;
 			PlaySound(CreatureDamageSoundId);
-			AddEffect(Player.Position, EffectType::ToTarget, item->Sprite, mob->Position, 1);
+			AddEffect(Position, EffectType::ToTarget, item->Sprite, mob->Position, 1);
 			AddEffect(mob->Position, EffectType::RotateFade, item->Sprite, 1);
 		}
 		break;
@@ -742,14 +736,14 @@ void UseConsumable(Item* item)
 	}
 }
 
-void ActivateItem(int slotIndex)
+void PlayerData::ActivateItem(int slotIndex)
 {
-	if (slotIndex < 0 || slotIndex >= Player.BackpackContents.size())
+	if (slotIndex < 0 || slotIndex >= BackpackContents.size())
 		return;
 
-	InventoryContents& inventorySlot = Player.BackpackContents[slotIndex];
+	InventoryContents &inventorySlot = BackpackContents[slotIndex];
 
-	Item* item = GetItem(inventorySlot.ItemId);
+	Item *item = GetItem(inventorySlot.ItemId);
 	if (item == nullptr)
 		return;
 
@@ -760,38 +754,37 @@ void ActivateItem(int slotIndex)
 
 	switch (item->ItemType)
 	{
-		case ItemTypes::Activatable:
-			UseConsumable(item);
-			removedItem.ItemId = -1;
-			removedItem.Quantity = 0;
-			break;
+	case ItemTypes::Activatable:
+		UseConsumable(item);
+		removedItem.ItemId = -1;
+		removedItem.Quantity = 0;
+		break;
 
-		case ItemTypes::Weapon:
-		{
-			// save our current weapon
-			int weapon = Player.EquipedWeapon;
+	case ItemTypes::Weapon:
+	{
+		// save our current weapon
+		int weapon = EquipedWeapon;
 
-			// equip new weapon
-			Player.EquipedWeapon = removedItem.ItemId;
+		// equip new weapon
+		EquipedWeapon = removedItem.ItemId;
 
-			// replace the removed item with the old weapon
-			removedItem.ItemId = weapon;
-			break;
-		}
+		// replace the removed item with the old weapon
+		removedItem.ItemId = weapon;
+		break;
+	}
 
-		case ItemTypes::Armor:
-		{
-			// save our current armor
-			int armor = Player.EquipedArmor;
+	case ItemTypes::Armor:
+	{
+		// save our current armor
+		int armor = EquipedArmor;
 
-			// equip new weapon
-			Player.EquipedArmor = removedItem.ItemId;
+		// equip new weapon
+		EquipedArmor = removedItem.ItemId;
 
-			// replace the removed item with the old weapon
-			removedItem.ItemId = armor;
-			break;
-		}
-
+		// replace the removed item with the old weapon
+		removedItem.ItemId = armor;
+		break;
+	}
 	}
 
 	// put whatever we have back, or drop it
@@ -801,13 +794,13 @@ void ActivateItem(int slotIndex)
 		if (!PickupItem(removedItem))
 		{
 			// no room, drop it
-			PlaceItemDrop(removedItem, Player.Position);
+			PlaceItemDrop(removedItem, Position);
 		}
 	}
 }
 
-void DropItem(int item)
+void PlayerData::DropItem(int item)
 {
 	TreasureInstance drop = RemoveInventoryItem(item, 999);
-	PlaceItemDrop(drop, Player.Position);
+	PlaceItemDrop(drop, Position);
 }
