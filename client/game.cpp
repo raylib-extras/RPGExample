@@ -395,7 +395,6 @@ void PlayerData::Move()
     }
 }
 
-
 void PlayerData::ApplyPlayerActions()
 {
     // see if we want to attack any mobs
@@ -500,7 +499,6 @@ void PlayerData::ApplyPlayerActions()
     }
 }
 
-
 void CullDeadMobs()
 {
 	for (std::vector<MobInstance>::iterator mobItr = Mobs.begin(); mobItr != Mobs.end();)
@@ -596,25 +594,19 @@ void UpdateMobs()
 	}
 }
 
-void UpdatePlayerSprite()
+void PlayerData::UpdateSprite()
 {
-	if (Player.Sprite != nullptr)
-		Player.Sprite->Position = Player.Position;
+    if (Sprite != nullptr)
+        Sprite->Position = Position;
 
-	if (Player.EquipedArmor == ChainArmorItem)
-		Player.Sprite->SpriteFrame = PlayerChainSprite;
-	else if (Player.EquipedArmor == PlateArmorItem)
-		Player.Sprite->SpriteFrame = PlayerPlateSprite;
-	else if (Player.EquipedArmor == LeatherArmorItem)
-		Player.Sprite->SpriteFrame = PlayerLeatherSprite;
-	else
-		Player.Sprite->SpriteFrame = PlayerSprite;
-
-	//	if (Player.TargetSprite != nullptr)
-	//	{
-	//		Player.TargetSprite->Active = Player.TargetActive;
-	//		Player.TargetSprite->Position = Player.Target;
-	//	}
+    if (EquipedArmor == ChainArmorItem)
+        Sprite->SpriteFrame = PlayerChainSprite;
+    else if (EquipedArmor == PlateArmorItem)
+        Sprite->SpriteFrame = PlayerPlateSprite;
+    else if (EquipedArmor == LeatherArmorItem)
+        Sprite->SpriteFrame = PlayerLeatherSprite;
+    else
+        Sprite->SpriteFrame = PlayerSprite;
 }
 
 void UpdateMobSprites()
@@ -649,7 +641,7 @@ MobInstance *GetNearestMobInSight()
 
 void UpdateSprites()
 {
-	UpdatePlayerSprite();
+	Player.UpdateSprite();
 	UpdateMobSprites();
 }
 

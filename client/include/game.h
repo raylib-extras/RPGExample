@@ -71,6 +71,7 @@ public:
 	void DropItem(int item);
     void Move();
     void ApplyPlayerActions();
+    void UpdateSprite();
 
 	float LastAttack = 0;
 	float LastConsumeable = 0;
