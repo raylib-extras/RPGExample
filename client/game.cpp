@@ -50,7 +50,7 @@ const int PlayerData::GetDefense() const
 	if (EquipedArmor == -1)
 		return 0 + BuffDefense;
 
-	return GetItem(Player.EquipedArmor)->Defense.Defense + BuffDefense;
+	return GetItem(EquipedArmor)->Defense.Defense + BuffDefense;
 }
 
 std::vector<Exit> Exits;
