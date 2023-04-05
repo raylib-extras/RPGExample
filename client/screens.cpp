@@ -36,8 +36,9 @@ void SetActiveScreen(Screen* screen)
 
 void DrawScreen()
 {
-	if (ActiveScreen != nullptr)
+	if (ActiveScreen != nullptr) {
 		ActiveScreen->Draw();
+	}
 }
 
 bool Screen::RectIsHovered(Rectangle& rect)

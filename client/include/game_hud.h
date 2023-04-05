@@ -33,9 +33,8 @@ class GameHudScreen : public Screen
 {
 public:
 	GameHudScreen(PlayerData& player);
-
 	void Draw() override;
-
+    void Draw(float barHeight);
 	PlayerData& Player;
 
 	bool IsUiClick(const Vector2& pos);
@@ -50,6 +49,5 @@ private:
 private:
 	float ButtonSize = 70;
 	float ButtonInset = 6;
-
 	const Item* HoveredItem = nullptr;
 };

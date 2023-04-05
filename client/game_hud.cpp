@@ -140,31 +140,34 @@ bool GameHudScreen::IsUiClick(const Vector2 &pos)
 	return false;
 }
 
-void GameHudScreen::Draw()
+void GameHudScreen::Draw() {
+    Draw(GetScreenHeight() - 160.0f); // upper
+    Draw(GetScreenHeight() - 80.0f); // lower
+}
+void GameHudScreen::Draw(float barHeight)
 {
-	float barHieght = GetScreenHeight() - 80.0f;
 	// background
-	DrawRectangleRec(Rectangle{0, barHieght, float(GetScreenWidth()), 80}, ColorAlpha(DARKGRAY, 0.25f));
+	DrawRectangleRec(Rectangle{0, barHeight, float(GetScreenWidth()), 80}, ColorAlpha(DARKGRAY, 0.25f));
 
 	// score
-	DrawSprite(CoinSprite, GetScreenWidth() - 200.0f, barHieght + 40.0f, 4);
-	DrawText(TextFormat("x %03d", Player.Gold), GetScreenWidth() - 170, int(barHieght + 20), 40, WHITE);
+	DrawSprite(CoinSprite, GetScreenWidth() - 200.0f, barHeight + 40.0f, 4);
+	DrawText(TextFormat("x %03d", Player.Gold), GetScreenWidth() - 170, int(barHeight + 20), 40, WHITE);
 
 	// health bar
-	DrawText("Health", 20, int(barHieght + 5), 20, RED);
+	DrawText("Health", 20, int(barHeight + 5), 20, RED);
 
 	float healthBarWidth = 300;
-	DrawRectangleLinesEx(Rectangle{20, barHieght + 30, healthBarWidth, 32}, 1, WHITE);
+	DrawRectangleLinesEx(Rectangle{20, barHeight + 30, healthBarWidth, 32}, 1, WHITE);
 
 	float healthPram = Player.Health / float(Player.MaxHealth);
-	DrawRectangleRec(Rectangle{22, barHieght + 32, healthBarWidth * healthPram - 4, 28}, RED);
+	DrawRectangleRec(Rectangle{22, barHeight + 32, healthBarWidth * healthPram - 4, 28}, RED);
 
 	// clear the hover item from last frame
 	HoveredItem = nullptr;
 
 	// action buttons
 	float buttonX = 20 + healthBarWidth + 10;
-	float buttonY = barHieght + 4;
+	float buttonY = barHeight + 4;
 
 	Item *weapon = GetItem(Player.EquipedWeapon);
 	// equipped weapon
@@ -249,6 +252,7 @@ void GameHudScreen::Draw()
 		DrawRectangleRec(toolTipRect, ColorAlpha(BLACK, 0.5f));
 		DrawText(HoveredItem->Name.c_str(), int(toolTipRect.x) + 2, int(toolTipRect.y) + 2, 20, WHITE);
 	}
+
 }
 
 bool GameHudScreen::DrawButton(float x, float y, int sprite, int quantity, Color border, Color center)
