@@ -29,8 +29,8 @@
 
 #include "raylib.h"
 
-GameHudScreen::GameHudScreen(PlayerData &player)
-	: Screen(), Player(player)
+GameHudScreen::GameHudScreen(PlayerData &player1, PlayerData &player2)
+	: Screen(), Player1(player1), Player2(player2)
 {
 }
 
@@ -43,88 +43,94 @@ void GameHudScreen::ShowItemToolTip(const Item *item, const Rectangle &rect)
 	DrawText(item->Name.c_str(), int(rect.x), int(rect.y), 10, WHITE);
 }
 
-void GameHudScreen::DrawInventory()
+
+void GameHudScreen::DrawInventory(PlayerData &player)
 {
-	Rectangle inventoryWindowRect = {GetScreenWidth() - 475.0f, GetScreenHeight() - 500.0f, 354, 400.0f};
-	Rectangle shadowRect = inventoryWindowRect;
-	shadowRect.x += 10;
-	shadowRect.y += 10;
-	DrawRectangleRec(shadowRect, ColorAlpha(DARKBROWN, 0.5f));
-	FillRectWithSprite(InventoryBackgroundSprite, inventoryWindowRect);
+    Rectangle inventoryWindowRect = {GetScreenWidth() - 475.0f, GetScreenHeight() - 500.0f, 354, 400.0f};
+    Rectangle shadowRect = inventoryWindowRect;
+    shadowRect.x += 10;
+    shadowRect.y += 10;
+    DrawRectangleRec(shadowRect, ColorAlpha(DARKBROWN, 0.5f));
+    FillRectWithSprite(InventoryBackgroundSprite, inventoryWindowRect);
 
-	// equipment
-	Item *weaponItem = GetItem(Player.EquipedWeapon);
-	if (DrawButton(inventoryWindowRect.x + 20, inventoryWindowRect.y + 20, weaponItem != nullptr ? weaponItem->Sprite : -1, 0, DARKGRAY, GRAY))
-	{
-		HoveredItem = weaponItem;
-	}
-	DrawText("Weapon", int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 20), 20, DARKBROWN);
-	DrawText(TextFormat("%d - %d", Player.GetAttack().MinDamage, Player.GetAttack().MaxDamage), int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 40), 20, WHITE);
+    // equipment
+    Item *weaponItem = GetItem(player.EquipedWeapon);
+    if (DrawButton(inventoryWindowRect.x + 20, inventoryWindowRect.y + 20, weaponItem != nullptr ? weaponItem->Sprite : -1, 0, DARKGRAY, GRAY))
+    {
+        HoveredItem = weaponItem;
+    }
+    DrawText("Weapon", int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 20), 20, DARKBROWN);
+    DrawText(TextFormat("%d - %d", player.GetAttack().MinDamage, player.GetAttack().MaxDamage), int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 40), 20, WHITE);
 
-	Item *armorItem = GetItem(Player.EquipedArmor);
-	if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, 0, DARKBROWN, BROWN))
-	{
-		HoveredItem = armorItem;
-	}
-	DrawText("Armor", int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62)), int(inventoryWindowRect.y + ButtonSize), 20, DARKBROWN);
-	DrawText(TextFormat("%d", Player.GetDefense()), int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 22)), int(inventoryWindowRect.y + ButtonSize - 20), 20, WHITE);
+    Item *armorItem = GetItem(player.EquipedArmor);
+    if (DrawButton(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize), inventoryWindowRect.y + 20, armorItem != nullptr ? armorItem->Sprite : -1, 0, DARKBROWN, BROWN))
+    {
+        HoveredItem = armorItem;
+    }
+    DrawText("Armor", int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 62)), int(inventoryWindowRect.y + ButtonSize), 20, DARKBROWN);
+    DrawText(TextFormat("%d", player.GetDefense()), int(inventoryWindowRect.x + inventoryWindowRect.width - (20 + ButtonSize + 22)), int(inventoryWindowRect.y + ButtonSize - 20), 20, WHITE);
 
-	// backpack contents
-	constexpr int inventoryItemSize = 64;
-	constexpr int inventoryItemPadding = 4;
+    // backpack contents
+    constexpr int inventoryItemSize = 64;
+    constexpr int inventoryItemPadding = 4;
 
-	DrawText("Backpack (LMB)Use/Equip (RMB)Drop", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 10, DARKBROWN);
+    DrawText("Backpack (LMB)Use/Equip (RMB)Drop", int(inventoryWindowRect.x + 10), int(inventoryWindowRect.y + 100), 10, DARKBROWN);
 
-	int itemIndex = 0;
-	for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 5; x++)
-		{
-			float itemY = inventoryWindowRect.y + (inventoryWindowRect.height - inventoryItemPadding) - ((inventoryItemPadding + inventoryItemSize) * (4 - y));
-			float itemX = inventoryWindowRect.x + (inventoryItemPadding * 2) + ((inventoryItemSize + inventoryItemPadding) * x);
+    int itemIndex = 0;
+    for (int y = 0; y < 4; y++)
+    {
+        for (int x = 0; x < 5; x++)
+        {
+            float itemY = inventoryWindowRect.y + (inventoryWindowRect.height - inventoryItemPadding) - ((inventoryItemPadding + inventoryItemSize) * (4 - y));
+            float itemX = inventoryWindowRect.x + (inventoryItemPadding * 2) + ((inventoryItemSize + inventoryItemPadding) * x);
 
-			Rectangle itemRect = {itemX, itemY, inventoryItemSize, inventoryItemSize};
-			Rectangle shadowRect = itemRect;
-			shadowRect.x += 2;
-			shadowRect.y += 2;
+            Rectangle itemRect = {itemX, itemY, inventoryItemSize, inventoryItemSize};
+            Rectangle shadowRect = itemRect;
+            shadowRect.x += 2;
+            shadowRect.y += 2;
 
-			DrawRectangleRec(shadowRect, ColorAlpha(BLACK, 0.5f));
-			FillRectWithSprite(ItemBackgroundSprite, itemRect);
+            DrawRectangleRec(shadowRect, ColorAlpha(BLACK, 0.5f));
+            FillRectWithSprite(ItemBackgroundSprite, itemRect);
 
-			if (itemIndex < Player.BackpackContents.size())
-			{
-				Item *item = GetItem(Player.BackpackContents[itemIndex].ItemId);
-				if (item != nullptr)
-				{
-					DrawSprite(item->Sprite, itemRect.x + itemRect.width / 2, itemRect.y + itemRect.height / 2);
+            if (itemIndex < player.BackpackContents.size())
+            {
+                Item *item = GetItem(player.BackpackContents[itemIndex].ItemId);
+                if (item != nullptr)
+                {
+                    DrawSprite(item->Sprite, itemRect.x + itemRect.width / 2, itemRect.y + itemRect.height / 2);
 
-					if (Player.BackpackContents[itemIndex].Quantity > 1)
-						DrawText(TextFormat("%d", Player.BackpackContents[itemIndex].Quantity), int(itemRect.x) + 2, int(itemRect.y + itemRect.height - 10), 10, WHITE);
+                    if (player.BackpackContents[itemIndex].Quantity > 1)
+                        DrawText(TextFormat("%d", player.BackpackContents[itemIndex].Quantity), int(itemRect.x) + 2, int(itemRect.y + itemRect.height - 10), 10, WHITE);
 
-					bool hovered = CheckCollisionPointRec(GetMousePosition(), itemRect);
+                    bool hovered = CheckCollisionPointRec(GetMousePosition(), itemRect);
 
-					if (hovered)
-					{
-						HoveredItem = item;
-						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-						{
-							if (item->IsActivatable())
-								Player.ActivateItem(itemIndex);
-							else if (item->IsWeapon())
-								Player.ActivateItem(itemIndex);
-							else if (item->IsArmor())
-								Player.ActivateItem(itemIndex);
-						}
-						else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
-						{
-							Player.DropItem(itemIndex);
-						}
-					}
-				}
-			}
-			itemIndex++;
-		}
-	}
+                    if (hovered)
+                    {
+                        HoveredItem = item;
+                        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                        {
+                            if (item->IsActivatable())
+                                player.ActivateItem(itemIndex);
+                            else if (item->IsWeapon())
+                                player.ActivateItem(itemIndex);
+                            else if (item->IsArmor())
+                                player.ActivateItem(itemIndex);
+                        }
+                        else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+                        {
+                            player.DropItem(itemIndex);
+                        }
+                    }
+                }
+            }
+            itemIndex++;
+        }
+    }
+}
+
+void GameHudScreen::DrawInventory() {
+    DrawInventory(Player1);
+    DrawInventory(Player2);
 }
 
 bool GameHudScreen::IsUiClick(const Vector2 &pos)
@@ -141,119 +147,121 @@ bool GameHudScreen::IsUiClick(const Vector2 &pos)
 }
 
 void GameHudScreen::Draw() {
-    Draw(GetScreenHeight() - 160.0f); // upper
-    Draw(GetScreenHeight() - 80.0f); // lower
+    Draw(Player1, GetScreenHeight() - 160.0f); // upper
+    Draw(Player2, GetScreenHeight() - 80.0f); // lower
 }
-void GameHudScreen::Draw(float barHeight)
+
+void GameHudScreen::Draw(PlayerData &player, float barHeight)
 {
-	// background
-	DrawRectangleRec(Rectangle{0, barHeight, float(GetScreenWidth()), 80}, ColorAlpha(DARKGRAY, 0.25f));
+    // background
+    DrawRectangleRec(Rectangle{0, barHeight, float(GetScreenWidth()), 80}, ColorAlpha(DARKGRAY, 0.25f));
 
-	// score
-	DrawSprite(CoinSprite, GetScreenWidth() - 200.0f, barHeight + 40.0f, 4);
-	DrawText(TextFormat("x %03d", Player.Gold), GetScreenWidth() - 170, int(barHeight + 20), 40, WHITE);
+    // score
+    DrawSprite(CoinSprite, GetScreenWidth() - 200.0f, barHeight + 40.0f, 4);
+    DrawText(TextFormat("x %03d", player.Gold), GetScreenWidth() - 170, int(barHeight + 20), 40, WHITE);
 
-	// health bar
-	DrawText("Health", 20, int(barHeight + 5), 20, RED);
+    // health bar
+    DrawText("Health", 20, int(barHeight + 5), 20, RED);
 
-	float healthBarWidth = 300;
-	DrawRectangleLinesEx(Rectangle{20, barHeight + 30, healthBarWidth, 32}, 1, WHITE);
+    float healthBarWidth = 300;
+    DrawRectangleLinesEx(Rectangle{20, barHeight + 30, healthBarWidth, 32}, 1, WHITE);
 
-	float healthPram = Player.Health / float(Player.MaxHealth);
-	DrawRectangleRec(Rectangle{22, barHeight + 32, healthBarWidth * healthPram - 4, 28}, RED);
+    float healthPram = player.Health / float(player.MaxHealth);
+    DrawRectangleRec(Rectangle{22, barHeight + 32, healthBarWidth * healthPram - 4, 28}, RED);
 
-	// clear the hover item from last frame
-	HoveredItem = nullptr;
+    // clear the hover item from last frame
+    HoveredItem = nullptr;
 
-	// action buttons
-	float buttonX = 20 + healthBarWidth + 10;
-	float buttonY = barHeight + 4;
+    // action buttons
+    float buttonX = 20 + healthBarWidth + 10;
+    float buttonY = barHeight + 4;
 
-	Item *weapon = GetItem(Player.EquipedWeapon);
-	// equipped weapon
-	DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, 0, DARKGRAY, GRAY);
+    Item *weapon = GetItem(player.EquipedWeapon);
+    // equipped weapon
+    DrawButton(buttonX, buttonY, weapon != nullptr ? weapon->Sprite : -1, 0, DARKGRAY, GRAY);
 
-	if (Player.AttackCooldown > 0)
-	{
-		float height = ButtonSize * Player.AttackCooldown;
-		DrawRectangleRec(Rectangle{buttonX, buttonY + (ButtonSize - height), ButtonSize, height}, ColorAlpha(RED, 0.5f));
-	}
+    if (player.AttackCooldown > 0)
+    {
+        float height = ButtonSize * player.AttackCooldown;
+        DrawRectangleRec(Rectangle{buttonX, buttonY + (ButtonSize - height), ButtonSize, height}, ColorAlpha(RED, 0.5f));
+    }
 
-	std::vector<int> activatableItems;
-	for (int i = 0; i < Player.BackpackContents.size(); i++)
-	{
-		Item *item = GetItem(Player.BackpackContents[i].ItemId);
-		if (item != nullptr && item->IsActivatable())
-			activatableItems.push_back(i);
-	}
+    std::vector<int> activatableItems;
+    for (int i = 0; i < player.BackpackContents.size(); i++)
+    {
+        Item *item = GetItem(player.BackpackContents[i].ItemId);
+        if (item != nullptr && item->IsActivatable())
+            activatableItems.push_back(i);
+    }
 
-	int activatedItem = -1;
+    int activatedItem = -1;
 
-	// activatable items
-	int backpackSlot = 0;
-	for (int i = 0; i < 7; i++)
-	{
-		buttonX += ButtonSize + 4;
+    // activatable items
+    int backpackSlot = 0;
+    for (int i = 0; i < 7; i++)
+    {
+        buttonX += ButtonSize + 4;
 
-		if (i < activatableItems.size())
-		{
-			bool shortcutPressed = IsKeyPressed(KEY_ONE + i);
+        if (i < activatableItems.size())
+        {
+            bool shortcutPressed = IsKeyPressed(KEY_ONE + i);
 
-			Item *item = GetItem(Player.BackpackContents[activatableItems[i]].ItemId);
-			if ((DrawButton(buttonX, buttonY, item->Sprite, Player.BackpackContents[activatableItems[i]].Quantity) || shortcutPressed) && item != nullptr)
-			{
-				if ((IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || shortcutPressed) && Player.ItemCooldown == 0)
-				{
-					activatedItem = activatableItems[i];
-				}
-				else
-				{
-					HoveredItem = item;
-				}
-			}
+            Item *item = GetItem(player.BackpackContents[activatableItems[i]].ItemId);
+            if ((DrawButton(buttonX, buttonY, item->Sprite, player.BackpackContents[activatableItems[i]].Quantity) || shortcutPressed) && item != nullptr)
+            {
+                if ((IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || shortcutPressed) && player.ItemCooldown == 0)
+                {
+                    activatedItem = activatableItems[i];
+                }
+                else
+                {
+                    HoveredItem = item;
+                }
+            }
 
-			DrawText(TextFormat("%d", i + 1), int(buttonX), int(buttonY), 20, WHITE);
+            DrawText(TextFormat("%d", i + 1), int(buttonX), int(buttonY), 20, WHITE);
 
-			if (Player.ItemCooldown > 0)
-			{
-				float height = ButtonSize * Player.ItemCooldown;
-				DrawRectangleRec(Rectangle{buttonX, buttonY + (ButtonSize - height), ButtonSize, height}, ColorAlpha(BLACK, 0.5f));
-			}
-		}
-	}
+            if (player.ItemCooldown > 0)
+            {
+                float height = ButtonSize * player.ItemCooldown;
+                DrawRectangleRec(Rectangle{buttonX, buttonY + (ButtonSize - height), ButtonSize, height}, ColorAlpha(BLACK, 0.5f));
+            }
+        }
+    }
 
-	if (activatedItem != -1)
-		Player.ActivateItem(activatedItem);
+    if (activatedItem != -1)
+        player.ActivateItem(activatedItem);
 
-	// backpack buttons
-	buttonX += ButtonSize + 4;
-	if ((DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_I))
-	{
-		InventoryOpen = !InventoryOpen;
-	}
+    // backpack buttons
+    buttonX += ButtonSize + 4;
+    if ((DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_I))
+    {
+        InventoryOpen = !InventoryOpen;
+    }
 
-	buttonX += ButtonSize + 4;
+    buttonX += ButtonSize + 4;
 
-	// buff icon
-	if (Player.BuffLifetimeLeft > 0)
-	{
-		DrawSprite(Player.BuffItem, buttonX + ButtonSize / 2, buttonY + ButtonSize / 2, 0, 2);
-		DrawText(TextFormat("%0.0f", Player.BuffLifetimeLeft), int(buttonX), int(buttonY + ButtonSize - 30), 30, RED);
-	}
+    // buff icon
+    if (player.BuffLifetimeLeft > 0)
+    {
+        DrawSprite(player.BuffItem, buttonX + ButtonSize / 2, buttonY + ButtonSize / 2, 0, 2);
+        DrawText(TextFormat("%0.0f", player.BuffLifetimeLeft), int(buttonX), int(buttonY + ButtonSize - 30), 30, RED);
+    }
 
-	if (InventoryOpen)
-		DrawInventory();
+    if (InventoryOpen)
+        DrawInventory();
 
-	if (HoveredItem != nullptr)
-	{
-		Vector2 size = MeasureTextEx(GetFontDefault(), HoveredItem->Name.c_str(), 20, 2);
-		Rectangle toolTipRect = {GetMousePosition().x - (size.x / 2 + 2), GetMousePosition().y - (size.y + 2), size.x + 4, size.y + 4};
+    if (HoveredItem != nullptr)
+    {
+        Vector2 size = MeasureTextEx(GetFontDefault(), HoveredItem->Name.c_str(), 20, 2);
+        Rectangle toolTipRect = {GetMousePosition().x - (size.x / 2 + 2), GetMousePosition().y - (size.y + 2), size.x + 4, size.y + 4};
 
-		DrawRectangleRec(toolTipRect, ColorAlpha(BLACK, 0.5f));
-		DrawText(HoveredItem->Name.c_str(), int(toolTipRect.x) + 2, int(toolTipRect.y) + 2, 20, WHITE);
-	}
+        DrawRectangleRec(toolTipRect, ColorAlpha(BLACK, 0.5f));
+        DrawText(HoveredItem->Name.c_str(), int(toolTipRect.x) + 2, int(toolTipRect.y) + 2, 20, WHITE);
+    }
 
 }
+
 
 bool GameHudScreen::DrawButton(float x, float y, int sprite, int quantity, Color border, Color center)
 {

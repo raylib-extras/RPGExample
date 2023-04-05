@@ -11,31 +11,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
-struct Exit
-{
-	Rectangle Bounds;
-	std::string Destination;
-};
-
-struct Chest
-{
-	Rectangle Bounds;
-	std::string Contents;
-	bool Opened = false;
-};
-
-struct MobInstance
-{
-	int MobId = -1;
-	Vector2 Position;
-	int Health;
-	int SpriteId;
-
-	bool Triggered = false;
-	float LastAttack = -100;
-};
-
-PlayerData Player;
+PlayerData Player1;
+PlayerData Player2;
 
 const AttackInfo &PlayerData::GetAttack() const
 {
@@ -65,31 +42,43 @@ float GetGameTime() { return float(GameClock); }
 std::vector<TreasureInstance> ItemDrops;
 std::vector<MobInstance> Mobs;
 
-GameHudScreen GameHud(Player);
+GameHudScreen GameHud(Player1, Player2);
+// GameHudScreen GameHud2(Player2);
 
 void LoadLevel(const char *level)
 {
 	LoadMap(level);
-	Player.Sprite = AddSprite(PlayerSprite, Player.Position);
-	Player.Sprite->Bobble = true;
-	Player.Sprite->Shadow = true;
+	Player1.Sprite = AddSprite(PlayerSprite, Player1.Position);
+	Player1.Sprite->Bobble = true;
+	Player1.Sprite->Shadow = true;
+
+	Player2.Sprite = AddSprite(PlayerSprite, Player2.Position);
+	Player2.Sprite->Bobble = true;
+	Player2.Sprite->Shadow = true;
 }
 
 void StartLevel()
 {
 	GameClock = 0;
 
-	Player.LastConsumeable = -100;
-	Player.LastAttack = -100;
+	Player1.LastConsumeable = -100;
+	Player1.LastAttack = -100;
+
+	Player2.LastConsumeable = -100;
+	Player2.LastAttack = -100;
 
 	auto *spawn = GetFirstMapObjectOfType(PlayerSpawnType);
 	if (spawn != nullptr)
 	{
-		Player.Position.x = spawn->Bounds.x;
-		Player.Position.y = spawn->Bounds.y;
+		Player1.Position.x = spawn->Bounds.x;
+		Player1.Position.y = spawn->Bounds.y;
+
+		Player2.Position.x = spawn->Bounds.x;
+		Player2.Position.y = spawn->Bounds.y;
 	}
 
-	Player.TargetActive = false;
+	Player1.TargetActive = false;
+	Player2.TargetActive = false;
 
 	Exits.clear();
 	for (const TileObject *exit : GetMapObjectsOfType(ExitType))
@@ -153,47 +142,77 @@ void ActivateGame()
 
 void GetPlayerInput()
 {
-	bool keyPressed = false;
-	Vector2 targetPosition = Player.Position;
 	float moveUnit = 2.0f;
+
+	// User1 input
+	bool player1KeyPressed = false;
+	Vector2 player1TargetPosition = Player1.Position;
 
 	if (IsKeyDown(KEY_LEFT))
 	{
-		targetPosition.x -= moveUnit;
-		keyPressed = true;
+		player1TargetPosition.x -= moveUnit;
+		player1KeyPressed = true;
 	}
 
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		targetPosition.x += moveUnit;
-		keyPressed = true;
+		player1TargetPosition.x += moveUnit;
+		player1KeyPressed = true;
 	}
 
 	if (IsKeyDown(KEY_UP))
 	{
-		targetPosition.y -= moveUnit;
-		keyPressed = true;
+		player1TargetPosition.y -= moveUnit;
+		player1KeyPressed = true;
 	}
 
 	if (IsKeyDown(KEY_DOWN))
 	{
-		targetPosition.y += moveUnit;
-		keyPressed = true;
+		player1TargetPosition.y += moveUnit;
+		player1KeyPressed = true;
+	}
+
+	// User2 input
+	bool player2KeyPressed = false;
+	Vector2 player2TargetPosition = Player2.Position;
+
+	if (IsKeyDown(KEY_A))
+	{
+		player2TargetPosition.x -= moveUnit;
+		player2KeyPressed = true;
+	}
+
+	if (IsKeyDown(KEY_D))
+	{
+		player2TargetPosition.x += moveUnit;
+		player2KeyPressed = true;
+	}
+
+	if (IsKeyDown(KEY_W))
+	{
+		player2TargetPosition.y -= moveUnit;
+		player2KeyPressed = true;
+	}
+
+	if (IsKeyDown(KEY_S))
+	{
+		player2TargetPosition.y += moveUnit;
+		player2KeyPressed = true;
 	}
 
 	// check for key inputs
-	if (keyPressed)
+	if (player1KeyPressed)
 	{
-		if (PointInMap(targetPosition))
+		if (PointInMap(player1TargetPosition))
 		{
-			Player.TargetActive = true;
-			Player.Target = targetPosition;
+			Player1.TargetActive = true;
+			Player1.Target = player1TargetPosition;
 		}
 
 		TargetChest = nullptr;
 		for (auto &chest : Chests)
 		{
-			if (CheckCollisionPointRec(targetPosition, chest.Bounds))
+			if (CheckCollisionPointRec(player1TargetPosition, chest.Bounds))
 			{
 				TargetChest = &chest;
 			}
@@ -201,12 +220,42 @@ void GetPlayerInput()
 
 		for (auto &mob : Mobs)
 		{
-			if (CheckCollisionPointCircle(targetPosition, mob.Position, 20))
+			if (CheckCollisionPointCircle(player1TargetPosition, mob.Position, 20))
 			{
 				TargetMob = &mob;
 
-				if (Vector2Distance(Player.Position, mob.Position) <= Player.GetAttack().Range + 40)
-					Player.TargetActive = false;
+				if (Vector2Distance(Player1.Position, mob.Position) <= Player1.GetAttack().Range + 40)
+					Player1.TargetActive = false;
+				break;
+			}
+		}
+	}
+
+	if (player2KeyPressed)
+	{
+		if (PointInMap(player2TargetPosition))
+		{
+			Player2.TargetActive = true;
+			Player2.Target = player2TargetPosition;
+		}
+
+		TargetChest = nullptr;
+		for (auto &chest : Chests)
+		{
+			if (CheckCollisionPointRec(player1TargetPosition, chest.Bounds))
+			{
+				TargetChest = &chest;
+			}
+		}
+
+		for (auto &mob : Mobs)
+		{
+			if (CheckCollisionPointCircle(player1TargetPosition, mob.Position, 20))
+			{
+				TargetMob = &mob;
+
+				if (Vector2Distance(Player2.Position, mob.Position) <= Player2.GetAttack().Range + 40)
+					Player2.TargetActive = false;
 				break;
 			}
 		}
@@ -226,7 +275,13 @@ void PlaceItemDrop(TreasureInstance &item, Vector2 &dropPoint)
 		Vector2 vec = {cosf(angle * DEG2RAD), sinf(angle * DEG2RAD)};
 		vec = Vector2Add(dropPoint, Vector2Scale(vec, 45));
 
-		if (PointInMap(vec) && Vector2Distance(vec, Player.Position) > Player.PickupDistance)
+		if (PointInMap(vec) && Vector2Distance(vec, Player1.Position) > Player1.PickupDistance)
+		{
+			item.Position = vec;
+			valid = true;
+		}
+
+		if (PointInMap(vec) && Vector2Distance(vec, Player2.Position) > Player1.PickupDistance)
 		{
 			item.Position = vec;
 			valid = true;
@@ -345,158 +400,158 @@ bool PlayerData::PickupItem(TreasureInstance &drop)
 
 void PlayerData::Move()
 {
-    // does the player want to move
-    if (TargetActive)
-    {
-        Vector2 movement = Vector2Subtract(Target, Position);
-        float distance = Vector2Length(movement);
+	// does the player want to move
+	if (TargetActive)
+	{
+		Vector2 movement = Vector2Subtract(Target, Position);
+		float distance = Vector2Length(movement);
 
-        float frameSpeed = GetFrameTime() * Speed;
+		float frameSpeed = GetFrameTime() * Speed;
 
-        if (distance <= frameSpeed)
-        {
-            Position = Target;
-            TargetActive = false;
-        }
-        else
-        {
-            movement = Vector2Normalize(movement);
-            Vector2 newPos = Vector2Add(Position, Vector2Scale(movement, frameSpeed));
+		if (distance <= frameSpeed)
+		{
+			Position = Target;
+			TargetActive = false;
+		}
+		else
+		{
+			movement = Vector2Normalize(movement);
+			Vector2 newPos = Vector2Add(Position, Vector2Scale(movement, frameSpeed));
 
-            if (!PointInMap(newPos))
-            {
-                TargetActive = false;
-            }
-            else
-            {
-                Position = newPos;
-            }
-        }
-    }
+			if (!PointInMap(newPos))
+			{
+				TargetActive = false;
+			}
+			else
+			{
+				Position = newPos;
+			}
+		}
+	}
 
-    // see if the player entered an exit
-    for (auto exit : Exits)
-    {
-        if (CheckCollisionPointRec(Position, exit.Bounds))
-        {
-            if (exit.Destination == "endgame")
-            {
-                EndGame(true, Gold + 100);
-            }
-            else
-            {
-                std::string map = "maps/" + exit.Destination;
-                LoadLevel(map.c_str());
-                StartLevel();
-            }
+	// see if the player entered an exit
+	for (auto exit : Exits)
+	{
+		if (CheckCollisionPointRec(Position, exit.Bounds))
+		{
+			if (exit.Destination == "endgame")
+			{
+				EndGame(true, Gold + 100);
+			}
+			else
+			{
+				std::string map = "maps/" + exit.Destination;
+				LoadLevel(map.c_str());
+				StartLevel();
+			}
 
-            break;
-        }
-    }
+			break;
+		}
+	}
 }
 
 void PlayerData::ApplyActions()
 {
-    // see if we want to attack any mobs
-    if (TargetMob != nullptr)
-    {
-        // see if we can even attack.
-        if (GetGameTime() - LastAttack >= GetAttack().Cooldown)
-        {
-            float distance = Vector2Distance(TargetMob->Position, Position);
-            if (distance < GetAttack().Range + 40)
-            {
-                MOB *monsterInfo = GetMob(TargetMob->MobId);
-                if (monsterInfo != nullptr)
-                {
-                    AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
-                    if (!GetAttack().Melee)
-                        AddEffect(Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
+	// see if we want to attack any mobs
+	if (TargetMob != nullptr)
+	{
+		// see if we can even attack.
+		if (GetGameTime() - LastAttack >= GetAttack().Cooldown)
+		{
+			float distance = Vector2Distance(TargetMob->Position, Position);
+			if (distance < GetAttack().Range + 40)
+			{
+				MOB *monsterInfo = GetMob(TargetMob->MobId);
+				if (monsterInfo != nullptr)
+				{
+					AddEffect(TargetMob->Position, EffectType::ScaleFade, ClickTargetSprite);
+					if (!GetAttack().Melee)
+						AddEffect(Position, EffectType::ToTarget, ProjectileSprite, TargetMob->Position, 0.25f);
 
-                    int damage = ResolveAttack(GetAttack(), monsterInfo->Defense.Defense);
-                    if (damage == 0)
-                    {
-                        PlaySound(MissSoundId);
-                    }
-                    else
-                    {
-                        PlaySound(HitSoundId);
-                        PlaySound(CreatureDamageSoundId);
-                        AddEffect(Vector2{TargetMob->Position.x, TargetMob->Position.y - 16}, EffectType::RiseFade, DamageSprite);
-                        TargetMob->Health -= damage;
+					int damage = ResolveAttack(GetAttack(), monsterInfo->Defense.Defense);
+					if (damage == 0)
+					{
+						PlaySound(MissSoundId);
+					}
+					else
+					{
+						PlaySound(HitSoundId);
+						PlaySound(CreatureDamageSoundId);
+						AddEffect(Vector2{TargetMob->Position.x, TargetMob->Position.y - 16}, EffectType::RiseFade, DamageSprite);
+						TargetMob->Health -= damage;
 
-                        // if you hit them, they wake up!
-                        TargetMob->Triggered = true;
-                    }
-                }
-            }
+						// if you hit them, they wake up!
+						TargetMob->Triggered = true;
+					}
+				}
+			}
 
-            TargetMob = nullptr;
-        }
-    }
+			TargetMob = nullptr;
+		}
+	}
 
-    // see if the player is near the last clicked chest, if so open it
-    if (TargetChest != nullptr)
-    {
-        Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
+	// see if the player is near the last clicked chest, if so open it
+	if (TargetChest != nullptr)
+	{
+		Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
 
-        float distance = Vector2Distance(center, Position);
-        if (distance <= 50)
-        {
-            if (!TargetChest->Opened)
-            {
-                PlaySound(ChestOpenSoundId);
-                TargetChest->Opened = true;
-                DropLoot(TargetChest->Contents.c_str(), center);
-            }
-            TargetChest = nullptr;
-        }
-    }
+		float distance = Vector2Distance(center, Position);
+		if (distance <= 50)
+		{
+			if (!TargetChest->Opened)
+			{
+				PlaySound(ChestOpenSoundId);
+				TargetChest->Opened = true;
+				DropLoot(TargetChest->Contents.c_str(), center);
+			}
+			TargetChest = nullptr;
+		}
+	}
 
-    // see if we are under any items to pickup
-    for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end();)
-    {
-        float distance = Vector2Distance(item->Position, Position);
-        if (distance <= PickupDistance)
-        {
-            if (PickupItem(*item))
-            {
-                RemoveSprite(item->SpriteId);
-                item = ItemDrops.erase(item);
-                continue;
-            }
-        }
+	// see if we are under any items to pickup
+	for (std::vector<TreasureInstance>::iterator item = ItemDrops.begin(); item != ItemDrops.end();)
+	{
+		float distance = Vector2Distance(item->Position, Position);
+		if (distance <= PickupDistance)
+		{
+			if (PickupItem(*item))
+			{
+				RemoveSprite(item->SpriteId);
+				item = ItemDrops.erase(item);
+				continue;
+			}
+		}
 
-        item++;
-    }
+		item++;
+	}
 
-    float time = GetGameTime();
+	float time = GetGameTime();
 
-    float attackTime = time - LastAttack;
-    float itemTime = time - LastConsumeable;
+	float attackTime = time - LastAttack;
+	float itemTime = time - LastConsumeable;
 
-    if (attackTime >= GetAttack().Cooldown)
-        AttackCooldown = 0;
-    else
-        AttackCooldown = 1.0f - (attackTime / AttackCooldown);
+	if (attackTime >= GetAttack().Cooldown)
+		AttackCooldown = 0;
+	else
+		AttackCooldown = 1.0f - (attackTime / AttackCooldown);
 
-    float itemCooldown = 1;
+	float itemCooldown = 1;
 
-    if (itemTime >= itemCooldown)
-        ItemCooldown = 0;
-    else
-        ItemCooldown = 1.0f - (itemTime / itemCooldown);
+	if (itemTime >= itemCooldown)
+		ItemCooldown = 0;
+	else
+		ItemCooldown = 1.0f - (itemTime / itemCooldown);
 
-    if (BuffLifetimeLeft > 0)
-    {
-        BuffLifetimeLeft -= GetFrameTime();
-        if (BuffLifetimeLeft <= 0)
-        {
-            BuffDefense = 0;
-            BuffItem = -1;
-            BuffLifetimeLeft = 0;
-        }
-    }
+	if (BuffLifetimeLeft > 0)
+	{
+		BuffLifetimeLeft -= GetFrameTime();
+		if (BuffLifetimeLeft <= 0)
+		{
+			BuffDefense = 0;
+			BuffItem = -1;
+			BuffLifetimeLeft = 0;
+		}
+	}
 }
 
 void CullDeadMobs()
@@ -528,8 +583,27 @@ void UpdateMobs()
 	// check for mob actions
 	for (auto &mob : Mobs)
 	{
-		Vector2 vecToPlayer = Vector2Subtract(Player.Position, mob.Position);
-		float distance = Vector2Length(vecToPlayer);
+		Vector2 vecToPlayer1 = Vector2Subtract(Player1.Position, mob.Position);
+		float distance1 = Vector2Length(vecToPlayer1);
+
+		Vector2 vecToPlayer2 = Vector2Subtract(Player1.Position, mob.Position);
+		float distance2 = Vector2Length(vecToPlayer2);
+
+		PlayerData *player;
+		float distance;
+
+		Vector2 &vecToPlayer = vecToPlayer1;
+		if (distance1 < distance2)
+		{
+			player = &Player1;
+			distance = distance1;
+		}
+		else
+		{
+			player = &Player2;
+			distance = distance2;
+			vecToPlayer = vecToPlayer2;
+		}
 
 		MOB *monsterInfo = GetMob(mob.MobId);
 		if (monsterInfo == nullptr)
@@ -541,7 +615,7 @@ void UpdateMobs()
 			if (distance > monsterInfo->DetectionRadius) // too far away
 				continue;
 
-			if (Ray2DHitsMap(Player.Position, mob.Position))
+			if (Ray2DHitsMap(player->Position, mob.Position))
 				continue; // something is blocking line of sight
 
 			// we see our prey, wake up and get em.
@@ -559,12 +633,12 @@ void UpdateMobs()
 				if (GetGameTime() - mob.LastAttack >= monsterInfo->Attack.Cooldown)
 				{
 					mob.LastAttack = GetGameTime();
-					int damage = ResolveAttack(monsterInfo->Attack, Player.GetDefense());
+					int damage = ResolveAttack(monsterInfo->Attack, player->GetDefense());
 
 					if (monsterInfo->Attack.Melee)
-						AddEffect(Player.Position, EffectType::RotateFade, MobAttackSprite);
+						AddEffect(player->Position, EffectType::RotateFade, MobAttackSprite);
 					else
-						AddEffect(mob.Position, EffectType::ToTarget, ProjectileSprite, Player.Position, 0.5f);
+						AddEffect(mob.Position, EffectType::ToTarget, ProjectileSprite, player->Position, 0.5f);
 
 					if (damage == 0)
 					{
@@ -574,8 +648,8 @@ void UpdateMobs()
 					{
 						PlaySound(HitSoundId);
 						PlaySound(PlayerDamageSoundId);
-						AddEffect(Vector2{Player.Position.x, Player.Position.y - 16}, EffectType::RiseFade, DamageSprite);
-						Player.Health -= damage;
+						AddEffect(Vector2{player->Position.x, player->Position.y - 16}, EffectType::RiseFade, DamageSprite);
+						player->Health -= damage;
 					}
 				}
 			}
@@ -596,17 +670,17 @@ void UpdateMobs()
 
 void PlayerData::UpdateSprite()
 {
-    if (Sprite != nullptr)
-        Sprite->Position = Position;
+	if (Sprite != nullptr)
+		Sprite->Position = Position;
 
-    if (EquipedArmor == ChainArmorItem)
-        Sprite->SpriteFrame = PlayerChainSprite;
-    else if (EquipedArmor == PlateArmorItem)
-        Sprite->SpriteFrame = PlayerPlateSprite;
-    else if (EquipedArmor == LeatherArmorItem)
-        Sprite->SpriteFrame = PlayerLeatherSprite;
-    else
-        Sprite->SpriteFrame = PlayerSprite;
+	if (EquipedArmor == ChainArmorItem)
+		Sprite->SpriteFrame = PlayerChainSprite;
+	else if (EquipedArmor == PlateArmorItem)
+		Sprite->SpriteFrame = PlayerPlateSprite;
+	else if (EquipedArmor == LeatherArmorItem)
+		Sprite->SpriteFrame = PlayerLeatherSprite;
+	else
+		Sprite->SpriteFrame = PlayerSprite;
 }
 
 void UpdateMobSprites()
@@ -617,17 +691,17 @@ void UpdateMobSprites()
 	}
 }
 
-MobInstance *GetNearestMobInSight()
+MobInstance *PlayerData::GetNearestMobInSight(std::vector<MobInstance> &mobs)
 {
 	MobInstance *nearest = nullptr;
 	float nearestDistance = 9999999.9f;
 
-	for (auto &mob : Mobs)
+	for (auto &mob : mobs)
 	{
-		if (Ray2DHitsMap(mob.Position, Player.Position))
+		if (Ray2DHitsMap(mob.Position, Position))
 			continue;
 
-		float dist = Vector2Distance(mob.Position, Player.Position);
+		float dist = Vector2Distance(mob.Position, Position);
 
 		if (dist < nearestDistance)
 		{
@@ -641,7 +715,8 @@ MobInstance *GetNearestMobInSight()
 
 void UpdateSprites()
 {
-	Player.UpdateSprite();
+	Player1.UpdateSprite();
+	Player2.UpdateSprite();
 	UpdateMobSprites();
 }
 
@@ -668,20 +743,24 @@ void UpdateGame()
 	GameClock += GetFrameTime();
 
 	GetPlayerInput();
-	Player.Move();
-    Player.ApplyActions();
+	Player1.Move();
+	Player1.ApplyActions();
+
+	Player2.Move();
+	Player2.ApplyActions();
 
 	UpdateMobs();
 
-	if (Player.Health < 0)
+	if (Player1.Health < 0 || Player2.Health < 0)
 	{
 		// you died, change to the end screen
-		EndGame(false, Player.Gold);
+		EndGame(false, Player1.Gold + Player2.Gold);
 	}
 
 	UpdateSprites();
 
-	SetVisiblePoint(Player.Position);
+	SetVisiblePoint(Player1.Position);
+	SetVisiblePoint(Player2.Position);
 }
 
 void PlayerData::UseConsumable(Item *item)
@@ -714,7 +793,7 @@ void PlayerData::UseConsumable(Item *item)
 
 	case ActivatableEffects::Damage:
 	{
-		MobInstance *mob = GetNearestMobInSight();
+		MobInstance *mob = GetNearestMobInSight(Mobs);
 		if (mob != nullptr)
 		{
 			mob->Health -= item->Value;

@@ -32,10 +32,11 @@
 class GameHudScreen : public Screen
 {
 public:
-	GameHudScreen(PlayerData& player);
+	GameHudScreen(PlayerData &player1, PlayerData &player2);
 	void Draw() override;
-    void Draw(float barHeight);
-	PlayerData& Player;
+    void Draw(PlayerData &player, const float barHeight);
+	PlayerData& Player1;
+    PlayerData& Player2;
 
 	bool IsUiClick(const Vector2& pos);
 
@@ -43,8 +44,9 @@ public:
 
 private:
 	bool DrawButton(float x, float y, int itemId = -1, int quantity = 1, Color border = BROWN, Color center = BEIGE);
-	void DrawInventory();	
-	void ShowItemToolTip(const Item* item, const Rectangle& rect);
+	void DrawInventory(PlayerData &player);
+    void DrawInventory();
+    void ShowItemToolTip(const Item* item, const Rectangle& rect);
 
 private:
 	float ButtonSize = 70;

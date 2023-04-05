@@ -30,7 +30,7 @@
 #include "map.h"
 #include "combat.h"
 #include "treasure.h"
-
+#include "extra.h"
 #include <vector>
 
 void InitGame();
@@ -72,6 +72,8 @@ public:
     void Move();
     void ApplyActions();
     void UpdateSprite();
+
+    MobInstance* GetNearestMobInSight(std::vector<MobInstance> &mobs);
 
 	float LastAttack = 0;
 	float LastConsumeable = 0;
