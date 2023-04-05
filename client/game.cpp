@@ -395,7 +395,7 @@ void PlayerData::Move()
     }
 }
 
-void PlayerData::ApplyPlayerActions()
+void PlayerData::ApplyActions()
 {
     // see if we want to attack any mobs
     if (TargetMob != nullptr)
@@ -669,7 +669,7 @@ void UpdateGame()
 
 	GetPlayerInput();
 	Player.Move();
-	Player.ApplyPlayerActions();
+    Player.ApplyActions();
 
 	UpdateMobs();
 

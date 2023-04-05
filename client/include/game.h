@@ -70,7 +70,7 @@ public:
 	void ActivateItem(int slotIndex);
 	void DropItem(int item);
     void Move();
-    void ApplyPlayerActions();
+    void ApplyActions();
     void UpdateSprite();
 
 	float LastAttack = 0;
