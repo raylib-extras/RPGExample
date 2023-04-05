@@ -242,7 +242,7 @@ void GetPlayerInput()
 		TargetChest = nullptr;
 		for (auto &chest : Chests)
 		{
-			if (CheckCollisionPointRec(player1TargetPosition, chest.Bounds))
+			if (CheckCollisionPointRec(player2TargetPosition, chest.Bounds))
 			{
 				TargetChest = &chest;
 			}
@@ -250,7 +250,7 @@ void GetPlayerInput()
 
 		for (auto &mob : Mobs)
 		{
-			if (CheckCollisionPointCircle(player1TargetPosition, mob.Position, 20))
+			if (CheckCollisionPointCircle(player2TargetPosition, mob.Position, 20))
 			{
 				TargetMob = &mob;
 
@@ -494,7 +494,7 @@ void PlayerData::ApplyActions()
 	if (TargetChest != nullptr)
 	{
 		Vector2 center = {TargetChest->Bounds.x + TargetChest->Bounds.width / 2, TargetChest->Bounds.y + TargetChest->Bounds.height / 2};
-
+        // TODO: player2 cannot open the chest
 		float distance = Vector2Distance(center, Position);
 		if (distance <= 50)
 		{
@@ -586,7 +586,7 @@ void UpdateMobs()
 		Vector2 vecToPlayer1 = Vector2Subtract(Player1.Position, mob.Position);
 		float distance1 = Vector2Length(vecToPlayer1);
 
-		Vector2 vecToPlayer2 = Vector2Subtract(Player1.Position, mob.Position);
+		Vector2 vecToPlayer2 = Vector2Subtract(Player2.Position, mob.Position);
 		float distance2 = Vector2Length(vecToPlayer2);
 
 		PlayerData *player;
@@ -744,9 +744,9 @@ void UpdateGame()
 
 	GetPlayerInput();
 	Player1.Move();
-	Player1.ApplyActions();
+    Player2.Move();
 
-	Player2.Move();
+	Player1.ApplyActions();
 	Player2.ApplyActions();
 
 	UpdateMobs();
