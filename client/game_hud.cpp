@@ -59,6 +59,7 @@ void GameHudScreen::DrawInventory(PlayerData &player)
     {
         HoveredItem = weaponItem;
     }
+    DrawText(player.Name.c_str(), int(inventoryWindowRect.x) + 8, int(inventoryWindowRect.y) + 3, 15, DARKBROWN);
     DrawText("Weapon", int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 20), 20, DARKBROWN);
     DrawText(TextFormat("%d - %d", player.GetAttack().MinDamage, player.GetAttack().MaxDamage), int(inventoryWindowRect.x + 20 + ButtonSize + 2), int(inventoryWindowRect.y + 40), 20, WHITE);
 
@@ -128,23 +129,6 @@ void GameHudScreen::DrawInventory(PlayerData &player)
     }
 }
 
-void GameHudScreen::DrawInventory() {
-    DrawInventory(Player1);
-    DrawInventory(Player2);
-}
-
-bool GameHudScreen::IsUiClick(const Vector2 &pos)
-{
-	if (pos.y > GetScreenHeight() - 80.0f)
-		return true;
-
-	Rectangle inventoryWindowRect = {GetScreenWidth() - 475.0f, GetScreenHeight() - 500.0f, 354, 400.0f};
-
-	if (InventoryOpen && CheckCollisionPointRec(pos, inventoryWindowRect))
-		return true;
-
-	return false;
-}
 
 void GameHudScreen::Draw() {
     Draw(Player1, GetScreenHeight() - 160.0f); // upper
@@ -234,9 +218,13 @@ void GameHudScreen::Draw(PlayerData &player, float barHeight)
 
     // backpack buttons
     buttonX += ButtonSize + 4;
+
     if ((DrawButton(buttonX, buttonY, BagSprite, 0, GRAY, LIGHTGRAY) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) || IsKeyPressed(KEY_I))
     {
-        InventoryOpen = !InventoryOpen;
+        if (player.Type == PLAYER1)
+            Player1InventoryOpen = !Player1InventoryOpen;
+        else
+            Player2InventoryOpen = !Player2InventoryOpen;
     }
 
     buttonX += ButtonSize + 4;
@@ -248,8 +236,11 @@ void GameHudScreen::Draw(PlayerData &player, float barHeight)
         DrawText(TextFormat("%0.0f", player.BuffLifetimeLeft), int(buttonX), int(buttonY + ButtonSize - 30), 30, RED);
     }
 
-    if (InventoryOpen)
-        DrawInventory();
+    if (player.Type == PLAYER1 && Player1InventoryOpen)
+        DrawInventory(player);
+
+    if (player.Type == PLAYER2 && Player2InventoryOpen)
+        DrawInventory(player);
 
     if (HoveredItem != nullptr)
     {

@@ -38,17 +38,14 @@ public:
 	PlayerData& Player1;
     PlayerData& Player2;
 
-	bool IsUiClick(const Vector2& pos);
-
-	bool InventoryOpen = false;
+    bool Player1InventoryOpen = false;
+    bool Player2InventoryOpen = false;
 
 private:
 	bool DrawButton(float x, float y, int itemId = -1, int quantity = 1, Color border = BROWN, Color center = BEIGE);
 	void DrawInventory(PlayerData &player);
-    void DrawInventory();
     void ShowItemToolTip(const Item* item, const Rectangle& rect);
 
-private:
 	float ButtonSize = 70;
 	float ButtonInset = 6;
 	const Item* HoveredItem = nullptr;

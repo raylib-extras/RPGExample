@@ -11,9 +11,13 @@
 #include "raylib.h"
 #include "raymath.h"
 
-PlayerData Player1;
-PlayerData Player2;
+PlayerData Player1("Player1", PLAYER1);
+PlayerData Player2("Player2", PLAYER2);
 
+
+PlayerData::PlayerData(std::string name, PLAYER_TYPE type) : Name(name), Type(type) {
+
+}
 const AttackInfo &PlayerData::GetAttack() const
 {
 	if (EquipedWeapon == -1)
@@ -724,8 +728,10 @@ void UpdateGame()
 {
 	if (IsKeyPressed(KEY_ESCAPE))
 	{
-		if (GameHud.InventoryOpen)
-			GameHud.InventoryOpen = false;
+		if (GameHud.Player1InventoryOpen || GameHud.Player2InventoryOpen) {
+            GameHud.Player1InventoryOpen = false;
+            GameHud.Player2InventoryOpen = false;
+        }
 		else
 		{
 			PauseGame();

@@ -45,9 +45,16 @@ struct InventoryContents
 	int Quantity;
 };
 
+enum PLAYER_TYPE {
+    PLAYER1,
+    PLAYER2,
+    SINGLE_PLAYER
+};
+
 class PlayerData
 {
 public:
+    PlayerData(std::string name, PLAYER_TYPE type);
 	Vector2 Position = {0, 0};
 	SpriteInstance *Sprite = nullptr;
 
@@ -91,6 +98,9 @@ public:
 	std::vector<InventoryContents> BackpackContents;
 
 	float PickupDistance = 20;
+
+    std::string Name;
+    PLAYER_TYPE Type;
 
 private:
 	AttackInfo DefaultAttack = {"Slap", true, 1, 1, 1.0f, 10.0f};
