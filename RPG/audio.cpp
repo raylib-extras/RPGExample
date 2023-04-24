@@ -84,5 +84,5 @@ void PlaySound(int sound)
 	if (sound < 0 || sound > Sounds.size())
 		return;
 
-	PlaySoundMulti(Sounds[sound]);
+	PlaySound(Sounds[sound]);
 }
