@@ -205,7 +205,7 @@ void UpdateLoad()
 // gets a texture from an ID. The textures are loaded in ID order.
 const Texture& GetTexture(int id)
 {
-	if (id < 0 || id > int(LoadedTextures.size()))
+	if (id < 0 || id >= int(LoadedTextures.size()))
 		return DefaultTexture;
 
 	return LoadedTextures[id];
